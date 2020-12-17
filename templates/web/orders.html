@@ -1,0 +1,109 @@
+{% extends "web/index.html" %}
+{% load tags %}
+
+
+{% block content %}
+<div class="" id="content-container">
+    <div id="page-title">
+        <h1 class="page-header text-overflow">订单管理</h1>
+    </div>
+    <ol class="breadcrumb">
+        <li><a href="/">主页</a></li>
+        <li><a href="#">订单</a></li>
+        <li class="active">我的订单</li>
+    </ol>
+    <div id="page-content">
+        <div class="panel panel-bordered-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">我的订单</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6 text-xs-center">
+                        <div class="form-group">
+                            <a id="demo-btn-addrow" class="btn btn-primary btn-labeled fa fa-plus" href="create/">新建订单</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 text-xs-center text-right">
+                        <div class="form-group">
+                            <!-- <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off"> -->
+                        </div>
+                    </div>
+                </div>
+                <table id="foo-filtering" class="table table-hover toggle-circle" data-page-size="10">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <!-- <th data-toggle="true" >Task</th> -->
+                            <th data-hide="phone, tablet">创建时间</th>
+                            <th data-hide="phone, tablet">商品</th>
+                            <th data-hide="phone, tablet">单价</th>
+                            <th data-hide="phone, tablet">数量</th>
+                            <th data-hide="phone, tablet">总价</th>
+                            <th data-hide="phone, tablet">审核状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in my_orders %}
+                        <tr class="footable-even" style="display: table-row;">
+                            <td>{{ item.id }}</td>
+                            <!-- <td>{{ item.get_order_type_display }}</td> -->
+                            <!-- <td>{{ item.create_date }}</td> -->
+                            {% get_create_date item %}
+                            <td>{{ item.detail }}</td>
+                            <td>{{ item.unit_price }}</td>
+                            <td>{{ item.count }}</td>
+                            <td>{{ item.total_price }}</td>
+                            {% get_order_status item %}
+                            <!-- <td><span class="label label-table label-success">已通过</span></td> -->
+                        </tr>
+                        {% endfor %}
+                        <!-- <tr class="footable-even" style="display: table-row;">
+                            <td>1</td>
+                            <td>药水</td>
+                            <td>sad</td>
+                            <td>acscs</td>
+                            <td>ascs</td>
+                            <td>233</td>
+                            <td><span class="label label-table label-success">已通过</span></td>
+                        </tr> -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7">
+                                <div class="text-right">
+                                    <ul class="pagination"></ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+
+{% block css %}
+<link href="/static/plugins/fooTable/css/footable.core.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block js %}
+<script src="/static/plugins/fooTable/dist/footable.all.min.js"></script>
+<script>
+    $(function() {
+        $('#foo-filtering').footable();
+
+        $('#mainnav-menu li').removeClass('active-link');
+        // $('.hosts').addClass('active-link');
+        $("li.order").addClass("active");
+        $('.order ul').attr({'class': 'collapse in', 'aria-expanded': "true"});
+         // 激活标志
+         var task_type = window.location.pathname.split('/')[2];
+         // $("li.multi-cmd").addClass('active-link');
+         $(`li.${task_type}`).addClass('active-link');
+    }) 
+</script>
+{% endblock %}

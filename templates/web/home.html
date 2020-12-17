@@ -1,0 +1,257 @@
+{% extends "web/index.html" %}
+
+
+
+{% block content %}
+			<!--CONTENT CONTAINER-->
+			<!--===================================================-->
+			<div id="content-container">
+				
+				<!--Page Title-->
+				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+				<div id="page-title">
+					<h1 class="page-header text-overflow">HomePage</h1>
+
+					<!--Searchbox-->
+				</div>
+				
+				<ol class="breadcrumb">
+					<li><a href="#">Home</a></li>
+					<li class="active">首页</li>
+				</ol>
+
+				<div id="page-content">
+					
+					<div class="row">
+					    <div class="col-md-8 col-lg-8">
+					
+							<!--Realtime flot chart-->
+							<!--===================================================-->
+							<div class="panel">
+								
+							</div>
+							<!--===================================================-->
+							<!--End Realtime flot chart-->
+					
+						</div>
+					    <div class="col-lg-4">
+					
+							<!--Weather widget-->
+							<!--===================================================-->
+							<div id="demo-weather-widget-md" class="panel panel-info panel-colorful text-center">
+								<div class="panel-body">
+					
+									<!--Weather widget body-->
+									<div class="row pad-top">
+										<div class="col-xs-6">
+											<canvas id="demo-weather-md-icon-1" width="98" height="98"></canvas>
+										</div>
+										<div class="col-xs-6">
+											<p class="text-4x">17°</p>
+											<p class="text-sm">晴&nbsp&nbsp天</p>
+										</div>
+									</div>
+									<h4 class="mar-no pad-top">成&nbsp&nbsp都</h4>
+									<p>Today</p>
+									<hr>
+					
+					
+									<!--Weather widget footer-->
+									<ul class="list-unstyled text-center clearfix">
+										<li class="col-xs-3">
+											<canvas id="demo-weather-md-icon-2" width="32" height="32"></canvas>
+											<p class="text-sm mar-no">Saturday</p>
+											<p>25 °C</p>
+										</li>
+										<li class="col-xs-3">
+											<canvas id="demo-weather-md-icon-3" width="32" height="32"></canvas>
+											<p class="text-sm mar-no">Sunday</p>
+											<p>22 °C</p>
+										</li>
+										<li class="col-xs-3">
+											<canvas id="demo-weather-md-icon-4" width="32" height="32"></canvas>
+											<p class="text-sm mar-no">Monday</p>
+											<p>20 °C</p>
+										</li>
+										<li class="col-xs-3">
+											<canvas id="demo-weather-md-icon-5" width="32" height="32"></canvas>
+											<p class="text-sm mar-no">Tuesday</p>
+											<p>28 °C</p>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<!--===================================================-->
+							<!--End Weather widget-->
+					
+						</div>
+					</div>
+					
+					<br>
+					<div class="row">
+					
+						<!--Tile with progress bar - (Visit Today)-->
+						<!--===================================================-->
+						<div class="col-md-6 col-lg-3">
+							<div class="panel panel-success panel-colorful">
+								<div class="pad-all media">
+									<div class="media-left">
+										<span class="icon-wrap icon-wrap-xs">
+											<i class="fa fa-users fa-2x"></i>
+										</span>
+									</div>
+									<div class="media-body">
+										<p class="h3 text-thin media-heading">314</p>
+										<small class="text-uppercase">已注册用户</small>
+									</div>
+								</div>
+								<div class="progress progress-xs progress-dark-base mar-no">
+									<div style="width: 30%" class="progress-bar progress-bar-light" aria-valuemax="100" aria-valuemin="0" aria-valuenow="30" role="progressbar"></div>
+								</div>
+								<div class="pad-all text-right">
+									<small><span class="text-semibold"><i class="fa fa-user fa-fw"></i>32</span> 已登录</small>
+								</div>
+							</div>
+						</div>
+						<!--===================================================-->
+						<!--End Tile with progress bar - (Visit Today)-->
+					
+					
+						<!--Tile with progress bar - (Comments)-->
+						<!--===================================================-->
+						<div class="col-md-6 col-lg-3">
+							<div class="panel panel-mint panel-colorful">
+								<div class="pad-all media">
+									<div class="media-left">
+										<span class="icon-wrap icon-wrap-xs">
+											<i class="fa fa-server fa-2x"></i>
+										</span>
+									</div>
+									<div class="media-body">
+										<p class="h3 text-thin media-heading">452</p>
+										<small class="text-uppercase">主机数</small>
+									</div>
+								</div>
+								<div class="progress progress-xs progress-dark-base mar-no">
+									<div style="width: 45.9%" class="progress-bar progress-bar-light" aria-valuemax="100" aria-valuemin="0" aria-valuenow="45.9" role="progressbar"></div>
+								</div>
+								<div class="pad-all text-right">
+									<small><span class="text-semibold"><i class="fa fa-television fa-fw"></i> 132</span> 运行中</small>
+								</div>
+							</div>
+						</div>
+						<!--===================================================-->
+						<!--End Tile with progress bar - (Comments)-->
+					
+					
+						<!--Tile with progress bar - (New Order)-->
+						<!--===================================================-->
+						<div class="col-md-6 col-lg-3">
+							<div class="panel panel-purple panel-colorful">
+								<div class="pad-all media">
+									<div class="media-left">
+										<span class="icon-wrap icon-wrap-xs">
+											<i class="fa fa-bug fa-fw fa-2x"></i>
+										</span>
+									</div>
+									<div class="media-body">
+										<p class="h3 text-thin media-heading">1,345</p>
+										<small class="text-uppercase">bugs</small>
+									</div>
+								</div>
+								<div class="progress progress-xs progress-dark-base mar-no">
+									<div style="width: 75%" class="progress-bar progress-bar-light" aria-valuemax="100" aria-valuemin="0" aria-valuenow="75" role="progressbar"></div>
+								</div>
+								<div class="pad-all text-right">
+									<small><span class="text-semibold"><i class="fa fa-warning fa-fw"></i> 3,245</span> Warnings</small>
+								</div>
+							</div>
+						</div>
+						<!--===================================================-->
+						<!--End Tile with progress bar - (New Order)-->
+					
+					
+						<!--Tile with progress bar - (Earning)-->
+						<!--===================================================-->
+						<div class="col-md-6 col-lg-3">
+							<div class="panel panel-pink panel-colorful">
+								<div class="pad-all media">
+									<div class="media-left">
+										<span class="icon-wrap icon-wrap-xs">
+											<i class="fa fa-hand-peace-o fa-fw fa-2x"></i>
+										</span>
+									</div>
+									<div class="media-body">
+										<p class="h3 text-thin media-heading">1 Day</p>
+										<small class="text-uppercase">距周末还有</small>
+									</div>
+								</div>
+								<div class="progress progress-xs progress-dark-base mar-no">
+									<div style="width: 37.4%" class="progress-bar progress-bar-light" aria-valuemax="100" aria-valuemin="0" aria-valuenow="37.4" role="progressbar"></div>
+								</div>
+								<div class="pad-all text-right">
+									<small><span class="text-semibold"><i class="fa fa-dollar fa-fw"></i> -2,675</span> Earning</small>
+								</div>
+							</div>
+						</div>
+						<!--===================================================-->
+						<!--End Tile with progress bar - (Earning)-->
+					
+					</div>
+					
+				
+					
+				</div>
+			</div>
+{% endblock %}
+
+
+
+
+{% block js %}
+<script src='/static/plugins/skycons/skycons.min.js'></script>
+<script>
+    $(function() {
+        GetWeather();
+    })
+
+    function GetWeather() {
+
+		skyconsOptions = {
+			"color": "#fff",
+			"resizeClear": true
+		}
+
+		/* Main Icon */
+		var skycons = new Skycons(skyconsOptions);
+		skycons.add("demo-weather-md-icon-1", Skycons.CLEAR_DAY);
+		skycons.play();
+
+
+
+		/* Small Icons*/
+		var skycons2 = new Skycons(skyconsOptions);
+		skycons2.add("demo-weather-md-icon-2", Skycons.CLOUDY);
+		skycons2.play();
+
+
+		var skycons3 = new Skycons(skyconsOptions);
+		skycons3.add("demo-weather-md-icon-3", Skycons.WIND);
+		skycons3.play();
+
+
+		var skycons4 = new Skycons(skyconsOptions);
+		skycons4.add("demo-weather-md-icon-4", Skycons.RAIN);
+		skycons4.play();
+
+
+		var skycons5 = new Skycons(skyconsOptions);
+		skycons5.add("demo-weather-md-icon-5", Skycons.PARTLY_CLOUDY_DAY);
+		skycons5.play();
+	}
+
+</script>
+
+
+{% endblock%}
+

@@ -1,0 +1,255 @@
+{% extends "web/index.html" %}
+
+
+
+{% block content %}
+<div class="" id="content-container">
+    <div id="page-title">
+        <h1 class="page-header text-overflow">订单管理</h1>
+    </div>
+    <ol class="breadcrumb">
+        <li><a href="/">主页</a></li>
+        <li><a href="#">订单</a></li>
+        <li><a href="/order/myorder/">我的订单</a></li>
+        <li class="active">新建订单</li>
+    </ol>
+    <div id="page-content">
+        <div class="panel panel-bordered-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">新建订单</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal order-create">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="" class="col-sm-3 control-label text-bold">商&nbsp品</label>
+                            <div class="col-sm-4">
+                                <select data-placeholder="----选择已有商品信息----" id="chosen-select" name="goods">
+                                    {% for item in goods %} 
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <a href="#"><i class="fa fa-md fa-plus" id="add-goods" aria-hidden="true">&nbsp新建商品</i></a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label">公&nbsp司</label>
+                            <div class="col-sm-4">
+                                <input type="text" placeholder="订购公司" class="form-control" id="demo-is-inputnormal">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">单&nbsp价</label>
+                            <div class="col-sm-1">
+                                <input type="number" placeholder="" class="form-control" required="" id="demo-is-inputnormal oninput=" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">数&nbsp量</label>
+                            <div class="col-sm-1">
+                                <input type="number" placeholder="" class="form-control" required="" id="demo-is-inputnormal">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">总&nbsp价</label>
+                            <div class="col-sm-1">
+                                <input type="number" placeholder="" class="form-control" required="" id="demo-is-inputnormal">
+                            </div>
+                            <i class="fa fa-md fa-pencil" id="get-price" aria-hidden="true">&nbsp计算</i>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label">备&nbsp注</label>
+                            <div class="col-sm-4">
+                                <textarea name="memo" cols="40" rows="6" class="vLargeTextField"  id="id_memo"></textarea>
+                            </div>
+                        </div>
+                        
+
+                        <div class="row">
+                            <div class="col-sm-9 col-sm-offset-6">
+                                <!-- <button class="btn btn-default bg-dark-gray btn-labeled fa fa-repeat fa-lg" type="reset">保存</button> -->
+                                <!-- <button class="btn btn-info btn-labeled fa fa-user fa-lg" type="submit">提交</button> -->
+                                <button class="btn btn-primary" type="submit">提&nbsp&nbsp&nbsp交</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </form>
+           
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" href="/static/plugins/chosen/chosen.min.css">
+<style>
+    .order-create .form-group {
+        margin-bottom: 25px;
+    }
+    #add-goods {
+        position: relative;
+        bottom: 5px;
+        left: 5px;
+        color: rgb(194, 156, 32);
+    }
+    .order-create i.fa:hover {
+        opacity: 50%;
+        cursor: pointer;
+    }
+    #id_memo {
+        width: 100%;
+    }
+    #get-price {
+        position: relative;
+        top: 7px;
+        color: rgb(194, 156, 32);
+    }
+    .modal-backdrop {
+        z-index: -1;
+    }
+    .hide {
+        display: none;
+    }
+    span.help-block {
+        color: rgb(223, 63, 63);
+    }
+</style>
+{% endblock %}
+
+{% block js %}
+<script src='/static/plugins/bootbox/bootbox.min.js'></script>
+<script src="/static/plugins/chosen/chosen.jquery.min.js"></script>
+<script>
+
+    $(function() {
+
+        // 启动单选框
+        $('#chosen-select').chosen({width: "50%"});
+
+        // 激活标志
+        $('#mainnav-menu li').removeClass('active-link');
+        // $('.hosts').addClass('active-link');
+        $("li.order").addClass("active");
+        $('.order ul').attr({'class': 'collapse in', 'aria-expanded': "true"});
+         // 激活标志
+         var task_type = window.location.pathname.split('/')[2];
+         // $("li.multi-cmd").addClass('active-link');
+         $(`li.${task_type}`).addClass('active-link');
+
+         var flag = false;
+        
+         $('#add-goods').on('click', function(){
+            var dialog = bootbox.dialog({
+                title: "新建商品",
+                onEscape: true,
+                message:'<div class="row"> ' + '<div class="col-md-12"> ' +
+                    '<form class="form-horizontal"> ' +
+                    '<div class="form-group"> ' +
+                    '<label class="col-md-4 control-label text-bold" for="name">名称:</label> ' +
+                    '<div class="col-md-4"> ' +
+                    '<input name="name" type="text" placeholder="" required class="form-control input-md"> ' +
+                    '<span class="help-block name hide"><small>Here goes your name</small></span> </div> ' +
+                    '</div> ' + 
+
+                    '<div class="form-group"> ' +
+                    '<label class="col-md-4 control-label text-bold" for="name">品牌/型号:</label> ' +
+                    '<div class="col-md-4"> ' +
+                    '<input name="brand" type="text" placeholder="" required class="form-control input-md"> ' +
+                    '<span class="help-block brand hide"><small>Here goes your name</small></span> </div> ' +
+                    '</div> ' +  
+
+                    '<div class="form-group"> ' +
+                    '<label class="col-md-4 control-label" for="name">数量规格:</label> ' +
+                    '<div class="col-md-4"> ' +
+                    '<input name="specification" type="text" placeholder="如50ml/瓶, 150pc/盒..."  class="form-control input-md"> ' +
+                    '<span class="help-block specification hide"><small>Here goes your name</small></span> </div> ' +
+                    '</div> ' +  
+
+                    '<div class="form-group"> ' +
+                    '<label class="col-md-4 control-label" for="name">CAS号:</label> ' +
+                    '<div class="col-md-4"> ' +
+                    '<input name="CAS_number" type="text" placeholder=""  class="form-control input-md"> ' +
+                    '<span class="help-block CAS_number hide"><small>Here goes your name</small></span>' + 
+                    '<span class="help-block __all__ hide"><small>Here goes your name</small></span></div> ' +
+                    '</div> ' +  
+
+                    '</form> </div> </div>',
+                buttons: {
+                    success: {
+                        label: "保存",
+                        className: "btn-purple",
+                        callback: function() {
+
+                            var name = $("input[name='name']").val();
+                            var brand = $("input[name='brand']").val();
+                            var specification = $("input[name='specification']").val();
+                            var CAS_number = $("input[name='CAS_number']").val();
+                            
+                            $.ajax({
+                                url: "/order/add-goods/",
+                                type: "post",
+                                dataType: "JSON",
+                                data: {
+                                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                                    name: name,
+                                    brand: brand,
+                                    specification: specification,
+                                    CAS_number: CAS_number
+                                },
+                                success: function(res) {
+                                    // console.log(res);
+                                    // console.log(JSON.stringify(res));
+                                    if(res.status == "success") {
+                                        // 
+                                        // 更新 select
+                                        var add_id = res.add_item[0];
+                                        var add_name = res.add_item[1];
+                                        $("#chosen-select").append(`<option value="${add_id}">${add_name}</option>`);
+                                        $("#chosen-select").trigger("chosen:updated");
+                                        // noty
+                                        $.niftyNoty({
+                                            type: 'success',
+                                            icon : 'fa fa-check',
+                                            message : "Success " +  ".<br> 添加成功 <strong>" + "</strong>",
+                                            container : 'floating',
+                                            timer : 5000
+                                        });
+
+                                        dialog.modal('hide');
+                                        
+
+                                    }else if(res.status == "failed") {
+                                        // 添加失败
+                                        $("span.help-block").addClass('hide');
+                                        var res_keys = Object.keys(res.errors);
+                                        for (i in res_keys) {
+                                            $(`span.${res_keys[i]}`).removeClass('hide');
+                                            $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
+                                        }
+                                    }
+                                }
+                            });
+
+                            return false;
+                        }
+                    }
+                }
+            });
+            
+            dialog.init(function() {
+                //console.log("AAAAA");
+            });
+            
+            $(".demo-modal-radio").niftyCheck();
+        });
+
+
+    }) ;
+
+    
+</script>
+{% endblock %}
