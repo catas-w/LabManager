@@ -1,0 +1,178 @@
+{% extends "web/index.html" %}
+{% load tags %}
+
+
+{% block content %}
+<div class="" id="content-container">
+    <div id="page-title">
+        <h1 class="page-header text-overflow">订单管理</h1>
+    </div>
+    <ol class="breadcrumb">
+        <li><a href="/">主页</a></li>
+        <li><a href="#">订单</a></li>
+        <li><a href="/order/myorder/">我的订单</a></li>
+        <li class="active">订单详情</li>
+    </ol>
+    <div id="page-content">
+        <div class="panel panel-bordered-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">订单详情</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal order-create">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">用&nbsp;户</label>
+                            <div class="col-sm-4">
+                                <!-- <input type="text" name="company" class="form-control" value="{{ request.user.name }}" disabled> -->
+                                <label class="order-info text-semibold">{{ request.user.name }}</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">创建时间</label>
+                            <div class="col-sm-4">
+                                {% get_date order_obj as date %}
+                                <!-- <input type="text" name="company" class="form-control" value="{{ date }}" disabled> -->
+                                <label class="order-info text-semibold">{{ date }}</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">状&nbsp;态</label>
+                            <div class="col-sm-4">
+                                <label class="order-info text-semibold">{{ order_obj.get_status_display }}</label>
+                            </div>
+                        </div>
+
+                        {% if editable %}
+                        <div class="form-group">
+                            <label for="" class="col-sm-3 control-label text-bold">商&nbsp;品</label>
+                            <div class="col-sm-4">
+                                <select data-placeholder="----选择已有商品信息----" id="chosen-select" name="detail">
+                                    <!-- <option value="none" selected disabled hidden>----选择已有商品----</option> -->
+                                    {% for item in goods %} 
+                                        {% if item.id == order_obj.detail.id %}
+                                            <option value="{{ item.id }}" selected>{{ item }}</option>
+                                        {% else %}
+                                            <option value="{{ item.id }}">{{ item }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <a href="#"><i class="fa fa-md fa-plus" id="add-goods" aria-hidden="true">&nbsp;新建商品</i></a>
+                                <span class="help-block detail hide"><small>Here goes your name</small></span>
+                            </div>     
+                        </div>                   
+
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">公&nbsp;司</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="company" class="form-control" value="{{ order_obj.company }}">
+                                <span class="help-block company hide"><small>Here goes your name</small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">单&nbsp价</label>
+                            <div class="col-sm-1">
+                                <input type="number" step="0.01" min="0" name="unit_price" placeholder="" class="form-control" required value="{{ order_obj.unit_price }}">
+                                <span class="help-block unit_price hide"><small>Here goes your name</small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">数&nbsp量</label>
+                            <div class="col-sm-1">
+                                <input type="number" name="count" placeholder="" class="form-control" required="" value="{{ order_obj.count }}">
+                                <span class="help-block count hide"><small>Here goes your name</small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">总&nbsp价</label>
+                            <div class="col-sm-1">
+                                <input type="number" step="0.01" min="0" name="total_price" placeholder="" class="form-control" required="" value="{{ order_obj.total_price }}">
+                                <span class="help-block total_count hide"><small>Here goes your name</small></span>
+                            </div>
+                            <i class="fa fa-md fa-pencil" id="get-price" aria-hidden="true">&nbsp;计算</i>
+                        </div>
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">备&nbsp注</label>
+                            <div class="col-sm-4">
+                                <textarea name="memo" cols="40" rows="6" class="vLargeTextField"  id="id_memo">{{ order_obj.memo }}</textarea>
+                                <span class="help-block memo hide"><small>Here goes your name</small></span>
+                            </div>
+                        </div>
+
+                        <!-- buttons -->
+                        <div class="row">
+                            <div class="col-sm-2 col-sm-offset-3">
+                                <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button>
+                            </div>
+                            <div class="col-sm-4 col-sm-offset">
+                                <button class="btn btn-default btn-rounded  btn-labeled fa fa-save fa-lg" id="order-save">保&nbsp;&nbsp;&nbsp;存</button>
+                                <button class="btn btn-primary btn-rounded  btn-labeled fa fa-check fa-lg" id="order-submit">提&nbsp;&nbsp;&nbsp;交</button>
+                            </div>
+                        </div>
+                        {% else %}
+                            {% include "web/order_readonly.html" %}
+                        {% endif %}
+
+                        
+                    </div>
+                    
+                </form>
+           
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" href="/static/plugins/chosen/chosen.min.css">
+<style>
+    .order-create .form-group {
+        margin-bottom: 25px;
+    }
+    #add-goods {
+        position: relative;
+        bottom: 5px;
+        left: 5px;
+        color: rgb(194, 156, 32);
+    }
+    .order-create i.fa:hover {
+        opacity: 50%;
+        cursor: pointer;
+    }
+    #id_memo {
+        width: 100%;
+    }
+    #get-price {
+        position: relative;
+        top: 7px;
+        color: rgb(194, 156, 32);
+    }
+    .modal-backdrop {
+        z-index: -1;
+    }
+    .hide {
+        display: none;
+    }
+    span.help-block {
+        color: rgb(223, 63, 63);
+    }
+    #order-save {
+        margin-right: 37px;
+    }
+    label.order-info {
+        padding-top: 7px;
+        padding-left: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block js %}
+<script src='/static/plugins/bootbox/bootbox.min.js'></script>
+<script src="/static/plugins/chosen/chosen.jquery.min.js"></script>
+<script>
+    var csrf_token = "{{ csrf_token }}";
+</script>
+<script src="/static/js/order_base.js"></script>
+{% endblock %}

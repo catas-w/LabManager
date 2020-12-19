@@ -23,4 +23,26 @@ class GoodsDetailForm(forms.ModelForm):
         }
 
 
+class OrderForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Order
+        fields = ("company", "unit_price", "count", "total_price", "user", "status", "memo", "detail")
+
+        error_messages = {
+            "unit_price": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            },
+            "count": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            },
+            "total_price": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            }
+        }
+
+
 

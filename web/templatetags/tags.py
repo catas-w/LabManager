@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-17 10:28:38
-LastEditTime: 2020-12-17 11:13:55
+LastEditTime: 2020-12-18 19:09:39
 Author: catas
 LastEditors: catas
 Description: 
@@ -14,7 +14,7 @@ register = template.Library()
 @register.simple_tag
 def get_order_status(order_obj):
     html = '''
-        <td><span class="label label-table {button}">{text}</span></td>
+        <td><a href="{order_id}"><span class="label label-table {button}">{text}</span></a></td>
     '''
     status_dict = {
         0: ["未提交", "label-default"],
@@ -23,19 +23,23 @@ def get_order_status(order_obj):
         3: ["已批准", "label-success"],
     }
     status = order_obj.status
-    res = html.format(button=status_dict[status][1], text=status_dict[status][0])
+    res = html.format(button=status_dict[status][1], text=status_dict[status][0], order_id=order_obj.id)
     return mark_safe(res)
 
 @register.simple_tag
 def get_create_date(order_obj):
-    html = "<td>{}</td>"
+    html = "<td><a href='{order_id}'>{time}</a></td>"
     create_date = order_obj.create_date + datetime.timedelta(hours = 8)
-    time_toshow = create_date.strftime("%Y-%m-%d  %I:%m %p")
-    res = html.format(time_toshow)
-    print(res)
+    time_toshow = create_date.strftime("%Y-%m-%d  %I:%M %p")
+    res = html.format(time=time_toshow, order_id=order_obj.id)
+    # print(res)
     return mark_safe(res)
 
-
+@register.simple_tag
+def get_date(order_obj):
+    create_date = order_obj.create_date + datetime.timedelta(hours = 8)
+    time_toshow = create_date.strftime("%Y-%m-%d  %I:%M %p")
+    return time_toshow
 
 
 

@@ -119,6 +119,9 @@ class Order(models.Model):
     user = models.ForeignKey("UserProfile", on_delete=models.SET_NULL, null=True)
     memo = models.TextField(verbose_name="备注", blank=True, null=True)
     detail = models.ForeignKey("GoodsDetail", on_delete=models.SET_NULL, null=True)
+    
+    bill_received = models.BooleanField(default=False)
+    review = models.CharField(max_length=128, blank=True, null=True)
 
     class Meta:
         verbose_name = "订单"

@@ -10,75 +10,27 @@
     <ol class="breadcrumb">
         <li><a href="/">主页</a></li>
         <li><a href="#">订单</a></li>
-        <li class="active">我的订单</li>
+        {% if order_type == "personal" %}
+            <li class="active">我的订单</li>
+        {% elif order_type == "unchecked" %}
+            <li class="active">订单审核</li>
+        {% endif %}
     </ol>
     <div id="page-content">
         <div class="panel panel-bordered-info">
-            <div class="panel-heading">
+            <div class="panel-heading">    
+            {% if order_type == "personal" %}
                 <h3 class="panel-title">我的订单</h3>
+            {% elif order_type == "unchecked" %}
+                <h3 class="panel-title">订单审核</h3>
+            {% endif %}
             </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-sm-6 text-xs-center">
-                        <div class="form-group">
-                            <a id="demo-btn-addrow" class="btn btn-primary btn-labeled fa fa-plus" href="create/">新建订单</a>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 text-xs-center text-right">
-                        <div class="form-group">
-                            <!-- <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off"> -->
-                        </div>
-                    </div>
-                </div>
-                <table id="foo-filtering" class="table table-hover toggle-circle" data-page-size="10">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <!-- <th data-toggle="true" >Task</th> -->
-                            <th data-hide="phone, tablet">创建时间</th>
-                            <th data-hide="phone, tablet">商品</th>
-                            <th data-hide="phone, tablet">单价</th>
-                            <th data-hide="phone, tablet">数量</th>
-                            <th data-hide="phone, tablet">总价</th>
-                            <th data-hide="phone, tablet">审核状态</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in my_orders %}
-                        <tr class="footable-even" style="display: table-row;">
-                            <td>{{ item.id }}</td>
-                            <!-- <td>{{ item.get_order_type_display }}</td> -->
-                            <!-- <td>{{ item.create_date }}</td> -->
-                            {% get_create_date item %}
-                            <td>{{ item.detail }}</td>
-                            <td>{{ item.unit_price }}</td>
-                            <td>{{ item.count }}</td>
-                            <td>{{ item.total_price }}</td>
-                            {% get_order_status item %}
-                            <!-- <td><span class="label label-table label-success">已通过</span></td> -->
-                        </tr>
-                        {% endfor %}
-                        <!-- <tr class="footable-even" style="display: table-row;">
-                            <td>1</td>
-                            <td>药水</td>
-                            <td>sad</td>
-                            <td>acscs</td>
-                            <td>ascs</td>
-                            <td>233</td>
-                            <td><span class="label label-table label-success">已通过</span></td>
-                        </tr> -->
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="7">
-                                <div class="text-right">
-                                    <ul class="pagination"></ul>
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+            
+            {% if order_type == "personal" %}
+                {% include "web/my_orders_list.html" %}
+            {% elif order_type == "unchecked" %}
+                {% include "web/unchecked_list.html" %}
+            {% endif %}
         </div>  
     </div>
 </div>
@@ -87,7 +39,11 @@
 
 {% block css %}
 <link href="/static/plugins/fooTable/css/footable.core.css" rel="stylesheet">
-
+<style>
+    .order-list tbody a:hover{
+        color: rgb(13, 152, 207)
+    }
+</style>
 {% endblock %}
 
 {% block js %}
