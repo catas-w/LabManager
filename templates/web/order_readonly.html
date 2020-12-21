@@ -34,3 +34,13 @@
             <label class="order-info text-semibold">{{ order_obj.memo }}</label>
         </div>
     </div>
+    <div class="form-group">
+        <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">收到底单</label>
+        <div class="col-sm-4">
+            {% if order_obj.bill_received %}
+                <label class="order-info text-semibold">是</label>
+            {% else %}
+                <label class="order-info text-semibold">否</label>
+            {% endif %}
+        </div>
+    </div>

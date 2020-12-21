@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
+import os
 
 # Create your models here.
 
@@ -40,6 +41,11 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+def user_directory_path(instance, filename):
+    ext = filename.split('.').pop()
+    filename = 'avatar_{0}.{1}'.format(instance.id, ext)
+    return os.path.join("avatars", filename) # 系统路径分隔符差异，增强代码重用性
+
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
@@ -57,9 +63,12 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         (2, "硕士"),
         (3, "本科生"),
         (4, "已毕业"),
+        (5, "----")
     )
-    user_type = models.SmallIntegerField(choices=user_type_choices, verbose_name="用户类型", null=True)
-
+    user_type = models.SmallIntegerField(choices=user_type_choices, verbose_name="用户类型", null=True, default=5)
+    stu_number = models.CharField(max_length=16, blank=True, default="---", verbose_name="学号") 
+    avatar = models.ImageField(verbose_name="头像", upload_to = user_directory_path, blank = True, null = True)
+    
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -68,13 +77,24 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
 
+    # 这里定义一个方法，作用是当用户注册时没有上传照片，模板中调用 [ModelName].[ImageFieldName].url 时赋予一个默认路径    
+    def photo_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        else:
+            return '/upload/media/default/av1.png'
+
     def __str__(self):
         return "%s" % (self.name, )
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
         # Simplest possible answer: Yes, always
-        return True
+        if self.is_admin:
+            return True
+        else:
+            user_perms_codename = self.user_permissions.all().values_list("codename")
+            return (perm, ) in user_perms_codename
 
     def has_module_perms(self, app_label):
         "Does the user have permissions to view the app `app_label`?"
@@ -90,6 +110,13 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "用户信息"
         verbose_name_plural = "用户信息"
+
+        permissions = (
+            ("web__check_orders", "审核订单"),
+            ("web__edit_history_orders", "修改历史订单"),
+            ("web__edit_user_info", "修改用户信息"),
+            ("web__watch_unchecked_order", "查看未审核订单"),
+        )
     
 
 class Order(models.Model):

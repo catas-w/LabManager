@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from web import views
+from django.conf.urls.static import static
+from LabManager import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +31,11 @@ urlpatterns = [
     path("order/add-goods/", views.add_goods),
     path("order/myorder/<int:order_id>/", views.order_detail),
     path("order/check/", views.unchecked_order),
+    path("order/check/<int:order_id>/", views.check_order, name="check_order"),
+    path("order/history/", views.history_orders),
+    path("order/history/<int:order_id>", views.history_order_detail, name="history_order_detail"),
+    path("order/history/output/", views.output_history_order),
+    path("userinfo/", views.user_info),
+    path("userinfo/<int:user_id>", views.user_edit, name="user_edit"),
 
-]
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

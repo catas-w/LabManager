@@ -47,7 +47,7 @@
                         <div class="form-group">
                             <label for="" class="col-sm-3 control-label text-bold">商&nbsp;品</label>
                             <div class="col-sm-4">
-                                <select data-placeholder="----选择已有商品信息----" id="chosen-select" name="detail">
+                                <select data-placeholder="----选择已有商品信息----" class="form-control" id="chosen-select" name="detail">
                                     <!-- <option value="none" selected disabled hidden>----选择已有商品----</option> -->
                                     {% for item in goods %} 
                                         {% if item.id == order_obj.detail.id %}
@@ -94,7 +94,7 @@
                         <div class="form-group">
                             <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">备&nbsp注</label>
                             <div class="col-sm-4">
-                                <textarea name="memo" cols="40" rows="6" class="vLargeTextField"  id="id_memo">{{ order_obj.memo }}</textarea>
+                                <textarea name="memo" cols="40" rows="6" class="form-control vLargeTextField"  id="id_memo">{{ order_obj.memo }}</textarea>
                                 <span class="help-block memo hide"><small>Here goes your name</small></span>
                             </div>
                         </div>

@@ -1,15 +1,27 @@
 {% load tags %}
 
 <div class="panel-body">
+    
     <div class="row">
-        <div class="col-sm-6 text-xs-center">
+        <div class="col-sm-3 text-xs-center">
             <div class="form-group">
-                <!-- <a id="demo-btn-addrow" class="btn btn-primary btn-labeled fa fa-plus" href="create/">新建订单</a> -->
+                <!-- <label class="control-label">筛选</label> -->
+                <select id="demo-foo-filter-status" onchange="javascript:location.href = '?scale=' + this.value;" class="form-control">
+                    <option value="">全部</option>
+                    <option value="1">最近1个月</option>
+                    <option value="6">最近6个月</option>
+                    <option value="12">最近1年</option>
+                </select>
             </div>
         </div>
-        <div class="col-sm-6 text-xs-center text-right">
-            <div class="form-group">
-                <!-- <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off"> -->
+        <div class="col-sm-3 col-sm-offset-6 text-xs-center text-right">
+            <div class="searchbox">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" placeholder="Search by 申请人 or 商品名">
+                    <span class="input-group-btn">
+                        <button class="text-muted" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -51,4 +63,11 @@
             </tr>
         </tfoot>
     </table>
+    {% if order_type == "history" %}
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="output/" class="btn btn-mint btn-rounded btn-labeled fa fa-arrow-down" id="to-excel">导&nbsp;出&nbsp;Excel</a>
+        </div>
+    </div>
+    {% endif %}
 </div>

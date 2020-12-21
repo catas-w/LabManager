@@ -14,6 +14,8 @@
             <li class="active">我的订单</li>
         {% elif order_type == "unchecked" %}
             <li class="active">订单审核</li>
+        {% elif order_type == "history" %}
+            <li class="active">历史订单</li>
         {% endif %}
     </ol>
     <div id="page-content">
@@ -23,12 +25,15 @@
                 <h3 class="panel-title">我的订单</h3>
             {% elif order_type == "unchecked" %}
                 <h3 class="panel-title">订单审核</h3>
+            {% elif order_type == "history" %}
+                <h3 class="panel-title">历史订单</h3>
             {% endif %}
             </div>
             
             {% if order_type == "personal" %}
                 {% include "web/my_orders_list.html" %}
-            {% elif order_type == "unchecked" %}
+            
+            {% else %}
                 {% include "web/unchecked_list.html" %}
             {% endif %}
         </div>  
@@ -42,6 +47,10 @@
 <style>
     .order-list tbody a:hover{
         color: rgb(13, 152, 207)
+    }
+    #to-excel {
+        position: relative;
+        bottom: 14px;
     }
 </style>
 {% endblock %}

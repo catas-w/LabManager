@@ -41,7 +41,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = models.UserProfile
-        fields = ('email', 'password', 'name', 'user_type', 'is_active', 'is_admin')
+        fields = ('email', 'password', 'name', 'user_type', 'is_active', 'is_admin', "user_permissions")
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -59,11 +59,12 @@ class UserAdmin(BaseUserAdmin):
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     list_display = ('email', 'name', 'is_admin')
-    list_filter = ('is_admin',)
+    list_filter = ('is_admin', )
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('name', 'user_type')}),
-        ('Permissions', {'fields': ('is_admin',)}),
+        ('Permissions', {'fields': ('is_admin', 'is_active')}),
+        ('Permissions', {'fields': ('user_permissions',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -75,7 +76,7 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ('email', 'name')
     ordering = ('email','name')
-    filter_horizontal = ()
+    filter_horizontal = ("user_permissions",)
 
 # Now register the new UserAdmin...
 admin.site.register(models.UserProfile, UserAdmin)
@@ -85,7 +86,8 @@ admin.site.unregister(Group)
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "order_type", "status", "user", "create_date")
+    list_display = ("id", "order_type", "status", "user", "create_date", "checked_date")
+    list_filter = ("status", "user")
 
 class GoodsDetailAdmin(admin.ModelAdmin):
     list_display = ("name", "brand")

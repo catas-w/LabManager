@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2020-12-18 19:08:19
+ * @LastEditTime: 2020-12-21 18:10:08
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -25,14 +25,18 @@
         BindCalculatePrice();
         var flag = false;
         
-        BindOrderSubmit();
-        BindSaveOrder();
-        BindCreateGoods(); 
-        BindDeleteOrder();
+        // 绑定点击函数
+        BindClickButton("#order-submit", BindOrderSubmit);
+        BindClickButton("#add-goods", BindCreateGoods);
+        BindClickButton("#order-save", BindSaveOrder);
+        BindClickButton("#order-delete", BindDeleteOrder);
+        BindClickButton("#order-reject", BindReject);
+        BindClickButton("#order-pass", BindPass);
+        BindClickButton("#user-save", BindUserEdit);
+        
     }) ;
 
-    function BindCreateGoods() {
-        $('#add-goods').on('click', function(){
+    function BindCreateGoods(e) {
             var dialog = bootbox.dialog({
                 title: "新建商品",
                 onEscape: true,
@@ -133,45 +137,33 @@
             dialog.init(function() {
                 //console.log("AAAAA");
             });
-            
-            $(".demo-modal-radio").niftyCheck();
-        });
-
     }
 
-    function BindDeleteOrder() {
-        $("#order-delete").click(function(e) {
-            e.preventDefault();
-            // 禁用点击事件
-            $("#order-delete").attr("disabled",true);
+    function BindDeleteOrder(e) {
+        e.preventDefault();
+        
+        var dialog = bootbox.dialog({
+            title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;警告</label>',
+            onEscape: true,
+            message: "<label class='text-sm'>确认删除? 此操作不可撤销</label>",
             
-            var dialog = bootbox.dialog({
-                title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;警告</label>',
-                onEscape: true,
-                message: "<label class='text-sm'>确认删除? 此操作不可撤销</label>",
-               
-                buttons: {
-                    default: {
-                        label: "Cancel",
-                        className: "btn-default",
-                    },
-                    danger: {
-                        label: "确认",
-                        className: "btn-danger",
-                        callback: function() {
-                            submitOrder("delete");
-                        },
+            buttons: {
+                default: {
+                    label: "Cancel",
+                    className: "btn-default",
+                },
+                danger: {
+                    label: "确认",
+                    className: "btn-danger",
+                    callback: function() {
+                        submitOrder("delete");
                     },
                 },
-                // animateIn: 'bounceIn',
-                // animateOut : 'bounceOut',
-            });
+            },
+            // animateIn: 'bounceIn',
+            // animateOut : 'bounceOut',
+        });
 
-            // 1秒后启用点击事件
-            setTimeout(function(){
-                $("#order-delete").removeAttr("disabled");
-            },1000);
-        })
     }
 
     function BindCalculatePrice() {
@@ -184,87 +176,207 @@
         })
     }
 
-    function BindOrderSubmit() {
-        $("#order-submit").click(function(e) {
-            e.preventDefault();
-            // 禁用点击事件
-            $("#order-submit").attr("disabled",true);
-
-            // 提交业务
-            submitOrder("submit");
+    function BindOrderSubmit(e) {
+        // 提交业务
+        e.preventDefault();
+        var dialog = bootbox.dialog({
+            title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;Alert</label>',
+            onEscape: true,
+            message: "<label class='text-sm'>确认要提交吗?</label>",
             
-            // 1秒后启用点击事件
-            setTimeout(function(){
-                $("#order-submitt").removeAttr("disabled");
-            },1000);
-
-        })
+            buttons: {
+                default: {
+                    label: "Cancel",
+                    className: "btn-default",
+                },
+                danger: {
+                    label: "确认",
+                    className: "btn-danger",
+                    callback: function() {
+                        submitOrder("submit"); 
+                    },
+                },
+            },
+        });          
     }
 
-    function BindSaveOrder() {
-        $("#order-save").click(function(e) {
-            e.preventDefault();
-            // 禁用点击事件
-            $("#order-save").attr("disabled",true);
-            
-            submitOrder("save");
-
-            // 1秒后启用点击事件
-            setTimeout(function(){
-                $("#order-save").removeAttr("disabled");
-            },1000);
-        }) 
+    function BindSaveOrder(e) {
+        e.preventDefault();            
+        submitOrder("save");
     }
 
-    function submitOrder(type) {
+    function submitOrder(type, jump_url) {
         var data = getOrderInfo();
-            data.csrfmiddlewaretoken = csrf_token;
-            data.type = type;
-            // console.log(data);
-            $.ajax({
-                url: "",
-                type: "post",
-                dataType: "JSON",
-                data: data,
-                success: function(res) {
-                    if(res.status=="success") {
-                        $.niftyNoty({
-                            type: 'success',
-                            icon : 'fa fa-check',
-                            message : "Success " +  ".<br> " + type + "成功 <strong>" + "</strong>",
-                            container : 'floating',
-                            timer : 3000
-                        });
-                        setTimeout(function() {window.location.pathname = "/order/myorder/"}, 750);
+        data.csrfmiddlewaretoken = csrf_token;
+        data.type = type;
+        // console.log(data);
+        // return;
+        $.ajax({
+            url: "",
+            type: "post",
+            dataType: "JSON",
+            data: data,
+            // data: JSON.stringify(data),
+            success: function(res) {
+                if(res.status=="success") {
+                    $.niftyNoty({
+                        type: 'success',
+                        icon : 'fa fa-check',
+                        message : "Success " +  ".<br> " + type + "成功 <strong>" + "</strong>",
+                        container : 'floating',
+                        timer : 3000
+                    });
+                    // 跳转前一界面
+                    if (jump_url)
+                        setTimeout(function() {window.location.pathname = jump_url}, 750);
+                    else {
+                        var next_path = window.location.pathname.split("/").slice(0, -2).join("/");
+                        setTimeout(function() {window.location.pathname = next_path}, 750);
+                    }
+                    // setTimeout(function() {window.location.pathname = "/order/myorder/"}, 750);
 
-                    }else if(res.status=="failed") {
-                        $("span.help-block").addClass('hide');
-                        var res_keys = Object.keys(res.errors);
-                        for (i in res_keys) {
-                            $(`span.${res_keys[i]}`).removeClass('hide');
-                            $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
-                        }
+                }else if(res.status=="failed") {
+                    $("span.help-block").addClass('hide');
+                    var res_keys = Object.keys(res.errors);
+                    for (i in res_keys) {
+                        $(`span.${res_keys[i]}`).removeClass('hide');
+                        $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
                     }
                 }
-            });
+            },
+
+            error: function() {
+                $.niftyNoty({
+                    type: 'danger',
+                    icon : 'fa fa-check',
+                    message : "请求失败 " +  ".<br> " + " <strong>" + "</strong>",
+                    container : 'floating',
+                    timer : 3000
+                });
+            }
+        });
     }
 
     function getOrderInfo() {
-        var detail = $("#chosen-select").val();
-        var company = $("input[name='company']").val();
-        var unit_price = $("input[name='unit_price']").val();
-        var count = $("input[name='count']").val();
-        var total_price = $("input[name='total_price']").val();
-        var memo = $("textarea[name='memo']").val();
+        // var detail = $("#chosen-select").val();
+        // var company = $("input[name='company']").val();
+        // var unit_price = $("input[name='unit_price']").val();
+        // var count = $("input[name='count']").val();
+        // var total_price = $("input[name='total_price']").val();
+        // var memo = $("textarea[name='memo']").val();
+        // var review = $("input[name='review']").val();
 
-        var data = {
-            detail: detail,
-            company: company,
-            unit_price: unit_price,
-            count: count,
-            total_price: total_price,
-            memo : memo
+        // var data = {
+        //     detail: detail,
+        //     company: company,
+        //     unit_price: unit_price,
+        //     count: count,
+        //     total_price: total_price,
+        //     memo : memo,
+        //     review: review,
+        // }
+        var data = {};
+        var form_items = $(".form-control");
+        for (var i =0; i<form_items.length; i++) {
+            data[$(form_items[i]).attr('name')] = $(form_items[i]).val();
         }
+        console.log(data);
         return data;
+    }
+    
+    function BindClickButton(item, func) {
+        // 绑定点击事件
+        $(item).click(function (e) {
+            $(item).attr("disabled", true);
+            // console.log("run function...")
+            // 执行绑定函数
+            func(e);
+            
+            // 1秒后启用点击事件
+            setTimeout(function(){
+                $(item).removeAttr("disabled");
+            },1000);
+        });        
+    }
+
+    function BindReject(e) {
+        // 驳回订单
+        e.preventDefault();
+        var dialog = bootbox.dialog({
+            title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;Alert</label>',
+            onEscape: true,
+            message: 
+                    "<label class='text-sm '>&nbsp;&nbsp;确认驳回此订单?</label>" +
+                     '<div class="form-group">' +
+                     '<label class="col-sm-2 control-label">原因(选填)</label>' +
+                     '<div class="col-sm-10">' +
+                         '<input type="text" name="review" placeholder="" class="form-control">'+
+                        //  '<textarea name="review" placeholder="原因(选填)" cols="40" rows="2" style="width:100%;border-color: #acacac;" class="vLargeTextField"></textarea>'+
+                     '</div>' +
+                 '</div>',
+            
+            buttons: {
+                default: {
+                    label: "取消",
+                    className: "btn-default",
+                },
+                danger: {
+                    label: "确认",
+                    className: "btn-danger",
+                    callback: function() {
+                        submitOrder("reject");
+                    },
+                },
+            },
+        });
+    }
+
+    function BindPass(e) {
+        // 通过订单
+        e.preventDefault();
+        var dialog = bootbox.dialog({
+            title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;Alert</label>',
+            onEscape: true,
+            message: "<label class='text-sm'>确认审核通过?</label>",
+            
+            buttons: {
+                default: {
+                    label: "取消",
+                    className: "btn-default",
+                },
+                danger: {
+                    label: "确认",
+                    className: "btn-success",
+                    callback: function() {
+                        submitOrder("pass");
+                    },
+                },
+            },
+        });
+    }
+
+
+    function BindUserEdit(e) {
+        // 修改个人信息--管理员
+        e.preventDefault();
+        var dialog = bootbox.dialog({
+            title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;Alert</label>',
+            onEscape: true,
+            message: "<label class='text-sm'>确认修改?</label>",
+            
+            buttons: {
+                default: {
+                    label: "取消",
+                    className: "btn-default",
+                },
+                danger: {
+                    label: "确认",
+                    className: "btn-success",
+                    callback: function() {
+                        submitOrder("edit_user", "/userinfo");
+                    },
+                },
+            },
+        });
     }
     
