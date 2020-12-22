@@ -115,7 +115,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
             ("web__check_orders", "审核订单"),
             ("web__edit_history_orders", "修改历史订单"),
             ("web__edit_user_info", "修改用户信息"),
-            ("web__watch_unchecked_order", "查看未审核订单"),
+            # ("web__watch_unchecked_order", "查看未审核订单"),
         )
     
 

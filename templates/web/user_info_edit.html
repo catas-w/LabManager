@@ -100,6 +100,7 @@
                     </div>
                 </div>
                 <!-- buttons -->
+                {% if has_edit_perm %}
                 <div class="row">
                     <div class="col-sm-2 col-sm-offset-4">
                         <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
@@ -108,13 +109,13 @@
                         <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save fa-lg" id="user-save">保&nbsp;&nbsp;&nbsp;存</button>
                     </div>
                 </div>
+                {% endif %}
                 
             </div>
             
         </form>
     </div>
 </div>
-
 {% endblock %}
 
 
@@ -156,14 +157,18 @@
 </script>
 <script src="/static/js/order_base.js"></script>
 <script>
+    var has_edit_perm = "{{ has_edit_perm }}"=="True"? true:false;
     $(function() {
 
         // new Switchery(document.getElementById('switch-admin'));
         // new Switchery(document.getElementById('switch-active'));
+        // var switchery = new Switchery(document.getElementById('switch-admin'), { disabled: true });
+        if (!has_edit_perm)
+            $(".form-control").attr("disabled", true);
 
         var SwitchAdmin = document.getElementById('switch-admin');
         var SwitchAdminInput =  document.getElementById("is_admin");
-        new Switchery(SwitchAdmin)
+        var Switcher_admin = new Switchery(SwitchAdmin, {disabled: !has_edit_perm})
             $(SwitchAdminInput).val(SwitchAdmin.checked);
             SwitchAdmin.onchange = function() {
                 $(SwitchAdminInput).val(SwitchAdmin.checked);
@@ -172,7 +177,7 @@
         
         var SwitchActive = document.getElementById('switch-active');
         var SwitchActiveInput = document.getElementById('is_active');
-        new Switchery(SwitchActive)
+        var Switcher_active = new Switchery(SwitchActive, {disabled: !has_edit_perm})
             $(SwitchActiveInput).val(SwitchActive.checked);
             SwitchActive.onchange = function() {
                 $(SwitchActiveInput).val(SwitchActive.checked);

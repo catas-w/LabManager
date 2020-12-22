@@ -45,7 +45,7 @@
                     
                         {% include "web/order_readonly.html" %}
                         <!-- buttons -->
-                        {% if request.user.is_admin %}
+                        {% if has_check_perm %}
                         <div class="row">
                             <div class="col-sm-4 col-sm-offset-3">
                                 <button class="btn btn-danger btn-rounded  btn-labeled fa fa-times fa-lg" id="order-reject">驳&nbsp;&nbsp;&nbsp;回</button>

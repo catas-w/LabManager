@@ -70,50 +70,18 @@
 						<li class="dropdown">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle" aria-expanded="true">
                                 <i class="fa fa-bell fa-lg"></i>
-                                <!-- <span class="badge badge-header badge-danger">9</span> -->
+                                <span class="badge badge-header badge-danger" id="notice-num"></span>
                             </a>
 
                             <!--Notification dropdown menu-->
                             <div class="dropdown-menu dropdown-menu-md">
                                 <div class="pad-all bord-btm">
-                                    <p class="text-lg text-muted text-semibold mar-no">You have 0 notifications.</p>
+                                    <p class="text-lg text-muted text-semibold mar-no" id="notice-brief"></p>
                                 </div>
                                 <div class="nano scrollable has-scrollbar" style="height: 265px;">
                                     <div class="nano-content" tabindex="0" style="right: -17px;">
                                         <ul class="head-list">
-
-                                            <!-- Dropdown list-->
-                                            <!-- <li>
-                                                <a href="#">
-                                                    <div class="clearfix">
-                                                        <p class="pull-left">Database Repair</p>
-                                                        <p class="pull-right">70%</p>
-                                                    </div>
-                                                    <div class="progress progress-sm">
-                                                        <div style="width: 70%;" class="progress-bar">
-                                                            <span class="sr-only">70% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li> -->
-
-                                            <!-- Dropdown list-->
-                                            <!-- <li>
-                                                <a href="#">
-                                                    <div class="clearfix">
-                                                        <p class="pull-left">Upgrade Progress</p>
-                                                        <p class="pull-right">10%</p>
-                                                    </div>
-                                                    <div class="progress progress-sm">
-                                                        <div style="width: 10%;" class="progress-bar progress-bar-warning">
-                                                            <span class="sr-only">10% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-									 -->
-									        <!-- Dropdown list-->
-									        <li>
+									        <!-- <li>
 									            <a href="#" class="media">
 									                <div class="media-left">
 									                    <img src="/static/img/av4.png" alt="Profile Picture" class="img-circle img-sm">
@@ -123,54 +91,10 @@
 									                    <small class="text-muted">30 minutes ago</small>
 									                </div>
 									            </a>
-									        </li>
+									        </li> -->
 									
 									        <!-- Dropdown list-->
-									        <li>
-									            <a href="#" class="media">
-									                <div class="media-left">
-									                    <img src="/static/img/av3.png" alt="Profile Picture" class="img-circle img-sm">
-									                </div>
-									                <div class="media-body">
-									                    <div class="text-nowrap">Jackson sent you a message</div>
-									                    <small class="text-muted">40 minutes ago</small>
-									                </div>
-									            </a>
-									        </li>
-									
-									        <!-- Dropdown list-->
-									        <li>
-									            <a href="#" class="media">
-									        <span class="badge badge-success pull-right">90%</span>
-									                <div class="media-left">
-									                    <span class="icon-wrap icon-circle bg-danger">
-									                        <i class="fa fa-hdd-o fa-lg"></i>
-									                    </span>
-									                </div>
-									                <div class="media-body">
-									                    <div class="text-nowrap">HDD is full</div>
-									                    <small class="text-muted">50 minutes ago</small>
-									                </div>
-									            </a>
-									        </li>
-									
-									        <!-- Dropdown list-->
-									        <li>
-									            <a href="#" class="media">
-									                <div class="media-left">
-									                    <span class="icon-wrap bg-info">
-									                        <i class="fa fa-file-word-o fa-lg"></i>
-									                    </span>
-									                </div>
-									                <div class="media-body">
-									                    <div class="text-nowrap">Write a news article</div>
-									                    <small class="text-muted">Last Update 8 hours ago</small>
-									                </div>
-									            </a>
-									        </li>
-									
-									        <!-- Dropdown list-->
-									        <li>
+									        <!-- <li>
 									            <a href="#" class="media">
 									        <span class="label label-danger pull-right">New</span>
 									                <div class="media-left">
@@ -183,10 +107,10 @@
 									                    <small class="text-muted">Last Update 8 hours ago</small>
 									                </div>
 									            </a>
-									        </li>
+									        </li> -->
 									
 									        <!-- Dropdown list-->
-									        <li>
+									        <!-- <li>
 									            <a href="#" class="media">
 									                <div class="media-left">
 									                    <span class="icon-wrap bg-success">
@@ -198,20 +122,8 @@
 									                    <small class="text-muted">4 minutes ago</small>
 									                </div>
 									            </a>
-									        </li>
+									        </li> -->
 									
-									        <!-- Dropdown list-->
-									        <li>
-									            <a href="#" class="media">
-									                <div class="media-left">
-									                    <img src="/static/img/av3.png" alt="Profile Picture" class="img-circle img-sm">
-									                </div>
-									                <div class="media-body">
-									                    <div class="text-nowrap">Jackson sent you a message</div>
-									                    <small class="text-muted">Yesterday</small>
-									                </div>
-									            </a>
-									        </li>
                                         </ul>
                                     </div>
                                 <div class="nano-pane" style="display: block;"><div class="nano-slider" style="height: 121px; transform: translate(0px, 0px);"></div></div></div>
@@ -428,7 +340,7 @@
             <!-- Remove the class name "show-fixed" and "hide-fixed" to make the content always appears. -->
             <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-            <p class="pad-lft">&#0169; 2020 Zou Lab </p>
+            <p class="pad-lft">&#0169; 2020 Zou-Lab </p>
 
 
 
@@ -454,17 +366,69 @@
     <script src="/static/js/nifty.min.js"></script>
     <script>
         $(function() {
+            
+            updateTag();
+            getNotice();
+        }) 
+
+        function updateTag() {
             var cur_path = window.location.pathname.split('/')[1];
             $('#mainnav-menu li').removeClass('active-link');
             $(`.${cur_path}`).addClass('active-link');
-            
-        }) 
+        }
 
         //获取url中的参数
         function getUrlParam(name) {
             var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
             var r = window.location.search.substr(1).match(reg);  //匹配目标参数
             if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+
+        function getNotice() {
+            // 获取通知
+            $.ajax({
+                url: "/get_notice/",
+                type: "post",
+                dataType: "JSON",
+                data: {
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                },
+                success: function(res) {
+                    console.log(res);
+                    if(res.status == "success") {
+                        if (res.has_check_orders_perm) {
+                            addNoticeList(res);
+                        }
+                    }
+                },
+            });
+            
+        }
+
+        function addNoticeList(res) {
+            var jump_url = "/order/check/";
+            var notice_list = $("ul.head-list");
+            var msg_type = "Unchecked orders";
+            var msg_detail = `您有 ${res.unchecked_num} 条订单待审核.`;
+
+            $("#notice-num").html(res.unchecked_num);
+            $("#notice-brief").html(`You have ${res.unchecked_num} notifications.`);
+            var notice_item = 
+                '<li>' +
+                    '<a href='+ jump_url + ' class="media">' +
+                        '<span class="label label-danger pull-right">New</span>' +
+                        '<div class="media-left">' +
+                            '<span class="icon-wrap bg-purple">' +
+                                '<i class="fa fa-comment fa-lg"></i>' +
+                            '</span>' +
+                        '</div>' + 
+                        '<div class="media-body">' +
+                            '<div class="text-nowrap">' + msg_type +'</div>' +
+                            '<small class="text-muted">' + msg_detail + '</small>' +
+                        '</div>' +
+                    '</a>' +
+                '</li>';
+            notice_list.append(notice_item);
         }
     </script>
 

@@ -38,4 +38,6 @@ urlpatterns = [
     path("userinfo/", views.user_info),
     path("userinfo/<int:user_id>", views.user_edit, name="user_edit"),
 
+    path("get_notice/", views.get_notice),
+
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

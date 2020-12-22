@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2020-12-21 17:46:45
+LastEditTime: 2020-12-22 10:08:38
 Author: catas
 LastEditors: catas
 Description: 
@@ -59,7 +59,7 @@ def acc_register(request):
             # print(form_obj.cleaned_data)
             user = authenticate(request, username=form_obj.cleaned_data['email'], password=form_obj.cleaned_data['password1'])
             login(request, user)
-            return redirect('/index/?from=sign_success')
+            return redirect('/')
         else:
             errors = form_obj.errors.as_json()
             
@@ -94,8 +94,8 @@ def process_order(request, data, order_obj=None):
     status_dict = {
         "save": 0,
         "submit": 1,
-        # "reject": 2,
-        # "pass": 3,
+        "reject": 2,
+        "pass": 3,
     }
     append_dict = {
         "user": request.user.id,
@@ -108,6 +108,7 @@ def process_order(request, data, order_obj=None):
         form = forms.OrderForm(data)
 
     if form.is_valid():
+        print(form.cleaned_data)
         form.save()
         return HttpResponse(json.dumps({"status": "success",}))
     else:
@@ -120,6 +121,9 @@ def create_order(request):
     if request.method == "POST":
         # 提交新订单
         data = request.POST.copy()
+        if data.get("type") != "save" and data.get("type") != "submit":
+            # 不是提交或者保存
+            return HttpResponse(status=403)
         return process_order(request, data)
 
     goods = models.GoodsDetail.objects.all()
@@ -144,10 +148,14 @@ def add_goods(request):
 @login_required
 def order_detail(request, order_id):
     order_obj = models.Order.objects.filter(id=order_id)
-    if order_obj and (request.user.is_admin or (order_obj[0] in models.Order.objects.filter(user_id=request.user.id))):
+    if order_obj and (order_obj[0] in models.Order.objects.filter(user_id=request.user.id)):
         # 验证权限
         if request.method == "POST":
             # 修改数据
+            if order_obj[0].status == 1 or order_obj[0].status == 3:
+                # status 是已提交或已完成
+                return HttpResponse(status=403)
+                
             data = request.POST.copy()
             if data.get("type") == "delete":
                 # 状态为删除订单
@@ -220,33 +228,67 @@ def check_order(request, order_id):
         order_obj.save()
         
         return HttpResponse(json.dumps({"status": "success"}))
-        # return render(request, "web/order_check.html", {"order_obj": order_obj, "message": msg})
-
-    return render(request, "web/order_check.html", {"order_obj": order_obj, })
+    
+    has_check_perm = request.user.has_perm("web__check_orders")
+    return render(request, "web/order_check.html", {"order_obj": order_obj, 
+                                                    "has_check_perm": has_check_perm,
+                                                    })
         
     
 
 @login_required
 def history_orders(request):
     '''
-    description: 历史订单
+    description: 历史订单列表
     param {*}
     return {*}
     '''    
     order_type = "history"
     order_objs = models.Order.objects.filter(status=3).order_by("create_date").reverse()
     
-    return render(request, "web/orders.html", {"order_type": order_type, "order_objs": order_objs})
+    return render(request, "web/orders.html", {"order_type": order_type,
+                                             "order_objs": order_objs,
+                                             })
 
 
 @login_required
-def history_order_detail(request, order_id):
+def history_order_detail(request, order_id):    
+    '''
+    description: 历史订单详情
+    param {*}
+    return {*}
+    '''    
     order_obj = models.Order.objects.get(id=order_id)
-    
-    return render(request, "web/order_edit.html", {"order_obj": order_obj,
-                                                         "editable": False,
-                                                         })
+    if request.method == 'POST':
+        # 提交修改
+        data = request.POST.copy()
+        data["type"] = "pass" # 不允许修改状态
+        print(data)
+        if data.get("type") == "delete":
+            # 状态为删除订单
+            order_obj[0].delete()
+            return HttpResponse(json.dumps({"status": "success", }))
+        # return HttpResponse(json.dumps({"status": "failed", }))
+        return process_order(request, data, order_obj)
 
+    page_type = "history"
+    has_edit_perm = request.user.has_perm("web__edit_history_orders")
+    show_edit = True
+    editable = False
+    goods = None
+    if request.GET.get("type", "") and has_edit_perm:
+        # 编辑模式
+        show_edit = False
+        editable = True
+        goods = models.GoodsDetail.objects.all()
+        
+    return render(request, "web/order_edit.html", {"order_obj": order_obj,
+                                                         "editable": editable,
+                                                         "page_type": page_type,
+                                                         "has_edit_perm": has_edit_perm,
+                                                         "show_edit": show_edit,
+                                                         "goods": goods,
+                                                         })
 
 
 @login_required
@@ -326,9 +368,35 @@ def user_edit(request, user_id):
     user_perms = user_obj.user_permissions.all().values_list("id", "name")
     # 所有自定义权限
     all_perms = user_obj.user_permissions.model.objects.filter(codename__contains="web__").values_list("id", "name")
+    has_edit_perm = request.user.has_perm("web__edit_user_info")
     return render(request, "web/user_info_edit.html", {"user": user_obj,
                                                         "user_types": user_obj.user_type_choices,
                                                         "user_perms": user_perms,
                                                         "all_perms": all_perms,
+                                                        "has_edit_perm": has_edit_perm,
                                                         })
+
+
+@login_required
+def get_notice(request):
+    '''
+    description: 首页通知
+    param {*}
+    return {*}
+    '''
+    has_check_orders_perm = request.user.has_perm("web__check_orders")
+    if has_check_orders_perm:
+        unchecked_order_objs = models.Order.objects.filter(status=1)
+        unchecked_num = len(unchecked_order_objs)
+        return HttpResponse(json.dumps({"status": "success", 
+                                        "has_check_orders_perm": has_check_orders_perm,
+                                        "unchecked_num": unchecked_num,
+                                        }))
+    else:
+        return HttpResponse(json.dumps({"status": "success", 
+                                        "has_check_orders_perm": has_check_orders_perm,
+                                        }))
+
+
+
 

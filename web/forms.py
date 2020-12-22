@@ -2,7 +2,6 @@ from django import forms
 from web import models
 from django.core.exceptions import NON_FIELD_ERRORS
 
-
 class GoodsDetailForm(forms.ModelForm):
 
     class Meta:
@@ -24,6 +23,7 @@ class GoodsDetailForm(forms.ModelForm):
 
 
 class OrderForm(forms.ModelForm):
+    bill_received = forms.BooleanField(label="收到底单", required=False)
 
     class Meta:
         model = models.Order
@@ -44,6 +44,26 @@ class OrderForm(forms.ModelForm):
             }
         }
 
+    def clean_user(self):
+        value = self.cleaned_data.get("user")
+        print(value)
+        print(self.instance.id)
+        print(type(self.instance))
+        if self.instance.id:
+            return self.instance.user
+        return value
+    
+    # def clean_bill_received(self):
+    #     return self.cleaned_data.get("bill_received", False)
+
+    def save(self, commit=True):
+        # Save the provided password in hashed format
+        order_obj = super().save(commit=False)
+        if self.cleaned_data.get("bill_received", ""):
+            order_obj.bill_received = self.cleaned_data["bill_received"]
+        if commit:
+            order_obj.save()
+        return order_obj
 
 class UserEditForm(forms.ModelForm):
     """

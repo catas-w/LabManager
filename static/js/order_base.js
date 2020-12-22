@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2020-12-21 18:10:08
+ * @LastEditTime: 2020-12-21 23:30:50
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -34,6 +34,8 @@
         BindClickButton("#order-pass", BindPass);
         BindClickButton("#user-save", BindUserEdit);
         
+        BindClickButton("#hist-order-submit", BindOrderSubmit, jump_url="/order/history/");
+        BindClickButton("#hist-order-delete", BindOrderSubmit, jump_url="/order/history/");
     }) ;
 
     function BindCreateGoods(e) {
@@ -139,7 +141,7 @@
             });
     }
 
-    function BindDeleteOrder(e) {
+    function BindDeleteOrder(e, jump_url) {
         e.preventDefault();
         
         var dialog = bootbox.dialog({
@@ -156,7 +158,7 @@
                     label: "确认",
                     className: "btn-danger",
                     callback: function() {
-                        submitOrder("delete");
+                        submitOrder("delete", jump_url);
                     },
                 },
             },
@@ -176,7 +178,7 @@
         })
     }
 
-    function BindOrderSubmit(e) {
+    function BindOrderSubmit(e, jump_url) {
         // 提交业务
         e.preventDefault();
         var dialog = bootbox.dialog({
@@ -193,7 +195,7 @@
                     label: "确认",
                     className: "btn-danger",
                     callback: function() {
-                        submitOrder("submit"); 
+                        submitOrder("submit", jump_url); 
                     },
                 },
             },
@@ -236,11 +238,21 @@
                     // setTimeout(function() {window.location.pathname = "/order/myorder/"}, 750);
 
                 }else if(res.status=="failed") {
+                    $.niftyNoty({
+                        type: 'danger',
+                        icon : 'fa fa-check',
+                        message : "数据错误 " +  ".<br> " + " <strong>" + "</strong>",
+                        container : 'floating',
+                        timer : 7000
+                    });
+                    
                     $("span.help-block").addClass('hide');
+                    if (res.errors) {
                     var res_keys = Object.keys(res.errors);
-                    for (i in res_keys) {
-                        $(`span.${res_keys[i]}`).removeClass('hide');
-                        $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
+                        for (i in res_keys) {
+                            $(`span.${res_keys[i]}`).removeClass('hide');
+                            $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
+                        }
                     }
                 }
             },
@@ -284,13 +296,14 @@
         return data;
     }
     
-    function BindClickButton(item, func) {
+    function BindClickButton(item, func, jump_url) {
         // 绑定点击事件
         $(item).click(function (e) {
             $(item).attr("disabled", true);
             // console.log("run function...")
             // 执行绑定函数
-            func(e);
+            // e.preventDefault
+            func(e, jump_url);
             
             // 1秒后启用点击事件
             setTimeout(function(){

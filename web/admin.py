@@ -4,12 +4,14 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from web import models
+from LabManager import settings
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    check_signal = forms.CharField(label='口令', widget=forms.PasswordInput)
 
     class Meta:
         model = models.UserProfile
@@ -22,6 +24,12 @@ class UserCreationForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError("两次输入的密码不同")
         return password2
+
+    def clean_check_signal(self):
+        check_signal = self.cleaned_data.get("check_signal").lower()
+        if check_signal != settings.check_signal:
+            raise forms.ValidationError("口令不正确")
+        return check_signal
 
     def save(self, commit=True):
         # Save the provided password in hashed format

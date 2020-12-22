@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link rel="icon" href="/static/img/main_logo.png" type="image/x-icon">
+    <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
     <meta charset="utf-8">
 	<title>Login</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
@@ -84,6 +84,15 @@
                                       {% endif %}
                                       <i class="fa fa-check-square-o"></i>
                                       <input type="password" class="form-control" name="password2"> 
+                                    </div>
+
+                                    <div class="form-group"> 
+                                      <label for="exampleInputPassword2">口&nbsp;令</label>
+                                      {% if errors.check_signal %}
+                                        <span class="error-msg name">{{ errors.check_signal.0.message }}</span>
+                                      {% endif %}
+                                      <i class="fa fa-check-square-o"></i>
+                                      <input type="password" class="form-control" name="check_signal"> 
                                     </div>
                                     
                                     <div>

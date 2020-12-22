@@ -10,13 +10,23 @@
     <ol class="breadcrumb">
         <li><a href="/">主页</a></li>
         <li><a href="#">订单</a></li>
-        <li><a href="/order/myorder/">我的订单</a></li>
-        <li class="active">订单详情</li>
+        {% if page_type == "history" %}
+            <li><a href="/order/history/">历史订单</a></li>
+            <li class="active">订单详情</li>
+        {% else %}
+            <li><a href="/order/myorder/">我的订单</a></li>
+            <li class="active">订单详情</li>
+        {% endif %}
     </ol>
     <div id="page-content">
         <div class="panel panel-bordered-info">
             <div class="panel-heading">
-                <h3 class="panel-title">订单详情</h3>
+                <h3 class="panel-title">订单详情
+                    {% if show_edit and has_edit_perm %}
+                    <i class="fa fa-md fa-pencil " id="hist-edit" aria-hidden="true" onclick="javascript:window.location.search = '?type=edit'">&nbsp;edit</i>
+                    {% endif %}
+                </h3>
+                
             </div>
             <div class="panel-body">
                 <form class="form-horizontal order-create">
@@ -25,7 +35,7 @@
                             <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">用&nbsp;户</label>
                             <div class="col-sm-4">
                                 <!-- <input type="text" name="company" class="form-control" value="{{ request.user.name }}" disabled> -->
-                                <label class="order-info text-semibold">{{ request.user.name }}</label>
+                                <label class="order-info text-semibold">{{ order_obj.user.name }}</label>
                             </div>
                         </div>
                         <div class="form-group">
@@ -99,7 +109,33 @@
                             </div>
                         </div>
 
+                        {%  if page_type == "history" %}
+                        <div class="form-group">
+                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">收到底单</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="bill_received" id="bill_received" class="form-control hide" value="{{ order_obj.bill_received }}">
+                                {% if order_obj.bill_received %}
+                                    <input id="switch-bill" name="bill_received" type="checkbox" class="" checked />
+                                {% else %}
+                                    <input id="switch-bill" name="bill_received" type="checkbox" class="" />
+                                {% endif %}
+                                <span class="help-block bill_received hide"><small>Here goes your name</small></span>
+                            </div>
+                        </div>
+                        {% endif %}
+
                         <!-- buttons -->
+                        {%  if page_type == "history" %}
+                        <div class="row">
+                            <div class="col-sm-2 col-sm-offset-3">
+                                <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="hist-order-delete">删&nbsp;&nbsp;除</button>
+                            </div>
+                            <div class="col-sm-4 col-sm-offset">
+                                <!-- <button class="btn btn-default btn-rounded  btn-labeled fa fa-save fa-lg" id="order-save">保&nbsp;&nbsp;&nbsp;存</button> -->
+                                <button class="btn btn-primary btn-rounded  btn-labeled fa fa-check fa-lg" id="hist-order-submit">保&nbsp;&nbsp;&nbsp;存</button>
+                            </div>
+                        </div>
+                        {% else %}
                         <div class="row">
                             <div class="col-sm-2 col-sm-offset-3">
                                 <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button>
@@ -109,6 +145,9 @@
                                 <button class="btn btn-primary btn-rounded  btn-labeled fa fa-check fa-lg" id="order-submit">提&nbsp;&nbsp;&nbsp;交</button>
                             </div>
                         </div>
+                        {% endif %}
+
+
                         {% else %}
                             {% include "web/order_readonly.html" %}
                         {% endif %}
@@ -126,6 +165,7 @@
 
 
 {% block css %}
+<link href="/static/plugins/switchery/switchery.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/static/plugins/chosen/chosen.min.css">
 <style>
     .order-create .form-group {
@@ -165,14 +205,47 @@
         padding-top: 7px;
         padding-left: 2px;
     }
+    #hist-edit {
+        position: relative;
+        top: 17px;
+        right: 10px;
+        /* margin-right: 20px; */
+        float: right;
+        color: rgb(194, 156, 32);
+    }
+    i#hist-edit:hover {
+        opacity: 50%;
+        cursor: pointer;
+        
+    }
+    span.switchery {
+        position: relative;
+        top: 5px;
+    }
 </style>
 {% endblock %}
 
 {% block js %}
 <script src='/static/plugins/bootbox/bootbox.min.js'></script>
 <script src="/static/plugins/chosen/chosen.jquery.min.js"></script>
+<script src="/static/plugins/switchery/switchery.min.js"></script>
+
 <script>
     var csrf_token = "{{ csrf_token }}";
+    
 </script>
 <script src="/static/js/order_base.js"></script>
+<script>
+    $(function() {
+        var SwitchAdmin = document.getElementById('switch-bill');
+        var SwitchAdminInput =  document.getElementById("bill_received");
+        if (SwitchAdmin) {
+            var Switcher_admin = new Switchery(SwitchAdmin)
+                $(SwitchAdminInput).val(SwitchAdmin.checked);
+                SwitchAdmin.onchange = function() {
+                    $(SwitchAdminInput).val(SwitchAdmin.checked);
+            };
+        }
+    })
+</script>
 {% endblock %}

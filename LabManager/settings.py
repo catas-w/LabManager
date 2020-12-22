@@ -74,23 +74,23 @@ WSGI_APPLICATION = 'LabManager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',   # 数据库引擎
-#         'NAME': 'mysite',  # 数据库名，先前创建的
-#         'USER': 'root',     # 用户名，可以自己创建用户
-#         'PASSWORD': '****',  # 密码
-#         'HOST': '192.168.1.121',  # mysql服务所在的主机ip
-#         'PORT': '3306',         # mysql服务端口
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',   # 数据库引擎
+        'NAME': 'lab_test',  # 数据库名，先前创建的
+        'USER': 'catas',     # 用户名，可以自己创建用户
+        'PASSWORD': 'eminem',  # 密码
+        'HOST': 'localhost',  # mysql服务所在的主机ip
+        'PORT': '3306',         # mysql服务端口
+    }
+}
 
 
 # Password validation
@@ -141,3 +141,8 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(BASE_DIR, 'upload') # 注意此处不要写成列表或元组的形式
 # 配置 MEDIA_URL 作为公用 URL，指向上传文件的基本路径
 MEDIA_URL = '/media/'
+
+
+# 注册口令
+check_signal = 'zou85412805'
+
