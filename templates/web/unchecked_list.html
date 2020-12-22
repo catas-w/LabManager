@@ -1,0 +1,73 @@
+{% load tags %}
+
+<div class="panel-body">
+    
+    <div class="row">
+        <div class="col-sm-3 text-xs-center">
+            <div class="form-group">
+                <!-- <label class="control-label">筛选</label> -->
+                <select id="demo-foo-filter-status" onchange="javascript:location.href = '?scale=' + this.value;" class="form-control">
+                    <option value="">全部</option>
+                    <option value="1">最近1个月</option>
+                    <option value="6">最近6个月</option>
+                    <option value="12">最近1年</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3 col-sm-offset-6 text-xs-center text-right">
+            <div class="searchbox">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" placeholder="Search by 申请人 or 商品名">
+                    <span class="input-group-btn">
+                        <button class="text-muted" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="foo-filtering" class="table table-hover toggle-circle order-list" data-page-size="10">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th data-hide="phone, tablet">创建时间</th>
+                <th data-hide="phone, tablet">申请人</th>
+                <th data-hide="phone, tablet">商品</th>
+                <th data-hide="phone, tablet">单价</th>
+                <th data-hide="phone, tablet">数量</th>
+                <th data-hide="phone, tablet">总价</th>
+                <th data-hide="phone, tablet">审核状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order_objs %}
+            <tr class="footable-even" style="display: table-row;">
+                <td><a href="{{ item.id }}">{{ item.id }}</a></td>
+                {% get_create_date item %}
+                <td><a href="{{ item.id }}">{{ item.user.name }}</a></td>
+                <td><a href="{{ item.id }}">{{ item.detail }}</a></td>
+                <td><a href="{{ item.id }}">{{ item.unit_price }}</a></td>
+                <td><a href="{{ item.id }}">{{ item.count }}</a></td>
+                <td><a href="{{ item.id }}">{{ item.total_price }}</a></td>
+                {% get_order_status item %}
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                    <div class="text-right">
+                        <ul class="pagination"></ul>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    {% if order_type == "history" %}
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="output/" class="btn btn-mint btn-rounded btn-labeled fa fa-arrow-down" id="to-excel">导&nbsp;出&nbsp;Excel</a>
+        </div>
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from www.themeon.net/nifty/v2.3/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 01 Mar 2016 16:52:32 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Manager</title>
+
+    <!--Bootstrap Select [ OPTIONAL ]-->
+    <link href="/static/plugins/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
+    <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
+
+    <!--Demo script [ DEMONSTRATION ]-->
+    <!-- <link href="/static/css/demo/nifty-demo.min.css" rel="stylesheet"> -->
+
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/nifty.min.css" rel="stylesheet">
+
+    
+    <!--Font Awesome [ OPTIONAL ]-->
+    <link href="/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	{% block css %}
+	{% endblock %}
+
+</head>
+<body>
+	<div id="container" class="effect mainnav-lg">
+		
+        <!--NAVBAR-->
+        <!--===================================================-->
+        <header id="navbar">
+            <div id="navbar-container" class="boxed">
+
+                <!--Brand logo & name-->
+                <!--================================-->
+                <div class="navbar-header">
+                    <a href="#" class="navbar-brand">
+                        <img src="/static/img/logo.png" id="page-logo" alt="Logo" class="brand-icon" height="20px" width="20px" style="
+                        width: 25px;
+                        height: 26px;
+                        margin-left: 7px;
+                        margin-top: 7px;
+                    ">
+                        <div class="brand-title">
+                            <span class="brand-text">Zou Lab</span>
+                        </div>
+                    </a>
+                </div>
+                <!--================================-->
+                <!--End brand logo & name-->
+
+
+                <!--Navbar Dropdown-->
+                <!--================================-->
+                <div class="navbar-content clearfix">
+                    <ul class="nav navbar-top-links pull-left">
+
+                        <!--Navigation toogle button-->
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <li class="tgl-menu-btn">
+                            <a class="mainnav-toggle" href="#">
+                                <i class="fa fa-navicon fa-lg"></i>
+                            </a>
+						</li>
+						<!-- Notification -->
+						<li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle" aria-expanded="true">
+                                <i class="fa fa-bell fa-lg"></i>
+                                <span class="badge badge-header badge-danger" id="notice-num"></span>
+                            </a>
+
+                            <!--Notification dropdown menu-->
+                            <div class="dropdown-menu dropdown-menu-md">
+                                <div class="pad-all bord-btm">
+                                    <p class="text-lg text-muted text-semibold mar-no" id="notice-brief"></p>
+                                </div>
+                                <div class="nano scrollable has-scrollbar" style="height: 265px;">
+                                    <div class="nano-content" tabindex="0" style="right: -17px;">
+                                        <ul class="head-list">
+									        <!-- <li>
+									            <a href="#" class="media">
+									                <div class="media-left">
+									                    <img src="/static/img/av4.png" alt="Profile Picture" class="img-circle img-sm">
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">Lucy sent you a message</div>
+									                    <small class="text-muted">30 minutes ago</small>
+									                </div>
+									            </a>
+									        </li> -->
+									
+									        <!-- Dropdown list-->
+									        <!-- <li>
+									            <a href="#" class="media">
+									        <span class="label label-danger pull-right">New</span>
+									                <div class="media-left">
+									                    <span class="icon-wrap bg-purple">
+									                        <i class="fa fa-comment fa-lg"></i>
+									                    </span>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">Comment Sorting</div>
+									                    <small class="text-muted">Last Update 8 hours ago</small>
+									                </div>
+									            </a>
+									        </li> -->
+									
+									        <!-- Dropdown list-->
+									        <!-- <li>
+									            <a href="#" class="media">
+									                <div class="media-left">
+									                    <span class="icon-wrap bg-success">
+									                        <i class="fa fa-user fa-lg"></i>
+									                    </span>
+									                </div>
+									                <div class="media-body">
+									                    <div class="text-nowrap">New User Registered</div>
+									                    <small class="text-muted">4 minutes ago</small>
+									                </div>
+									            </a>
+									        </li> -->
+									
+                                        </ul>
+                                    </div>
+                                <div class="nano-pane" style="display: block;"><div class="nano-slider" style="height: 121px; transform: translate(0px, 0px);"></div></div></div>
+
+                                <!--Dropdown footer-->
+                                <div class="pad-all bord-top">
+                                    <a href="#" class="btn-link text-dark box-block">
+                                        <i class="fa fa-angle-right fa-lg pull-right"></i>Show All Notifications
+                                    </a>
+                                </div>
+							</div>
+							
+                        </li>
+
+                    </ul>
+                    <ul class="nav navbar-top-links pull-right">
+
+                        <li id="dropdown-user" class="dropdown" style="border: 0;">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
+                                <span class="pull-right">
+                                    <img class="img-circle img-user media-object" src="/static/img/av1.png" alt="Profile Picture">
+                                </span>
+                                <div class="username hidden-xs">{{ request.user.name }}</div>
+                            </a>
+
+
+                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-right panel-default">
+
+                                <ul class="head-list">
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-user fa-fw fa-lg"></i> 个人信息
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-key fa-fw fa-lg"></i> 修改密码
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <!-- <span class="label label-success pull-right">New</span> -->
+                                            <i class="fa fa-gear fa-fw fa-lg"></i> 设置
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-question-circle fa-fw fa-lg"></i> 帮助
+                                        </a>
+                                    </li>
+                                    <li>
+                                </ul>
+
+                                <!-- Dropdown footer -->
+                                <div class="pad-all text-right">
+                                    <a href="/logout" class="btn btn-primary">
+                                        <i class="fa fa-sign-out fa-fw"></i> 注销
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                      
+                    </ul>
+                </div>
+
+            </div>
+        </header>
+        <!--===================================================-->
+        <!--END NAVBAR-->
+
+		<div class="boxed">
+
+
+			{% block content %}
+			{% endblock %}
+
+			
+            <!--MAIN NAVIGATION-->
+            <!--===================================================-->
+            <nav id="mainnav-container" style="padding-top: 0px;">
+                <div id="mainnav" style="padding-top: 40px;">
+
+
+                    <!--Menu-->
+                    <!--================================-->
+                    <div id="mainnav-menu-wrap">
+                        <div class="nano">
+                            <div class="nano-content">
+                                <ul id="mainnav-menu" class="list-group">
+						
+						            <!--Category name-->
+						            <li class="list-header">Navigation</li>
+						
+						            <!--Menu list item-->
+						            <li class="home active-link">
+						                <a href="/home">
+						                    <i class="fa fa-home fa-lg"></i>
+						                    <span class="menu-title">
+												<strong>首页</strong>
+												<!-- <span class="label label-success pull-right">Top</span> -->
+											</span>
+						                </a>
+						            </li>
+						
+						            <!--Menu list item-->
+						            <li class="order">
+						                <a href="#">
+						                    <i class="fa fa-file-text-o fa-lg"></i>
+						                    <span class="menu-title">
+												<strong>订单</strong>
+											</span>
+											<i class="arrow"></i>
+                                        </a>
+                                        <!--Submenu-->
+						                <ul class="collapse">
+						                    <li class="order-sub myorder"><a href="/order/myorder">我的订单</a></li>
+						                    <li class="order-sub check"><a href="/order/check/">待审核</a></li>
+						                    <li class="order-sub history"><a href="/order/history/">历史订单</a></li>
+						                </ul>
+						            </li>
+						
+						            <!--Menu list item-->
+						            <li class="statisc">
+						                <a href="#">
+						                    <i class="fa fa-pie-chart fa-lg"></i>
+						                    <span class="menu-title">
+												<strong>统计</strong>
+											</span>
+                                        </a>
+									</li>
+
+									<li class="userinfo">
+						                <a href="/userinfo/">
+						                    <i class="fa fa-users fa-lg"></i>
+						                    <span class="menu-title">人员管理</span>
+						                </a>
+						            </li>
+									
+						
+						            <li class="list-divider"></li>
+						
+						            <!--Category name-->
+						            <li class="list-header">TOOLS</li>
+						
+									<!--Menu list item-->
+								
+						            <li class="document">
+						                <a href="#">
+						                    <i class="fa fa-calendar-check-o fa-lg"></i>
+						                    <span class="menu-title">文档</span>
+						                </a>
+                                    </li>
+                                    <li class="">
+						                <a href="#">
+						                    <i class="fa fa-calendar-check-o fa-lg"></i>
+						                    <span class="menu-title">其他</span>
+						                </a>
+                                    </li>
+                                    <li class="">
+						                <a href="#">
+						                    <i class="fa fa-calendar-check-o fa-lg"></i>
+						                    <span class="menu-title">其他</span>
+						                </a>
+						            </li>
+                            </div>
+                        </div>
+                    </div>
+                    <!--================================-->
+                    <!--End menu-->
+
+                </div>
+            </nav>
+
+		</div>
+
+		
+
+        <!-- FOOTER -->
+        <!--===================================================-->
+        <footer id="footer" class="hide-fixed">
+
+            <!-- Visible when footer positions are fixed -->
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            <div class="show-fixed pull-right">
+                <ul class="footer-list list-inline">
+                    <li>
+                        <p class="text-sm">SEO Proggres</p>
+                        <div class="progress progress-sm progress-light-base">
+                            <div style="width: 80%" class="progress-bar progress-bar-danger"></div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <p class="text-sm">Online Tutorial</p>
+                        <div class="progress progress-sm progress-light-base">
+                            <div style="width: 80%" class="progress-bar progress-bar-primary"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="btn btn-sm btn-dark btn-active-success">Checkout</button>
+                    </li>
+                </ul>
+            </div>
+
+
+
+            <!-- Visible when footer positions are static -->
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            <div class="hide-fixed pull-right pad-rgt">Version 1.0.0</div>
+
+
+
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+            <!-- Remove the class name "show-fixed" and "hide-fixed" to make the content always appears. -->
+            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+            <p class="pad-lft">&#0169; 2020 Zou-Lab </p>
+
+
+
+        </footer>
+        <!--===================================================-->
+        <button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
+        <!--===================================================-->
+
+
+
+	</div>
+	<!--===================================================-->
+	<!-- END OF CONTAINER -->
+
+	
+    <!--JAVASCRIPT-->
+    <!--=================================================-->
+	
+
+    <script src="/static/js/jquery-2.1.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- <script src="/static/plugins/fast-click/fastclick.min.js"></script> -->
+    <script src="/static/js/nifty.min.js"></script>
+    <script>
+        $(function() {
+            
+            updateTag();
+            getNotice();
+        }) 
+
+        function updateTag() {
+            var cur_path = window.location.pathname.split('/')[1];
+            $('#mainnav-menu li').removeClass('active-link');
+            $(`.${cur_path}`).addClass('active-link');
+        }
+
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+
+        function getNotice() {
+            // 获取通知
+            $.ajax({
+                url: "/get_notice/",
+                type: "post",
+                dataType: "JSON",
+                data: {
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                },
+                success: function(res) {
+                    console.log(res);
+                    if(res.status == "success") {
+                        if (res.has_check_orders_perm && res.unchecked_num) {
+                            addNoticeList(res);
+                        }
+                    }
+                },
+            });
+            
+        }
+
+        function addNoticeList(res) {
+            var jump_url = "/order/check/";
+            var notice_list = $("ul.head-list");
+            var msg_type = "Unchecked orders";
+            var msg_detail = `您有 ${res.unchecked_num} 条订单待审核.`;
+
+            $("#notice-num").html(res.unchecked_num);
+            $("#notice-brief").html(`You have ${res.unchecked_num} notifications.`);
+            var notice_item = 
+                '<li>' +
+                    '<a href='+ jump_url + ' class="media">' +
+                        '<span class="label label-danger pull-right">New</span>' +
+                        '<div class="media-left">' +
+                            '<span class="icon-wrap bg-purple">' +
+                                '<i class="fa fa-comment fa-lg"></i>' +
+                            '</span>' +
+                        '</div>' + 
+                        '<div class="media-body">' +
+                            '<div class="text-nowrap">' + msg_type +'</div>' +
+                            '<small class="text-muted">' + msg_detail + '</small>' +
+                        '</div>' +
+                    '</a>' +
+                '</li>';
+            notice_list.append(notice_item);
+        }
+    </script>
+
+    {% block js %}
+	{% endblock %}
+
+</body>
+
+</html>

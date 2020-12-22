@@ -1,0 +1,74 @@
+{% extends "web/index.html" %}
+{% load tags %}
+
+
+{% block content %}
+<div class="" id="content-container">
+    <div id="page-title">
+        <h1 class="page-header text-overflow">订单管理</h1>
+    </div>
+    <ol class="breadcrumb">
+        <li><a href="/">主页</a></li>
+        <li><a href="#">订单</a></li>
+        {% if order_type == "personal" %}
+            <li class="active">我的订单</li>
+        {% elif order_type == "unchecked" %}
+            <li class="active">订单审核</li>
+        {% elif order_type == "history" %}
+            <li class="active">历史订单</li>
+        {% endif %}
+    </ol>
+    <div id="page-content">
+        <div class="panel panel-bordered-info">
+            <div class="panel-heading">    
+            {% if order_type == "personal" %}
+                <h3 class="panel-title">我的订单</h3>
+            {% elif order_type == "unchecked" %}
+                <h3 class="panel-title">订单审核</h3>
+            {% elif order_type == "history" %}
+                <h3 class="panel-title">历史订单</h3>
+            {% endif %}
+            </div>
+            
+            {% if order_type == "personal" %}
+                {% include "web/my_orders_list.html" %}
+            
+            {% else %}
+                {% include "web/unchecked_list.html" %}
+            {% endif %}
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+
+{% block css %}
+<link href="/static/plugins/fooTable/css/footable.core.css" rel="stylesheet">
+<style>
+    .order-list tbody a:hover{
+        color: rgb(13, 152, 207)
+    }
+    #to-excel {
+        position: relative;
+        bottom: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block js %}
+<script src="/static/plugins/fooTable/dist/footable.all.min.js"></script>
+<script>
+    $(function() {
+        $('#foo-filtering').footable();
+
+        $('#mainnav-menu li').removeClass('active-link');
+        // $('.hosts').addClass('active-link');
+        $("li.order").addClass("active");
+        $('.order ul').attr({'class': 'collapse in', 'aria-expanded': "true"});
+         // 激活标志
+         var task_type = window.location.pathname.split('/')[2];
+         // $("li.multi-cmd").addClass('active-link');
+         $(`li.${task_type}`).addClass('active-link');
+    }) 
+</script>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends "web/index.html" %}
+{% load tags %}
+
+{% block content %}
+<div class="" id="content-container">
+    <div id="page-title">
+        <h1 class="page-header text-overflow">用户管理</h1>
+    </div>
+    <ol class="breadcrumb">
+        <li><a href="/">主页</a></li>
+        <li><a href="/userinfo">用户管理</a></li>
+        <li class="active">{{ user.name }}</li>
+    </ol>
+    <hr>
+    <div id="page-content">
+        <form class="form-horizontal order-create">
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">姓&nbsp;名</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="name" class="form-control" value="{{ user.name }}">
+                        <span class="help-block name hide"><small>Here goes your name</small></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">Email</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="email" class="form-control" value="{{ user.email }}">
+                        <span class="help-block email hide"><small>Here goes your name</small></span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">学&nbsp;号</label>
+                    <div class="col-sm-4">                        
+                        <input type="text" name="stu_number" class="form-control" value="{{ user.stu_number }}">
+                        <span class="help-block stu_number hide"><small>Here goes your name</small></span>
+                    </div>
+                </div>            
+
+                <div class="form-group">
+                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">Status</label>
+                    <div class="col-sm-4">
+                        <select name="user_type" class="form-control" id="user_type">
+                            <!-- <option value="" disabled>选则用户类型</option> -->
+                            {% for user_type in user_types %}
+                                {% if user.user_type == user_type.0 %}
+                                <option value="{{ user_type.0 }}" name="user_type" selected>{{ user_type.1 }}</option>
+                                {% else %}
+                                <option value="{{ user_type.0 }}" name="user_type">{{ user_type.1 }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <span class="help-block user_type hide"><small>Here goes your name</small></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">管理员</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="is_admin" id="is_admin" class="form-control hide" value="{{ user.is_admin }}">
+                        {% if user.is_admin %}
+                        <input id="switch-admin" name="is_admin" type="checkbox" class="js-switch" checked />
+                        {% else %}
+                        <input id="switch-admin" name="is_admin" type="checkbox" class="js-switch" />
+                        {% endif %}
+                        <span class="help-block is_admin hide"><small>Here goes your name</small></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">Active</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="is_active" id="is_active" class="form-control hide" value="{{ user.is_active }}">
+                        {% if user.is_active %}
+                        <input id="switch-active" name="is_active" type="checkbox" class="js-switch" checked />
+                        {% else %}
+                        <input id="switch-active" name="is_active" type="checkbox" class="js-switch" />
+                        {% endif %}
+                        <span class="help-block is-active hide"><small>Here goes your name</small></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">权限</label>
+                    <div class="col-sm-4">
+                        <select name="user_permissions" data-placeholder="--默认权限--" class="form-control" multiple id="user_permissions">
+                            <!-- <option value="default" >--默认权限--</option> -->
+                            {% for perm in all_perms %}
+                                {% if perm in user_perms %}
+                                    <option value="{{ perm.0 }}" selected>{{ perm.1 }}</option>
+                                {% else %}
+                                    <option value="{{ perm.0 }}">{{ perm.1 }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <span class="help-block user_permissions hide"><small>Here goes your name</small></span>
+                    </div>
+                </div>
+                <!-- buttons -->
+                {% if has_edit_perm %}
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-4">
+                        <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
+                    </div>
+                    <div class="col-sm-4 col-sm-offset">
+                        <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save fa-lg" id="user-save">保&nbsp;&nbsp;&nbsp;存</button>
+                    </div>
+                </div>
+                {% endif %}
+                
+            </div>
+            
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block css %}
+<link href="/static/plugins/fooTable/css/footable.core.css" rel="stylesheet">
+<link href="/static/plugins/switchery/switchery.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/plugins/chosen/chosen.min.css">
+<style>
+    .form-group {
+        margin-bottom: 30px;
+    }
+    .hide {
+        display: none;
+    }
+    span.switchery {
+        position: relative;
+        top: 5px;
+    }
+    .modal-backdrop {
+        z-index: -1;
+    }
+    .hide {
+        display: none;
+    }
+    span.help-block {
+        color: rgb(223, 63, 63);
+    }
+</style>
+{% endblock %}
+
+
+{% block js %}
+<script src="/static/plugins/fooTable/dist/footable.all.min.js"></script>
+<script src="/static/plugins/switchery/switchery.min.js"></script>
+<script src='/static/plugins/bootbox/bootbox.min.js'></script>
+<script src="/static/plugins/chosen/chosen.jquery.min.js"></script>
+<script>
+    var csrf_token = "{{ csrf_token }}";
+</script>
+<script src="/static/js/order_base.js"></script>
+<script>
+    var has_edit_perm = "{{ has_edit_perm }}"=="True"? true:false;
+    $(function() {
+
+        // new Switchery(document.getElementById('switch-admin'));
+        // new Switchery(document.getElementById('switch-active'));
+        // var switchery = new Switchery(document.getElementById('switch-admin'), { disabled: true });
+        if (!has_edit_perm)
+            $(".form-control").attr("disabled", true);
+
+        var SwitchAdmin = document.getElementById('switch-admin');
+        var SwitchAdminInput =  document.getElementById("is_admin");
+        var Switcher_admin = new Switchery(SwitchAdmin, {disabled: !has_edit_perm})
+            $(SwitchAdminInput).val(SwitchAdmin.checked);
+            SwitchAdmin.onchange = function() {
+                $(SwitchAdminInput).val(SwitchAdmin.checked);
+        };
+
+        
+        var SwitchActive = document.getElementById('switch-active');
+        var SwitchActiveInput = document.getElementById('is_active');
+        var Switcher_active = new Switchery(SwitchActive, {disabled: !has_edit_perm})
+            $(SwitchActiveInput).val(SwitchActive.checked);
+            SwitchActive.onchange = function() {
+                $(SwitchActiveInput).val(SwitchActive.checked);
+        };
+
+        $('#user_type').chosen({width:'50%'});
+        // $('#user_type').trigger("chosen:updated");
+	    $('#user_permissions').chosen({width:'100%'});
+    })  
+</script>
+{% endblock %}
+
+
+
