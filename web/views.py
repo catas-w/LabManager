@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2020-12-22 10:08:38
+LastEditTime: 2020-12-22 18:38:56
 Author: catas
 LastEditors: catas
 Description: 
@@ -221,7 +221,7 @@ def check_order(request, order_id):
         if review:
             order_obj.review = review
         order_obj.status = status_dict[data.get("type")]
-        if data.get("type") == 3:
+        if order_obj.status == 3:
             # 通过
             order_obj.checked_date = timezone.now()
             
@@ -266,7 +266,7 @@ def history_order_detail(request, order_id):
         print(data)
         if data.get("type") == "delete":
             # 状态为删除订单
-            order_obj[0].delete()
+            order_obj.delete()
             return HttpResponse(json.dumps({"status": "success", }))
         # return HttpResponse(json.dumps({"status": "failed", }))
         return process_order(request, data, order_obj)
