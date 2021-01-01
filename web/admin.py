@@ -102,5 +102,7 @@ class GoodsDetailAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.DutyTable)
+admin.site.register(models.CompanyInfo)
+
 admin.site.register(models.DutyItem)
 admin.site.register(models.GoodsDetail, GoodsDetailAdmin)

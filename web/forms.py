@@ -21,6 +21,29 @@ class GoodsDetailForm(forms.ModelForm):
             },
         }
 
+class CompanyForm(forms.ModelForm):
+
+    class Meta:
+        model = models.CompanyInfo
+        fields = ("name",)
+
+        error_message = {
+            "name": {
+                "required": "名称不能为空",
+            }
+        }
+    
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if not name.strip():
+            raise forms.ValidationError("名称不能为空!")
+
+        all_companys = models.CompanyInfo.objects.all()
+        if (name, ) in all_companys.values_list("name"):
+            raise forms.ValidationError("公司已存在")
+        
+        return name
+
 
 class OrderForm(forms.ModelForm):
     bill_received = forms.BooleanField(label="收到底单", required=False)
@@ -64,6 +87,40 @@ class OrderForm(forms.ModelForm):
         if commit:
             order_obj.save()
         return order_obj
+
+
+
+class OrderFormBase(forms.ModelForm):
+
+    class Meta:
+        model = models.Order
+        fields = ["order_type", "company", "unit_price", "count", "total_price", "user", "status", "memo"]
+
+        error_messages = {
+            "order_type": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            },
+            "company": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            },
+            "unit_price": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            },
+            "count": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            },
+            "total_price": {
+                "required": "字段不能为空",
+                "invalid": "字段无效",
+            }
+        }
+
+        
+
 
 class UserEditForm(forms.ModelForm):
     """

@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2020-12-22 22:14:50
+ * @LastEditTime: 2020-12-31 23:19:37
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -9,25 +9,30 @@
     $(function() {
 
         // 启动单选框
-        $('#chosen-select').chosen({width: "50%"});
+        // $('#chosen-select').chosen({width: "50%"});
+        $(".form-group select.chosen-style").chosen({width:"50%"});
 
         // 激活标志
         $('#mainnav-menu li').removeClass('active-link');
-        // $('.hosts').addClass('active-link');
+        
         $("li.order").addClass("active");
         $('.order ul').attr({'class': 'collapse in', 'aria-expanded': "true"});
          // 激活标志
          var task_type = window.location.pathname.split('/')[2];
-         // $("li.multi-cmd").addClass('active-link');
+         
          $(`li.${task_type}`).addClass('active-link');
 
-         // 计算总价
-        BindCalculatePrice();
+        // 初始化数字input
+        InitNumberInput();
         var flag = false;
+
+        // Ordertype onchange
+        BindOrderTypeOnChange();
         
         // 绑定点击函数
         BindClickButton("#order-submit", BindOrderSubmit);
-        BindClickButton("#add-goods", BindCreateGoods);
+        BindClickButton("#add-detail", BindCreateGoods);
+        BindClickButton("#add-company", BindCreateCompany);
         BindClickButton("#order-save", BindSaveOrder);
         BindClickButton("#order-delete", BindDeleteOrder);
         BindClickButton("#order-reject", BindReject);
@@ -104,8 +109,9 @@
                                         // 更新 select
                                         var add_id = res.add_item[0];
                                         var add_name = res.add_item[1];
-                                        $("#chosen-select").append(`<option value="${add_id}">${add_name}</option>`);
-                                        $("#chosen-select").trigger("chosen:updated");
+                                        $("select[name='detail']").append(`<option value="${add_id}">${add_name}</option>`);
+                                        $("select[name='detail']").val(add_id);
+                                        $("select[name='detail']").trigger("chosen:updated");
                                         // noty
                                         $.niftyNoty({
                                             type: 'success',
@@ -141,6 +147,83 @@
             });
     }
 
+    function BindCreateCompany(e) {
+        /**
+         * @description: 懒得重构代码直接拷贝上面, 请勿模仿
+         * @param {*}
+         * @return {*}
+         */
+        var dialog = bootbox.dialog({
+            title: "添加公司",
+            onEscape: true,
+            message:'<div class="row"> ' + '<div class="col-md-12"> ' +
+                '<form class="form-horizontal"> ' +
+                '<div class="form-group"> ' +
+                '<label class="col-md-4 control-label text-bold" for="name">名称:</label> ' +
+                '<div class="col-md-4"> ' +
+                '<input name="name" type="text" placeholder="" required class="form-control input-md"> ' +
+                '<span class="help-block name hide"><small>Here goes your name</small></span> </div> ' +
+                '</div> ' + 
+                                
+                '</form> </div> </div>',
+            buttons: {
+                success: {
+                    label: "保存",
+                    className: "btn-purple",
+                    callback: function() {
+
+                        var name = $("input[name='name']").val();
+                        
+                        $.ajax({
+                            url: "/order/add-company/",
+                            type: "post",
+                            dataType: "JSON",
+                            data: {
+                                csrfmiddlewaretoken: csrf_token,
+                                name: name,
+                            },
+                            success: function(res) {
+                                // console.log(res);
+                                // console.log(JSON.stringify(res));
+                                if(res.status == "success") {
+                                    // 
+                                    // 更新 select
+                                    var add_id = res.add_item[0];
+                                    var add_name = res.add_item[1];
+                                    $("select[name='company']").append(`<option value="${add_id}">${add_name}</option>`);
+                                    $("select[name='company']").val(add_id);
+                                    $("select[name='company']").trigger("chosen:updated");
+                                    // noty
+                                    $.niftyNoty({
+                                        type: 'success',
+                                        icon : 'fa fa-check',
+                                        message : "Success " +  ".<br> 添加成功 <strong>" + "</strong>",
+                                        container : 'floating',
+                                        timer : 5000
+                                    });
+
+                                    dialog.modal('hide');
+                                    
+
+                                }else if(res.status == "failed") {
+                                    // 添加失败
+                                    $("span.help-block").addClass('hide');
+                                    var res_keys = Object.keys(res.errors);
+                                    for (i in res_keys) {
+                                        $(`span.${res_keys[i]}`).removeClass('hide');
+                                        $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
+                                    }
+                                }
+                            }
+                        });
+
+                        return false;
+                    }
+                }
+            }
+        });
+}
+
     function BindDeleteOrder(e, jump_url) {
         e.preventDefault();
         
@@ -169,9 +252,13 @@
     }
 
     function BindCalculatePrice() {
-        $("#get-price").click(function() {
+        $("#get-price").click(function(e) {
+            e.preventDefault();
             var price = $("input[name='unit_price']").val();
             var count = $("input[name='count']").val();
+            if (price < 0 || count <0) {
+                alert("不能小于0!");
+            }
             
             var total_price = Number(price) * Number(count);
             $("input[name='total_price']").val(total_price.toFixed(2));
@@ -211,7 +298,7 @@
         var data = getOrderInfo();
         data.csrfmiddlewaretoken = csrf_token;
         data.type = type;
-        // console.log(data);
+        console.log(data);
         // return;
         $.ajax({
             url: "",
@@ -368,7 +455,6 @@
         });
     }
 
-
     function BindUserEdit(e) {
         // 修改个人信息--管理员
         e.preventDefault();
@@ -393,3 +479,18 @@
         });
     }
     
+    function InitNumberInput() {
+        $(".form-group input[type='number']").css({"width": "50%", "display": "inline-block"});
+        $(".form-group input[name='total_price']").after('<i class="fa fa-md fa-pencil" id="get-price" aria-hidden="true">&nbsp;计算</i>');
+        '<i class="fa fa-md fa-plus" id="add-goods" aria-hidden="true">&nbsp新建商品</i>'
+        BindCalculatePrice();
+        
+    }
+
+    function BindOrderTypeOnChange() {
+        $(".form-group select[name='order_type']").change(function(e) {
+            // console.log($(this).val());
+            var order_type = $(this).val();
+            window.location.search = `type=${order_type}`;
+        })
+    }

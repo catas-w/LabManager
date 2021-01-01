@@ -124,15 +124,21 @@ class Order(models.Model):
     # 订单
     order_type_choices = (
         (0, "试剂购买"),
-        (1, "引物合成"),
-        (2, "测序"),
-        (3, "其他"),
+        (1, "基因测序"),
+        (2, "引物合成"),
+        # (3, "其他"),
     )
-    order_type = models.SmallIntegerField(choices=order_type_choices, default=0)
-    company = models.CharField(max_length=64, blank=True, null=True)
-    unit_price = models.DecimalField(max_digits=8, decimal_places=2)
-    count = models.IntegerField()
-    total_price = models.DecimalField(max_digits=8, decimal_places=2)
+    order_type = models.SmallIntegerField(choices=order_type_choices, default=0, verbose_name="订单类型")
+    # company = models.CharField(max_length=64, blank=True, null=True)
+    company = models.ForeignKey("CompanyInfo", on_delete=models.SET_NULL, null=True, verbose_name="公司")
+
+    gene_name = models.CharField(max_length=16, blank=True, null=True, verbose_name="基因")
+    primer1 = models.TextField(blank=True, null=True, verbose_name="引物序列1 (5'-3')")
+    primer2 = models.TextField(blank=True, null=True, verbose_name="引物序列2 (5'-3')")
+
+    unit_price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="单价")
+    count = models.IntegerField(verbose_name="数量")
+    total_price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="总价")
     create_date = models.DateTimeField(auto_now_add=True, verbose_name="创建日期")
     checked_date = models.DateTimeField(verbose_name="批准日期", blank=True, null=True)
     status_choices = (
@@ -143,12 +149,12 @@ class Order(models.Model):
     )
     status = models.SmallIntegerField(choices=status_choices, verbose_name="订单状态")
     
-    user = models.ForeignKey("UserProfile", on_delete=models.SET_NULL, null=True)
-    memo = models.TextField(verbose_name="备注", blank=True, null=True)
-    detail = models.ForeignKey("GoodsDetail", on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey("UserProfile", on_delete=models.SET_NULL, null=True, verbose_name="用户")
+    memo = models.TextField(blank=True, null=True, verbose_name="备注")
+    detail = models.ForeignKey("GoodsDetail", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="商品")
     
-    bill_received = models.BooleanField(default=False)
-    review = models.CharField(max_length=128, blank=True, null=True)
+    bill_received = models.BooleanField(default=False, verbose_name="收到底单")
+    review = models.CharField(max_length=128, blank=True, null=True, verbose_name="原因")
 
     class Meta:
         verbose_name = "订单"
@@ -156,6 +162,20 @@ class Order(models.Model):
 
     def __str__(self):
         return "%s-%s-%s" % (self.order_type, self.user, self.create_date)
+
+
+class CompanyInfo(models.Model):
+    objects = models.Manager()
+    # 公司信息
+    name = models.CharField(max_length=32, verbose_name="公司名称")
+    # brief_name = models.CharField(max_length=16, blank=True, default="", verbose_name="简称")
+
+    class Meta:
+        verbose_name = "公司"
+        verbose_name_plural = "公司"
+
+    def __str__(self):
+        return self.name
 
 
 class GoodsDetail(models.Model):

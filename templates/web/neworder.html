@@ -1,5 +1,5 @@
 {% extends "web/index.html" %}
-
+{% load tags %}
 
 
 {% block content %}
@@ -14,14 +14,16 @@
         <li class="active">新建订单</li>
     </ol>
     <div id="page-content">
-        <div class="panel panel-bordered-info">
+        <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">新建订单</h3>
             </div>
             <div class="panel-body">
                 <form class="form-horizontal order-create">
                     <div class="panel-body">
-                        <div class="form-group">
+                        {% get_order_items form_obj %}                        
+
+                        <!-- <div class="form-group">
                             <label for="" class="col-sm-3 control-label text-bold">商&nbsp品</label>
                             <div class="col-sm-4">
                                 <select data-placeholder="----选择已有商品信息----" class="form-control" id="chosen-select" name="detail">
@@ -71,7 +73,7 @@
                                 <span class="help-block memo hide"><small>Here goes your name</small></span>
                             </div>
                         </div>
-                        
+                         -->
 
                         <div class="row">
                             <div class="col-sm-4 col-sm-offset-5">
@@ -97,7 +99,7 @@
     .order-create .form-group {
         margin-bottom: 25px;
     }
-    #add-goods {
+    .add-items {
         position: relative;
         bottom: 5px;
         left: 5px;
@@ -112,7 +114,7 @@
     }
     #get-price {
         position: relative;
-        top: 7px;
+        left: 7px;
         color: rgb(194, 156, 32);
     }
     .modal-backdrop {
@@ -126,6 +128,9 @@
     }
     #order-save {
         margin-right: 37px;
+    }
+    .half-width {
+        width: 50%;
     }
 </style>
 {% endblock %}

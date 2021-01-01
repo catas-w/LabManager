@@ -17,9 +17,10 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>订单类型</th>
                 <!-- <th data-toggle="true" >Task</th> -->
                 <th data-hide="phone, tablet">创建时间</th>
-                <th data-hide="phone, tablet">商品</th>
+                <th data-hide="phone, tablet">内容</th>
                 <th data-hide="phone, tablet">单价</th>
                 <th data-hide="phone, tablet">数量</th>
                 <th data-hide="phone, tablet">总价</th>
@@ -30,13 +31,17 @@
             {% for item in my_orders %}
             <tr class="footable-even" style="display: table-row;">
                 <td><a href="{{ item.id }}">{{ item.id }}</a></td>
+                <td><a href="{{ item.id }}">{{ item.get_order_type_display }}</a></td>
                 {% get_create_date item %}
+                {% if item.order_type == 0 %}
                 <td><a href="{{ item.id }}">{{ item.detail }}</a></td>
+                {% else %}
+                <td><a href="{{ item.id }}">{{ item.gene_name }}</a></td>
+                {% endif %}
                 <td><a href="{{ item.id }}">{{ item.unit_price }}</a></td>
                 <td><a href="{{ item.id }}">{{ item.count }}</a></td>
                 <td><a href="{{ item.id }}">{{ item.total_price }}</a></td>
                 {% get_order_status item %}
-                <!-- <td><span class="label label-table label-success">已通过</span></td> -->
             </tr>
             {% endfor %}
         </tbody>

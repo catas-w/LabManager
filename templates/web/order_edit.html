@@ -101,7 +101,7 @@
                         <div class="form-group">
                             <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">数&nbsp量</label>
                             <div class="col-sm-1">
-                                <input type="number" name="count" placeholder="" class="form-control" required="" value="{{ order_obj.count }}">
+                                <input type="number" name="count" class="form-control" required="" value="{{ order_obj.count }}">
                                 <span class="help-block count hide"><small>Here goes your name</small></span>
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                         <div class="form-group">
                             <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">收到底单</label>
                             <div class="col-sm-4">
-                                <input type="text" name="bill_received" id="bill_received" class="form-control hide" value="{{ order_obj.bill_received }}">
+                                <!-- <input type="text" name="bill_received" id="bill_received" class="form-control hide" value="{{ order_obj.bill_received }}"> -->
                                 {% if order_obj.bill_received %}
                                     <input id="switch-bill" name="bill_received" type="checkbox" class="" checked />
                                 {% else %}

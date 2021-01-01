@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2020-12-22 21:34:52
+LastEditTime: 2021-01-01 14:56:10
 Author: catas
 LastEditors: catas
 Description: 
@@ -17,6 +17,8 @@ from django.utils import timezone
 import datetime
 from web.permissions import check_permission
 from web.permission_list import perm_dict
+from web.utils import process_order
+from web.utils import OrderFormBuilder
 
 # Create your views here.
 
@@ -74,60 +76,44 @@ def myorder(request):
     '''
     cur_user_id = request.user.id
     cur_orders = models.Order.objects.filter(user_id=cur_user_id).order_by("create_date").reverse()
-    order_type = "personal"
+    order_list_type = "personal"
     
-    return render(request, "web/orders.html", {"my_orders": cur_orders, "order_type": order_type})
-
-
-def process_order(request, data, order_obj=None):
-    '''
-    description: 处理订单 post 请求
-    param {
-        data: post数据 querydict
-        order_obj: order 对象
-    }
-    return {
-        httpResponse: json
-    }
-    '''    
-    # 此处不允许后2操作
-    status_dict = {
-        "save": 0,
-        "submit": 1,
-        "reject": 2,
-        "pass": 3,
-    }
-    append_dict = {
-        "user": request.user.id,
-        "status": status_dict[data.get("type")],
-    }
-    data.update(append_dict)
-    if order_obj:
-        form = forms.OrderForm(data, instance=order_obj)
-    else:
-        form = forms.OrderForm(data)
-
-    if form.is_valid():
-        print(form.cleaned_data)
-        form.save()
-        return HttpResponse(json.dumps({"status": "success",}))
-    else:
-        return HttpResponse(json.dumps({"status": "failed", "errors": form.errors}))
     
+    return render(request, "web/orders.html", {"my_orders": cur_orders, "order_list_type": order_list_type})
 
+
+   
 @login_required
 def create_order(request):
+    '''
+    description: 创建新订单, POST: 提交或保存
+    param {*}
+    return {*}
+    '''
+    creater = OrderFormBuilder()
     
     if request.method == "POST":
-        # 提交新订单
         data = request.POST.copy()
+        # print(data.get("order_type"))
+        # print(type(data.get("order_type")))
         if data.get("type") != "save" and data.get("type") != "submit":
             # 不是提交或者保存
             return HttpResponse(status=403)
-        return process_order(request, data)
+        form_class = creater.create_new_order(int(data.get("order_type")))
+        return process_order(request, data, form_class)
 
-    goods = models.GoodsDetail.objects.all()
-    return render(request, "web/neworder.html", {"goods": goods, })
+    order_type_param = request.GET.get("type", "")
+    try:
+        order_type = int(order_type_param)
+    except Exception:
+        order_type = 0
+    
+    form_class = creater.create_new_order(order_type)
+    form_obj = form_class(initial={"order_type": order_type})
+    
+    return render(request, "web/neworder.html", {
+                                                "form_obj": form_obj,
+                                                })
 
     
 
@@ -146,7 +132,19 @@ def add_goods(request):
             return HttpResponse(json.dumps({"status": "failed", "errors": form.errors}))
 
 @login_required
+def add_company(request):
+    if request.method == "POST":
+        form = forms.CompanyForm(request.POST)
+        if form.is_valid():
+            add_obj = form.save()
+            return HttpResponse(json.dumps({"status": "success", "add_item": [add_obj.id, add_obj.__str__()]}))
+        else:
+            return HttpResponse(json.dumps({"status": "failed", "errors": form.errors}))
+
+
+@login_required
 def order_detail(request, order_id):
+    
     order_obj = models.Order.objects.filter(id=order_id)
     if order_obj and (order_obj[0] in models.Order.objects.filter(user_id=request.user.id)):
         # 验证权限

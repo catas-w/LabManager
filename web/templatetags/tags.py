@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-17 10:28:38
-LastEditTime: 2020-12-22 21:55:43
+LastEditTime: 2020-12-31 23:08:10
 Author: catas
 LastEditors: catas
 Description: 
@@ -51,4 +51,33 @@ def get_checked_date(order_obj):
     return time_toshow
 
 
+@register.simple_tag
+def get_order_items(form_obj):
+    base_html = '''
+    <div class="form-group">
+        <label for="" class="col-sm-3 control-label text-bold">{label}</label>
+        <div class="col-sm-4">
+            {form_ele}
+            {append_ele}
+            <span class="help-block {field_name} hide"><small></small></span>
+        </div>
+    </div>
+    '''
+    html = ""
+    for field_name in form_obj.base_fields:
+        if field_name not in form_obj.Meta.hide_fields:
+            field = form_obj.base_fields[field_name]
+            
+            # verbose_name
+            label = form_obj.Meta.model._meta.get_field(field_name).verbose_name
+            # print(field.__repr__())
+            if "ModelChoiceField" in field.__repr__():
+                append_ele = '''<a href="#"><i class="fa fa-md fa-plus add-items" id="add-{field_name}" aria-hidden="true">&nbsp;添加</i></a>'''.format(field_name=field_name)
+            else:
+                append_ele = ""
 
+            form_ele = field.widget.render(name=field_name, value=form_obj[field_name].value())
+            html += base_html.format(label=label, form_ele=form_ele, append_ele=append_ele, field_name=field_name)
+    
+    return mark_safe(html)
+    

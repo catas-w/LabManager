@@ -31,7 +31,8 @@
                 <th>Id</th>
                 <th data-hide="phone, tablet">创建时间</th>
                 <th data-hide="phone, tablet">申请人</th>
-                <th data-hide="phone, tablet">商品</th>
+                <th data-hide="phone, tablet">订单类型</th>
+                <th data-hide="phone, tablet">内容</th>
                 <th data-hide="phone, tablet">单价</th>
                 <th data-hide="phone, tablet">数量</th>
                 <th data-hide="phone, tablet">总价</th>
@@ -44,7 +45,12 @@
                 <td><a href="{{ item.id }}">{{ item.id }}</a></td>
                 {% get_create_date item %}
                 <td><a href="{{ item.id }}">{{ item.user.name }}</a></td>
+                <td><a href="{{ item.id }}">{{ item.get_order_type_display }}</a></td>
+                {% if item.order_type == 0 %}
                 <td><a href="{{ item.id }}">{{ item.detail }}</a></td>
+                {% else %}
+                <td><a href="{{ item.id }}">{{ item.gene_name }}</a></td>
+                {% endif %}
                 <td><a href="{{ item.id }}">{{ item.unit_price }}</a></td>
                 <td><a href="{{ item.id }}">{{ item.count }}</a></td>
                 <td><a href="{{ item.id }}">{{ item.total_price }}</a></td>
@@ -55,7 +61,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="8">
+                <td colspan="9">
                     <div class="text-right">
                         <ul class="pagination"></ul>
                     </div>
