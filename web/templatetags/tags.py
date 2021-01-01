@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-17 10:28:38
-LastEditTime: 2020-12-31 23:08:10
+LastEditTime: 2021-01-01 17:16:00
 Author: catas
 LastEditors: catas
 Description: 
@@ -64,19 +64,26 @@ def get_order_items(form_obj):
     </div>
     '''
     html = ""
+    readonly_ele = '''<label class="order-info text-semibold">{field_value}</label>'''
     for field_name in form_obj.base_fields:
         if field_name not in form_obj.Meta.hide_fields:
             field = form_obj.base_fields[field_name]
+            append_ele = ""
             
             # verbose_name
             label = form_obj.Meta.model._meta.get_field(field_name).verbose_name
-            # print(field.__repr__())
-            if "ModelChoiceField" in field.__repr__():
+
+            # if field_name in form_obj.Meta.readonly_fields:
+            #     # Readonly field
+            #     form_ele = readonly_ele.format(field_value=form_obj[field_name].value())            
+            # else:
+            # 可编辑
+            if "ModelChoiceField" in field.__repr__() and (field_name not in form_obj.Meta.readonly_fields):
                 append_ele = '''<a href="#"><i class="fa fa-md fa-plus add-items" id="add-{field_name}" aria-hidden="true">&nbsp;添加</i></a>'''.format(field_name=field_name)
-            else:
-                append_ele = ""
 
             form_ele = field.widget.render(name=field_name, value=form_obj[field_name].value())
+            
+                
             html += base_html.format(label=label, form_ele=form_ele, append_ele=append_ele, field_name=field_name)
     
     return mark_safe(html)

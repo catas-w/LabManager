@@ -21,30 +21,17 @@
             <div class="panel-body">
                 <form class="form-horizontal order-create">
                     <div class="panel-body">
+                        
                         <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">用&nbsp;户</label>
+                            <label for="" class="col-sm-3 control-label text-semibold">创建时间</label>
                             <div class="col-sm-4">
-                                <!-- <input type="text" name="company" class="form-control" value="{{ request.user.name }}" disabled> -->
-                                <label class="order-info text-semibold">{{ request.user.name }}</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">创建时间</label>
-                            <div class="col-sm-4">
-                                {% get_date order_obj as date %}
-                                <!-- <input type="text" name="company" class="form-control" value="{{ date }}" disabled> -->
-                                <label class="order-info text-semibold">{{ date }}</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">状&nbsp;态</label>
-                            <div class="col-sm-4">
-                                <label class="order-info text-semibold">{{ order_obj.get_status_display }}</label>
-                            </div>
+                                {% get_date order_obj as date%}
+                                <label class="order-info">{{ date }}</label>
+                            </div>                        
                         </div>
                     
-                        {% include "web/order_readonly.html" %}
-                        <!-- buttons -->
+                        {% get_order_items form_obj %}                    
+                        
                         {% if has_check_perm %}
                         <div class="row">
                             <div class="col-sm-4 col-sm-offset-3">

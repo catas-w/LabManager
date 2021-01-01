@@ -31,140 +31,62 @@
             <div class="panel-body">
                 <form class="form-horizontal order-create">
                     <div class="panel-body">
+
                         <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">用&nbsp;户</label>
+                            <label for="" class="col-sm-3 control-label text-semibold">创建时间</label>
                             <div class="col-sm-4">
-                                <!-- <input type="text" name="company" class="form-control" value="{{ request.user.name }}" disabled> -->
-                                <label class="order-info text-semibold">{{ order_obj.user.name }}</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">创建时间</label>
-                            <div class="col-sm-4">
-                                {% get_date order_obj as date %}
-                                <!-- <input type="text" name="company" class="form-control" value="{{ date }}" disabled> -->
-                                <label class="order-info text-semibold">{{ date }}</label>
-                            </div>
+                                {% get_date order_obj as date%}
+                                <label class="order-info">{{ date }}</label>
+                            </div>                        
                         </div>
 
-                        {% if page_type == "history" %}
+                        {% if order_obj.status == 3 %}
                         <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">审核时间</label>
+                            <label for="" class="col-sm-3 control-label text-semibold">审核时间</label>
                             <div class="col-sm-4">
-                                {% get_checked_date order_obj as ch_date %}
-                                <!-- <input type="text" name="company" class="form-control" value="{{ date }}" disabled> -->
-                                <label class="order-info text-semibold">{{ ch_date }}</label>
-                            </div>
+                                {% get_checked_date order_obj as checked_date%}
+                                <label class="order-info">{{ checked_date }}</label>
+                            </div>                        
                         </div>
                         {% endif %}
 
+                        {% get_order_items form_obj %}                                               
+
+                        {% if order_obj.status == 2 %}
                         <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">状&nbsp;态</label>
+                            <label for="" class="col-sm-3 control-label text-semibold">原因</label>
                             <div class="col-sm-4">
-                                <label class="order-info text-semibold">{{ order_obj.get_status_display }}</label>
-                            </div>
+                                <label class="order-info">{{ order_obj.review }}</label>
+                            </div>                        
                         </div>
-
-                        {% if editable %}
-                        <div class="form-group">
-                            <label for="" class="col-sm-3 control-label text-bold">商&nbsp;品</label>
-                            <div class="col-sm-4">
-                                <select data-placeholder="----选择已有商品信息----" class="form-control" id="chosen-select" name="detail">
-                                    <!-- <option value="none" selected disabled hidden>----选择已有商品----</option> -->
-                                    {% for item in goods %} 
-                                        {% if item.id == order_obj.detail.id %}
-                                            <option value="{{ item.id }}" selected>{{ item }}</option>
-                                        {% else %}
-                                            <option value="{{ item.id }}">{{ item }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                                <a href="#"><i class="fa fa-md fa-plus" id="add-goods" aria-hidden="true">&nbsp;新建商品</i></a>
-                                <span class="help-block detail hide"><small>Here goes your name</small></span>
-                            </div>     
-                        </div>                   
-
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">公&nbsp;司</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="company" class="form-control" value="{{ order_obj.company }}">
-                                <span class="help-block company hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">单&nbsp价</label>
-                            <div class="col-sm-1">
-                                <input type="number" step="0.01" min="0" name="unit_price" placeholder="" class="form-control" required value="{{ order_obj.unit_price }}">
-                                <span class="help-block unit_price hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">数&nbsp量</label>
-                            <div class="col-sm-1">
-                                <input type="number" name="count" class="form-control" required="" value="{{ order_obj.count }}">
-                                <span class="help-block count hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">总&nbsp价</label>
-                            <div class="col-sm-1">
-                                <input type="number" step="0.01" min="0" name="total_price" placeholder="" class="form-control" required="" value="{{ order_obj.total_price }}">
-                                <span class="help-block total_count hide"><small>Here goes your name</small></span>
-                            </div>
-                            <i class="fa fa-md fa-pencil" id="get-price" aria-hidden="true">&nbsp;计算</i>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">备&nbsp注</label>
-                            <div class="col-sm-4">
-                                <textarea name="memo" cols="40" rows="6" class="form-control vLargeTextField"  id="id_memo">{{ order_obj.memo }}</textarea>
-                                <span class="help-block memo hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-
-                        {%  if page_type == "history" %}
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">收到底单</label>
-                            <div class="col-sm-4">
-                                <!-- <input type="text" name="bill_received" id="bill_received" class="form-control hide" value="{{ order_obj.bill_received }}"> -->
-                                {% if order_obj.bill_received %}
-                                    <input id="switch-bill" name="bill_received" type="checkbox" class="" checked />
-                                {% else %}
-                                    <input id="switch-bill" name="bill_received" type="checkbox" class="" />
-                                {% endif %}
-                                <span class="help-block bill_received hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <!-- buttons -->
-                        {%  if page_type == "history" %}
-                        <div class="row">
-                            <div class="col-sm-2 col-sm-offset-3">
-                                <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="hist-order-delete">删&nbsp;&nbsp;除</button>
-                            </div>
-                            <div class="col-sm-4 col-sm-offset">
-                                <!-- <button class="btn btn-default btn-rounded  btn-labeled fa fa-save fa-lg" id="order-save">保&nbsp;&nbsp;&nbsp;存</button> -->
-                                <button class="btn btn-primary btn-rounded  btn-labeled fa fa-check fa-lg" id="hist-order-submit">保&nbsp;&nbsp;&nbsp;存</button>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="row">
-                            <div class="col-sm-2 col-sm-offset-3">
-                                <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button>
-                            </div>
-                            <div class="col-sm-4 col-sm-offset">
-                                <button class="btn btn-default btn-rounded  btn-labeled fa fa-save fa-lg" id="order-save">保&nbsp;&nbsp;&nbsp;存</button>
-                                <button class="btn btn-primary btn-rounded  btn-labeled fa fa-check fa-lg" id="order-submit">提&nbsp;&nbsp;&nbsp;交</button>
-                            </div>
-                        </div>
-                        {% endif %}
-
-
-                        {% else %}
-                            {% include "web/order_readonly.html" %}
                         {% endif %}
 
                         
+
+                        <!-- buttons -->
+                        {% if editable %}
+                            {%  if page_type == "history" %}
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-3">
+                                    <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="hist-order-delete">删&nbsp;&nbsp;除</button>
+                                </div>
+                                <div class="col-sm-4 col-sm-offset">
+                                    <!-- <button class="btn btn-default btn-rounded  btn-labeled fa fa-save fa-lg" id="order-save">保&nbsp;&nbsp;&nbsp;存</button> -->
+                                    <button class="btn btn-primary btn-rounded  btn-labeled fa fa-check fa-lg" id="hist-order-submit">保&nbsp;&nbsp;&nbsp;存</button>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-3">
+                                    <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button>
+                                </div>
+                                <div class="col-sm-4 col-sm-offset">
+                                    <button class="btn btn-default btn-rounded  btn-labeled fa fa-save fa-lg" id="order-save">保&nbsp;&nbsp;&nbsp;存</button>
+                                    <button class="btn btn-primary btn-rounded  btn-labeled fa fa-check fa-lg" id="order-submit">提&nbsp;&nbsp;&nbsp;交</button>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                     
                 </form>
@@ -183,13 +105,13 @@
     .order-create .form-group {
         margin-bottom: 25px;
     }
-    #add-goods {
+    .add-items {
         position: relative;
         bottom: 5px;
         left: 5px;
         color: rgb(194, 156, 32);
     }
-    .order-create i.fa:hover {
+    .form-group i.fa:hover {
         opacity: 50%;
         cursor: pointer;
     }
@@ -198,7 +120,7 @@
     }
     #get-price {
         position: relative;
-        top: 7px;
+        left: 7px;
         color: rgb(194, 156, 32);
     }
     .modal-backdrop {
@@ -228,7 +150,6 @@
     i#hist-edit:hover {
         opacity: 50%;
         cursor: pointer;
-        
     }
     span.switchery {
         position: relative;
@@ -246,11 +167,12 @@
     var csrf_token = "{{ csrf_token }}";
     
 </script>
-<script src="/static/js/order_base.js"></script>
 <script>
     $(function() {
-        var SwitchAdmin = document.getElementById('switch-bill');
-        var SwitchAdminInput =  document.getElementById("bill_received");
+        // var SwitchAdmin = document.getElementById('switch-bill');
+        // var SwitchAdminInput =  document.getElementById("bill_received");
+        var SwitchAdmin = $("input[name='bill_received']:visible")[0];
+        var SwitchAdminInput = $("input[name='bill_received']:visible")[0];
         if (SwitchAdmin) {
             var Switcher_admin = new Switchery(SwitchAdmin)
                 $(SwitchAdminInput).val(SwitchAdmin.checked);
@@ -260,4 +182,5 @@
         }
     })
 </script>
+<script src="/static/js/order_base.js"></script>
 {% endblock %}

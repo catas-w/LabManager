@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-01 14:56:10
+LastEditTime: 2021-01-01 22:10:22
 Author: catas
 LastEditors: catas
 Description: 
@@ -96,6 +96,8 @@ def create_order(request):
         data = request.POST.copy()
         # print(data.get("order_type"))
         # print(type(data.get("order_type")))
+        data.update({"user": request.user.id})
+        # print(data)
         if data.get("type") != "save" and data.get("type") != "submit":
             # 不是提交或者保存
             return HttpResponse(status=403)
@@ -114,7 +116,6 @@ def create_order(request):
     return render(request, "web/neworder.html", {
                                                 "form_obj": form_obj,
                                                 })
-
     
 
 @login_required
@@ -144,33 +145,45 @@ def add_company(request):
 
 @login_required
 def order_detail(request, order_id):
-    
-    order_obj = models.Order.objects.filter(id=order_id)
-    if order_obj and (order_obj[0] in models.Order.objects.filter(user_id=request.user.id)):
+    '''
+    description: 查看自己的订单信息
+    param {*}
+    return {*}
+    '''
+    creater = OrderFormBuilder()    
+    order_obj = models.Order.objects.get(id=order_id)
+
+    if order_obj and (order_obj in models.Order.objects.filter(user_id=request.user.id)):
         # 验证权限
         if request.method == "POST":
             # 修改数据
-            if order_obj[0].status == 1 or order_obj[0].status == 3:
+            if order_obj.status == 1 or order_obj.status == 3:
                 # status 是已提交或已完成
                 return HttpResponse(status=403)
                 
             data = request.POST.copy()
             if data.get("type") == "delete":
                 # 状态为删除订单
-                order_obj[0].delete()
+                order_obj.delete()
                 return HttpResponse(json.dumps({"status": "success", }))
-            
-            return process_order(request, data, order_obj[0])
+
+            form_class = creater.create_edit_order(order_obj.order_type)
+            return process_order(request, data, form_class, order_obj)
 
         # GET
-        goods = models.GoodsDetail.objects.all()
         editabl = False
-        if order_obj[0].status == 0 or order_obj[0].status == 2:
+        if order_obj.status == 0 or order_obj.status == 2:
             # 订单未提交或未通过, 可修改
+            form_class = creater.create_edit_order(order_obj.order_type)
             editabl = True
-        return render(request, "web/order_edit.html", {"order_obj": order_obj[0],
-                                                         "goods": goods,
+        else:
+            # 订单不可修改
+            form_class = creater.create_readonly_order(order_obj.order_type)
+        
+        form_obj = form_class(instance=order_obj)        
+        return render(request, "web/order_edit.html", {"order_obj": order_obj,
                                                          "editable": editabl,
+                                                         "form_obj": form_obj,
                                                          })
     else:
         return HttpResponse(status=404)
@@ -201,14 +214,17 @@ def check_order(request, order_id):
     try:
         order_obj = models.Order.objects.get(id=order_id)
     except ObjectDoesNotExist:
-        return HttpResponse(404)
+        return HttpResponse(status=404)
     # if order_obj.status != 1 and request.user.is_admin != True:
     if order_obj.status != 1:
-        return HttpResponse(403)
+        return HttpResponse(status=403)
+    
+    creater = OrderFormBuilder()        
+    order_class = creater.create_check_order(order_type=order_obj.order_type)
 
     if request.method == "POST":
         data = request.POST.copy()
-        print(data)
+        # print(data)
         status_dict = {
         "save": 0,
         "submit": 1,
@@ -227,9 +243,12 @@ def check_order(request, order_id):
         
         return HttpResponse(json.dumps({"status": "success"}))
     
+    form_obj = order_class(instance=order_obj)
     has_check_perm = request.user.has_perm("web__check_orders")
+    
     return render(request, "web/order_check.html", {"order_obj": order_obj, 
                                                     "has_check_perm": has_check_perm,
+                                                    "form_obj": form_obj,
                                                     })
         
     
@@ -248,7 +267,7 @@ def history_orders(request):
                                              "order_objs": order_objs,
                                              })
 
-
+@check_permission
 @login_required
 def history_order_detail(request, order_id):    
     '''
@@ -257,6 +276,8 @@ def history_order_detail(request, order_id):
     return {*}
     '''    
     order_obj = models.Order.objects.get(id=order_id)
+    creater = OrderFormBuilder()        
+
     if request.method == 'POST':
         # 提交修改
         data = request.POST.copy()
@@ -268,26 +289,33 @@ def history_order_detail(request, order_id):
         
         # 不允许修改状态
         data["type"] = "pass"
-        return process_order(request, data, order_obj)
+        order_class = creater.create_edit_hist_order(order_type=order_obj.order_type)
+
+        return process_order(request, data, order_class, order_obj)
 
     page_type = "history"
     has_edit_perm = request.user.has_perm("web__edit_history_orders")
-    show_edit = True
-    editable = False
-    goods = None
+    
     if request.GET.get("type", "") and has_edit_perm:
         # 编辑模式
         show_edit = False
         editable = True
         goods = models.GoodsDetail.objects.all()
+        order_class = creater.create_edit_hist_order(order_type=order_obj.order_type)
+    else:
+        show_edit = True
+        editable = False
+        goods = None
+        order_class = creater.create_view_hist_order(order_type=order_obj.order_type)
+    form_obj = order_class(instance=order_obj)
         
     return render(request, "web/order_edit.html", {"order_obj": order_obj,
-                                                         "editable": editable,
-                                                         "page_type": page_type,
-                                                         "has_edit_perm": has_edit_perm,
-                                                         "show_edit": show_edit,
-                                                         "goods": goods,
-                                                         })
+                                                    "editable": editable,
+                                                    "page_type": page_type,
+                                                    "has_edit_perm": has_edit_perm,
+                                                    "show_edit": show_edit,
+                                                    "form_obj": form_obj,
+                                                    })
 
 
 @login_required
@@ -312,7 +340,7 @@ def output_history_order(request):
     for j in range(len(order_objs)):
         sheet.write(j+1, 0, order_objs[j].id)
         sheet.write(j+1, 1, order_objs[j].create_date.strftime("%Y-%m-%d  %H:%M"))
-        sheet.write(j+1, 2, order_objs[j].checked_date.strftime("%Y-%m-%d  %H:%M"))
+        sheet.write(j+1, 2, order_objs[j].checked_date.strftime("%Y-%m-%d  %H:%M") if order_objs[j].checked_date else "")
         sheet.write(j+1, 3, order_objs[j].user.name)
         sheet.write(j+1, 4, order_objs[j].detail.__str__())
         sheet.write(j+1, 5, order_objs[j].unit_price.__str__())

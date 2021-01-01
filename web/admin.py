@@ -96,6 +96,7 @@ admin.site.unregister(Group)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "order_type", "status", "user", "create_date", "checked_date")
     list_filter = ("status", "user")
+    readonly_fields = ("create_date", )
 
 class GoodsDetailAdmin(admin.ModelAdmin):
     list_display = ("name", "brand")

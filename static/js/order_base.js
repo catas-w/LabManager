@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2020-12-31 23:19:37
+ * @LastEditTime: 2021-01-01 22:04:16
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -8,9 +8,7 @@
 
     $(function() {
 
-        // 启动单选框
-        // $('#chosen-select').chosen({width: "50%"});
-        $(".form-group select.chosen-style").chosen({width:"50%"});
+        
 
         // 激活标志
         $('#mainnav-menu li').removeClass('active-link');
@@ -18,16 +16,24 @@
         $("li.order").addClass("active");
         $('.order ul').attr({'class': 'collapse in', 'aria-expanded': "true"});
          // 激活标志
-         var task_type = window.location.pathname.split('/')[2];
+        var task_type = window.location.pathname.split('/')[2];
          
-         $(`li.${task_type}`).addClass('active-link');
+        $(`li.${task_type}`).addClass('active-link');
 
-        // 初始化数字input
-        InitNumberInput();
+        
         var flag = false;
 
-        // Ordertype onchange
+        // 更改Ordertype 跳转页面
         BindOrderTypeOnChange();
+        
+        // 只读 form
+        ProcessReadonlyFields();
+        
+        // 初始化数字input
+        InitNumberInput();
+        // 启动单选框
+        // $('#chosen-select').chosen({width: "50%"});
+        $(".form-group select.chosen-style:visible").chosen({width:"50%"});
         
         // 绑定点击函数
         BindClickButton("#order-submit", BindOrderSubmit);
@@ -480,11 +486,9 @@
     }
     
     function InitNumberInput() {
-        $(".form-group input[type='number']").css({"width": "50%", "display": "inline-block"});
-        $(".form-group input[name='total_price']").after('<i class="fa fa-md fa-pencil" id="get-price" aria-hidden="true">&nbsp;计算</i>');
-        '<i class="fa fa-md fa-plus" id="add-goods" aria-hidden="true">&nbsp新建商品</i>'
-        BindCalculatePrice();
-        
+        $(".form-group input[type='number']:visible").css({"width": "50%", "display": "inline-block"});
+        $(".form-group input[name='total_price']:visible").after('<i class="fa fa-md fa-pencil" id="get-price" aria-hidden="true">&nbsp;计算</i>');
+        BindCalculatePrice();        
     }
 
     function BindOrderTypeOnChange() {
@@ -492,5 +496,18 @@
             // console.log($(this).val());
             var order_type = $(this).val();
             window.location.search = `type=${order_type}`;
+        })
+    }
+
+    function ProcessReadonlyFields() {
+        $('.form-group .readonly').each(function() {
+            var val = $(this).val();
+            console.log(val);            
+            if ($(this)[0].tagName == "SELECT") {
+                val = $(this).find($(`option[value=${val}]`)).html();
+                // console.log(val);
+            }
+            $(this).after(`<label class="order-info ">${val}</label>`);
+            $(this).addClass("hide");
         })
     }
