@@ -32,7 +32,7 @@
 									<img class="img-responsive" src="/static/img/thumbs/img3.jpg" alt="Image">
 								</div>
 								<div class="panel-media">
-									<img src="/static/img/av1.png" class="panel-media-img img-circle img-border-light" alt="Profile Picture">
+									<img src="/media/default/av1.png" class="panel-media-img img-circle img-border-light" alt="Profile Picture">
 									<div class="row">
 										<div class="col-lg-7">
 											<h3 class="panel-media-heading">{{ request.user.name }}</h3>
@@ -48,8 +48,8 @@
 									</div>
 								</div>
 								<div class="panel-body">
-									<h4> Motto </h4>
-									好好学习, 天天向上
+									<h4> {{ request.user.get_user_type_display }} </h4>
+									{{ request.user.motto }}
 								</div>
 							</div>
 							<!--===================================================-->

@@ -70,7 +70,7 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('is_admin', )
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('name', 'user_type')}),
+        ('Personal info', {'fields': ('name', 'user_type', 'avatar', 'motto')}),
         ('Permissions', {'fields': ('is_admin', 'is_active')}),
         ('Permissions', {'fields': ('user_permissions',)}),
     )

@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index),
     path("home/", views.index),
+    path("home/myprofile/", views.myprofile),
     path("login/", views.acc_login),
     path("logout/", views.acc_logout),
     path("register/", views.acc_register),
@@ -40,5 +41,6 @@ urlpatterns = [
     path("userinfo/<int:user_id>", views.user_edit, name="user_edit"),
 
     path("get_notice/", views.get_notice),
+    path("statistic/", views.statistic),
 
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

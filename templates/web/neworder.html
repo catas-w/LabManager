@@ -21,59 +21,7 @@
             <div class="panel-body">
                 <form class="form-horizontal order-create">
                     <div class="panel-body">
-                        {% get_order_items form_obj %}                        
-
-                        <!-- <div class="form-group">
-                            <label for="" class="col-sm-3 control-label text-bold">商&nbsp品</label>
-                            <div class="col-sm-4">
-                                <select data-placeholder="----选择已有商品信息----" class="form-control" id="chosen-select" name="detail">
-                                    <option value="none" selected disabled hidden>----选择已有商品----</option>
-                                    {% for item in goods %} 
-                                        <option value="{{ item.id }}">{{ item }}</option>
-                                    {% endfor %}
-                                </select>
-                                <a href="#"><i class="fa fa-md fa-plus" id="add-goods" aria-hidden="true">&nbsp新建商品</i></a>
-                                <span class="help-block detail hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">公&nbsp司</label>
-                            <div class="col-sm-4">
-                                <input type="text" name="company" placeholder="订购公司" class="form-control" id="demo-is-inputnormal">
-                                <span class="help-block company hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">单&nbsp价</label>
-                            <div class="col-sm-1">
-                                <input type="number" step="0.01" min="0" name="unit_price" placeholder="" class="form-control" required="" id="demo-is-inputnormal oninput=" >
-                                <span class="help-block unit_price hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">数&nbsp量</label>
-                            <div class="col-sm-1">
-                                <input type="number" name="count" placeholder="" class="form-control" required="" id="demo-is-inputnormal">
-                                <span class="help-block count hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">总&nbsp价</label>
-                            <div class="col-sm-1">
-                                <input type="number" step="0.01" min="0" name="total_price" placeholder="" class="form-control" required="" id="demo-is-inputnormal">
-                                <span class="help-block total_count hide"><small>Here goes your name</small></span>
-                            </div>
-                            <i class="fa fa-md fa-pencil" id="get-price" aria-hidden="true">&nbsp;计算</i>
-                        </div>
-                        <div class="form-group">
-                            <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">备&nbsp注</label>
-                            <div class="col-sm-4">
-                                <textarea name="memo" cols="40" rows="6" class="vLargeTextField form-control"  id="id_memo"></textarea>
-                                <span class="help-block memo hide"><small>Here goes your name</small></span>
-                            </div>
-                        </div>
-                         -->
+                        {% get_order_items form_obj %}   
 
                         <div class="row">
                             <div class="col-sm-4 col-sm-offset-5">

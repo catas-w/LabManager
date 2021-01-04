@@ -27,7 +27,7 @@
                 <div class="form-group">
                     <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">Email</label>
                     <div class="col-sm-4">
-                        <input type="text" name="email" class="form-control" value="{{ user.email }}">
+                        <input type="text" name="email" class="form-control" value="{{ user.email }}" readonly>
                         <span class="help-block email hide"><small>Here goes your name</small></span>
                     </div>
                 </div>
@@ -157,8 +157,10 @@
 </script>
 <script src="/static/js/order_base.js"></script>
 <script>
+    
     var has_edit_perm = "{{ has_edit_perm }}"=="True"? true:false;
     $(function() {
+        updateTag();
 
         // new Switchery(document.getElementById('switch-admin'));
         // new Switchery(document.getElementById('switch-active'));

@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-01 22:10:22
+LastEditTime: 2021-01-03 16:56:38
 Author: catas
 LastEditors: catas
 Description: 
@@ -19,6 +19,7 @@ from web.permissions import check_permission
 from web.permission_list import perm_dict
 from web.utils import process_order
 from web.utils import OrderFormBuilder
+from django.forms import modelform_factory
 
 # Create your views here.
 
@@ -332,21 +333,48 @@ def output_history_order(request):
     #设定编码类型为utf8
     wb = xlwt.Workbook(encoding = 'utf-8')
     #excel里添加类别
-    sheet = wb.add_sheet(u'历史订单')
-    columns = ["订单id", "创建日期", "批准日期", "申请人", "商品", "单价", "数量", "总价", "收到底单"]
-    for i in range(len(columns)):
-        sheet.write(0, i, columns[i])
+    # sheet = wb.add_sheet(u'历史订单')
+    # columns = ["订单id", "创建日期", "批准日期", "申请人", "商品", "单价", "数量", "总价", "收到底单"]
+    all_cols = [("订单id", "id"), 
+                ("订单类型", "get_order_type_display"),  
+                ("创建日期", "create_date"), 
+                ("批准日期", "checked_date"), 
+                ("申请人", "user", "name"), 
+                ("商品", "detail"), 
+                ("基因", "gene_name"), 
+                ("公司", "company", "name"), 
+                ("单价", "unit_price"), 
+                ("数量", "count"), 
+                ("总价", "total_price"), 
+                ("收到底单", "bill_received")]
+                
+    all_sheets = [(u"试剂购买", all_cols[0:6]+all_cols[7:], 0),
+                  (u"基因测序", all_cols[0:5]+all_cols[6:], 1), 
+                  (u"引物合成", all_cols[0:5]+all_cols[6:], 2), 
+                 ]
+    
+    for item in all_sheets:
+        objs = order_objs.filter(order_type=item[2])
+        sheet = wb.add_sheet(item[0])
+        columns = item[1]
+        for i in range(len(columns)):
+            # 添加 headers
+            sheet.write(0, i, columns[i][0])
+        
+        for i in range(len(objs)):
+            for j in range(len(columns)):
+                obj_attr = objs[i]
+                for attr in columns[j][1:]:
+                    # print(attr)
+                    obj_attr = getattr(obj_attr, attr)
+                
+                if "method" in obj_attr.__repr__():
+                    obj_attr = obj_attr()
+                elif "time" in obj_attr.__repr__():
+                    obj_attr = obj_attr.strftime("%Y-%m-%d  %H:%M")
 
-    for j in range(len(order_objs)):
-        sheet.write(j+1, 0, order_objs[j].id)
-        sheet.write(j+1, 1, order_objs[j].create_date.strftime("%Y-%m-%d  %H:%M"))
-        sheet.write(j+1, 2, order_objs[j].checked_date.strftime("%Y-%m-%d  %H:%M") if order_objs[j].checked_date else "")
-        sheet.write(j+1, 3, order_objs[j].user.name)
-        sheet.write(j+1, 4, order_objs[j].detail.__str__())
-        sheet.write(j+1, 5, order_objs[j].unit_price.__str__())
-        sheet.write(j+1, 6, order_objs[j].count)
-        sheet.write(j+1, 7, order_objs[j].total_price.__str__())
-        sheet.write(j+1, 8, "是" if order_objs[j].bill_received else "否")
+                value = obj_attr.__str__()
+                sheet.write(i+1, j, value)
     
     output = BytesIO()
     wb.save(output)
@@ -382,11 +410,16 @@ def user_edit(request, user_id):
         data['is_acitve'] = data.get("is_active").capitalize()
         # data["user_permissions"] = data.get("user_permissions[]")
         data.setlist("user_permissions", data.getlist("user_permissions[]"))
-        print(data)
-        print(data.getlist("user_permissions"))
-        form = forms.UserEditForm(data, instance=user_obj)
+        # print(data)
+        # print(data.getlist("user_permissions"))
+        # form = forms.UserEditForm(data, instance=user_obj)
+        form_class = modelform_factory(models.UserProfile, 
+                                fields=('name', 'user_type', 'is_active', 'is_admin', "user_permissions", "stu_number"), 
+                                # widgets={"name": {"required": "字段不能为空",}},
+                                )
+        form = form_class(data, instance=user_obj)                        
         if form.is_valid():
-            print(form.cleaned_data)
+            # print(form.cleaned_data)
             form.save()
             return HttpResponse(json.dumps({"status": "success"}))
         else:
@@ -401,6 +434,33 @@ def user_edit(request, user_id):
                                                         "user_perms": user_perms,
                                                         "all_perms": all_perms,
                                                         "has_edit_perm": has_edit_perm,
+                                                        })
+
+
+@login_required
+def myprofile(request):
+    '''
+    description: 自己的信息
+    param {*}
+    return {*}
+    '''    
+    # user_obj = models.UserProfile.objects.get(id=request.user.id)
+    user_obj = request.user
+    if request.method == "POST":
+        form_class = modelform_factory(models.UserProfile, 
+                                    fields=("avatar", "email", 'name', "motto", 'user_type', "stu_number"), 
+                                    # widgets={"name": {"required": "字段不能为空",}},
+                                    )
+        form = form_class(request.POST, instance=user_obj) 
+        if form.is_valid():
+            # print(form.cleaned_data)..........................
+            form.save()
+            return HttpResponse(json.dumps({"status": "success"}))
+        else:
+            return HttpResponse(json.dumps({"status": "failed", "errors": form.errors}))
+
+    return render(request, "web/user_info_self.html", {"user": user_obj, 
+                                                        "user_types": user_obj.user_type_choices,
                                                         })
 
 
@@ -424,6 +484,9 @@ def get_notice(request):
                                         "has_check_orders_perm": has_check_orders_perm,
                                         }))
 
+@login_required
+def statistic(request):
+    # 统计图
 
-
+    return render(request, "web/statistic.html")
 

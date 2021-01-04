@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2021-01-01 22:04:16
+ * @LastEditTime: 2021-01-03 16:23:12
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -18,10 +18,7 @@
          // 激活标志
         var task_type = window.location.pathname.split('/')[2];
          
-        $(`li.${task_type}`).addClass('active-link');
-
-        
-        var flag = false;
+        $(`li.${task_type}`).addClass('active-link');        
 
         // 更改Ordertype 跳转页面
         BindOrderTypeOnChange();
@@ -478,7 +475,7 @@
                     label: "确认",
                     className: "btn-success",
                     callback: function() {
-                        submitOrder("edit_user", "/userinfo");
+                        submitOrder("edit_user");
                     },
                 },
             },

@@ -68,7 +68,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     user_type = models.SmallIntegerField(choices=user_type_choices, verbose_name="用户类型", null=True, default=5)
     stu_number = models.CharField(max_length=16, blank=True, default="---", verbose_name="学号") 
     avatar = models.ImageField(verbose_name="头像", upload_to = user_directory_path, blank = True, null = True)
-    
+    motto = models.CharField(max_length=64, blank=True, default="好好学习, 天天向上", verbose_name="签名")
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

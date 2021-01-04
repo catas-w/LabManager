@@ -1,15 +1,16 @@
 '''
 Date: 2020-12-28 22:10:34
-LastEditTime: 2021-01-01 22:05:12
+LastEditTime: 2021-01-01 22:47:00
 Author: catas
 LastEditors: catas
 Description: 
 '''
 from web import models
+from django import forms
 from django.forms import ModelForm
 from django.shortcuts import HttpResponse
 import json
-
+import re
 
 def process_order(request, data, form_class, order_obj=None):
     '''
@@ -48,13 +49,30 @@ def process_order(request, data, form_class, order_obj=None):
 
 
 def clean_user(self):
-        value = self.cleaned_data.get("user")
-        if self.instance.id is not None:
-            # 非创建禁止修改用户
-            return self.initial["user"]
-        return value
+    value = self.cleaned_data.get("user")
+    if self.instance.id is not None:
+        # 非创建禁止修改用户
+        return self.initial["user"]
+    return value
 
-def default_clean(self):
+def clean_primer1(self):
+    seq = self.cleaned_data.get("primer1", "").strip().upper()
+    if seq:
+        if re.search(r'[^ACGT]', seq):
+            # 序列不正确
+            raise forms.ValidationError("序列只能包含 A,C,G,T (不区分大小写)")
+        else:
+            return seq
+
+def clean_primer2(self):
+    seq = self.cleaned_data.get("primer2", "").strip().upper()
+    if seq:
+        if re.search(r'[^ACGT]', seq):
+            raise forms.ValidationError("序列只能包含 A,C,G,T (不区分大小写)")
+        else:
+            return seq            
+
+def default_clean(self):    
     if self.instance.id is not None:
         for field in self.Meta.readonly_fields:
             if field == "status":
@@ -103,6 +121,8 @@ def __new__(cls, *args, **kwargs):
     
     # setattr(cls, "clean_user", clean_user)
     setattr(cls, "clean", default_clean)
+    setattr(cls, "clean_primer1", clean_primer1)
+    setattr(cls, "clean_primer2", clean_primer2)
 
     return ModelForm.__new__(cls)
 

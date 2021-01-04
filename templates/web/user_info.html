@@ -24,6 +24,7 @@
                 </div>
             </div>
         </div>
+
         <table class="table table-hover table-vcenter mar-top " id="user-table">
             <thead>
                 <tr>
@@ -43,7 +44,8 @@
                 {% for user in user_objs %}
                 <tr>
                     <td class="min-w-td">{{ user.id }}</td>
-                    <td><img src="/static/img/av1.png" alt="Profile Picture" class="img-circle img-sm"></td>
+                    <!-- <td><img src="/static/img/av1.png" alt="Profile Picture" class="img-circle img-sm"></td> -->
+                    <td><img src="/media/default/av1.png" alt="Profile Picture" class="img-circle img-sm"></td>
                     <td><a class="btn-link" href="{{ user.id }}">{{ user.name }}</a></td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.stu_number }}</td>
@@ -67,6 +69,7 @@
                 </tr>
             </tfoot>
         </table>
+        
     </div>
 </div>
 
