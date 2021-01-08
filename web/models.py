@@ -133,7 +133,7 @@ class Order(models.Model):
     # company = models.CharField(max_length=64, blank=True, null=True)
     company = models.ForeignKey("CompanyInfo", on_delete=models.SET_NULL, null=True, verbose_name="公司")
 
-    gene_name = models.CharField(max_length=16, blank=True, null=True, verbose_name="基因")
+    gene_name = models.CharField(max_length=64, blank=True, null=True, verbose_name="基因")
     primer1 = models.TextField(blank=True, null=True, verbose_name="引物序列1 (5'-3')")
     primer2 = models.TextField(blank=True, null=True, verbose_name="引物序列2 (5'-3')")
 

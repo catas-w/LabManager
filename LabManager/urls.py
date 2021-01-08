@@ -18,6 +18,9 @@ from django.urls import path
 from web import views
 from django.conf.urls.static import static
 from LabManager import settings
+# from django.views.static import serve
+# from django.conf import settings
+# from django.urls import re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,5 +45,7 @@ urlpatterns = [
 
     path("get_notice/", views.get_notice),
     path("statistic/", views.statistic),
+    # re_path('^static/(?P<path>.*)', serve,{'document_root':settings.STATIC_ROOT}), # 用于处理static里的文件
+    # re_path('^media/(?P<path>.*)',serve,{'document_root':settings.MEDIA_ROOT}),
 
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
