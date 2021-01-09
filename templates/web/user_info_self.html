@@ -18,9 +18,13 @@
 
                 <div class="form-group">
                     <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">头&nbsp;像</label>
-                    <div class="col-sm-4">
-                        <img src="/media/default/av1.png" alt="Profile Picture" class="img-sm">
-                        <span class="help-block name hide"><small>Here goes your name</small></span>
+                    <div class="col-sm-2" style="position: relative;bottom: 15px;">
+                        <img src="{{ user.avatar_url }}" id="avatar" alt="Profile Picture" class="img-md img-circle">
+                        <i class="fa fa-md fa-pencil" id="edit-ava" aria-hidden="true">&nbsp;修改</i>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="file" id="input_ava" style="display:none;">
+                        <!-- <img src="" alt="" id="ava"> -->
                     </div>
                 </div>
 
@@ -94,7 +98,11 @@
 <link href="/static/plugins/fooTable/css/footable.core.css" rel="stylesheet">
 <link href="/static/plugins/switchery/switchery.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/static/plugins/chosen/chosen.min.css">
+<link rel="stylesheet" href="/static/plugins/cropper/cropper.css">
 <style>
+    img {
+        max-width: 100%; /* This rule is very important, please do not ignore this! */
+    }
     .form-group {
         margin-bottom: 50px;
     }
@@ -114,6 +122,55 @@
     span.help-block {
         color: rgb(223, 63, 63);
     }
+    #edit-ava {
+        color: rgb(36, 113, 165);
+        margin-left: 10px;
+    }
+    #edit-ava:hover {
+        opacity: 70%;
+        cursor: pointer;
+    }
+    #current-ava-label {
+        display: block;
+        left: 26px;
+        top: 5px;
+        position: relative;
+    }
+    #current-ava-box {
+        position: relative;
+        top: 65px;
+    }
+    #preview-box {
+        border-radius: 50%;
+        background-color: aquamarine;
+        width: 96px;
+        height: 96px;
+        overflow: hidden;
+    }
+    #upload-box {
+        width: 180px;
+        height: 180px;
+        border-radius: 15px;
+        padding: 56px;
+        margin: 22px;
+    }
+    #upload-box:hover {
+        opacity: 70%;
+    }
+    #crop-box {
+        width: 180px;
+        height: 180px;
+        margin: 22px;
+    }
+    .border-line {
+        width: 1px;
+        height: 150px;
+        background: #b8b8b8;
+        float: left;
+        margin-right: 65px;
+        margin-top: 37px;
+        margin-left: 65px;
+    }
 </style>
 {% endblock %}
 
@@ -123,15 +180,160 @@
 <script src="/static/plugins/switchery/switchery.min.js"></script>
 <script src='/static/plugins/bootbox/bootbox.min.js'></script>
 <script src="/static/plugins/chosen/chosen.jquery.min.js"></script>
+<script src="/static/plugins/cropper/cropper.js"></script>
+<script src="/static/plugins/cropper/jquery-cropper.js"></script>
 <script>
     var csrf_token = "{{ csrf_token }}";
+    var cropper;
 </script>
 <script src="/static/js/order_base.js"></script>
 <script>
     $(function() {   
         updateTag();
         $('#user_type').chosen({width:'50%'});
+        
+        importImg();
+        BindEditAvatar();
     })  
+
+    function BindEditAvatar() {
+        $("#edit-ava").click(function(e) {
+            createModalBox();
+        });
+    }
+
+    function importImg() {
+        $('input[type=file]').change(function(){
+            var file=this.files[0];
+        
+            var reader=new FileReader();
+            reader.onload=function(){
+                // 通过 reader.result 来访问生成的 DataURL
+                var url=reader.result;
+                // setImageURL(url);
+                $("#crop-img").attr("src", url);
+                cropAvatar();
+                $("#upload-box").addClass("hide");
+                $("#crop-box").removeClass("hide");
+                $("#avatar-preview").addClass("hide");
+                $("#preview-box").removeClass("hide");
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function cropAvatar() {
+        options = {
+            viewMode: 2,
+            preview: "#preview-box",
+            center: false,
+            aspectRatio: 1,
+        };
+
+        var $image = $('#crop-img');
+        $image.cropper(options);
+
+        // Get the Cropper.js instance after initialized
+        // var cropper = $image.data('cropper');
+        cropper = $image.data('cropper');
+    }
+
+    function createModalBox() {
+        var init_avatar_url = $("#avatar").attr("src");
+        var dialog = bootbox.dialog({
+            title: " ",
+            onEscape: true,
+            message: `
+                <div class="row">
+                    <div class="col-sm-4 hide" id="crop-box">
+                        <img src="" id="crop-img" alt="">
+                    </div>
+                    <label class="col-sm-4 pad-all bg-gray" id="upload-box" for="input_ava">
+                        <img src="/static/img/uplpad.png">
+                        <span class="upload-img" style="padding-left: 8px;">选择图片</span>
+                    </label>
+                    <div class="border-line"></div>
+                    <div class="col-sm-4" id="current-ava-box">
+                        <div id="preview-box" class="hide"></div>
+                        <img src="${init_avatar_url}" id="avatar-preview" alt="Profile Picture" class="img-lg img-circle">
+                        <span id="current-ava-label">预&nbsp;览</span>
+                    </div>
+                </div>
+            `,
+            buttons: {
+                default: {
+                    label: "取&nbsp;&nbsp;消",
+                    className: "btn-default",
+                },
+                success: {
+                    label: "保&nbsp;&nbsp;存",
+                    className: "btn-purple",
+                    callback: function() {
+                        if (!$("#avatar-preview").hasClass("hide")) {
+                            // 没传图
+                            dialog.modal("hide");
+                            return;
+                        }
+                        
+                        // 取出其中 base64 信息，再用 window.atob 转换成由二进制字符串。
+                        // 但 window.atob 转换后的结果仍然是字符串，直接给 Blob 还是会出错。所以又要用 Uint8Array 转换一下
+                        var data_src = cropper.getCroppedCanvas().toDataURL('image/jpeg');
+
+                        data = data_src.split(',')[1];
+                        data = window.atob(data);
+                        var ia = new Uint8Array(data.length);
+                        for (var i = 0; i < data.length; i++) {
+                            ia[i] = data.charCodeAt(i);
+                        };
+                        
+                        // canvas.toDataURL 返回的默认格式就是 image/png
+                        var blob=new Blob([ia], {type:"image/jpeg"});
+                        
+                        var fd=new FormData();
+                        fd.append('file', blob);
+                        fd.append("csrfmiddlewaretoken", csrf_token);
+                        // AJAX
+                        $.ajax({
+                            url: "/update-avatar/",
+                            type: "post",
+                            data: fd,
+                            contentType: false,
+                            // 告诉jQuery不要去设置Content-Type请求头
+                            processData: false,
+                            success: function(res) {
+                                res = JSON.parse(res);
+                                if(res.status == "success") {
+                                    // 更新图片 
+                                    $("#avatar").attr("src", res.img_url);
+                                    // noty
+                                    $.niftyNoty({
+                                        type: 'success',
+                                        icon : 'fa fa-check',
+                                        message : "Success " +  ".<br> 修改成功 <strong>" + "</strong>",
+                                        container : 'floating',
+                                        timer : 5000
+                                    });                                                                        
+                                    dialog.modal('hide');
+                                }                                
+                            },
+                            error: function() {
+                                $.niftyNoty({
+                                    type: 'alert',
+                                    icon : 'fa fa-check',
+                                    message : "Error " +  ".<br> 更改失败 <strong>" + "</strong>",
+                                    container : 'floating',
+                                    timer : 3000
+                                });
+                            }
+                        });
+
+                        return false;
+                    }
+                }
+            }
+        });
+    }
+
 </script>
 {% endblock %}
 

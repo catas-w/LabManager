@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-03 16:56:38
+LastEditTime: 2021-01-09 22:57:58
 Author: catas
 LastEditors: catas
 Description: 
@@ -462,6 +462,18 @@ def myprofile(request):
     return render(request, "web/user_info_self.html", {"user": user_obj, 
                                                         "user_types": user_obj.user_type_choices,
                                                         })
+
+@login_required
+def update_avatar(request):
+    '''
+    description: 修改头像
+    '''
+    if request.method == "POST":
+        request.user.avatar = request.FILES.get("file")
+        request.user.save()
+        return HttpResponse(json.dumps({"status": "success", "img_url": request.user.avatar_url()}))
+
+    return HttpResponse(status=404)
 
 
 @login_required

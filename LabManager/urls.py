@@ -42,6 +42,7 @@ urlpatterns = [
     path("order/history/output/", views.output_history_order),
     path("userinfo/", views.user_info),
     path("userinfo/<int:user_id>", views.user_edit, name="user_edit"),
+    path("update-avatar/", views.update_avatar),
 
     path("get_notice/", views.get_notice),
     path("statistic/", views.statistic),

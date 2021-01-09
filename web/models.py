@@ -42,8 +42,9 @@ class MyUserManager(BaseUserManager):
         return user
 
 def user_directory_path(instance, filename):
-    ext = filename.split('.').pop()
-    filename = 'avatar_{0}.{1}'.format(instance.id, ext)
+    # 头像上传路径
+    file_type = filename.split('.')[-1]
+    filename = 'avatar_{0}.{1}'.format(instance.id, file_type)
     return os.path.join("avatars", filename) # 系统路径分隔符差异，增强代码重用性
 
 
@@ -79,11 +80,11 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['name']
 
     # 这里定义一个方法，作用是当用户注册时没有上传照片，模板中调用 [ModelName].[ImageFieldName].url 时赋予一个默认路径    
-    def photo_url(self):
+    def avatar_url(self):
         if self.avatar and hasattr(self.avatar, 'url'):
             return self.avatar.url
         else:
-            return '/upload/media/default/av1.png'
+            return '/media/default/av1.png'
 
     def __str__(self):
         return "%s" % (self.name, )
