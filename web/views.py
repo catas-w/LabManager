@@ -1,11 +1,11 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-09 22:57:58
+LastEditTime: 2021-01-10 19:02:25
 Author: catas
 LastEditors: catas
 Description: 
 '''
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.shortcuts import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from web import models
@@ -67,6 +67,34 @@ def acc_register(request):
             errors = form_obj.errors.as_json()
             
     return render(request, 'web/register.html', {'errors': json.loads(errors)})
+
+@login_required
+def reset_passwd(request):
+    # 修改密码
+    if request.method == "POST":
+        # print(request.POST)
+        errors = {}
+        old_password = request.POST.get("password")
+        user = authenticate(username=request.user.email, password=old_password)
+        if user is not None:
+            # 验证成功
+            password1 = request.POST.get("password1")
+            password2 = request.POST.get("password2")
+            if password1 == password2:
+                request.user.set_password(password1)
+                request.user.save()
+                return HttpResponse(json.dumps({"status": "success"}))
+            
+            else:
+                errors["password2"] = "两次密码不一致"
+        else:
+            errors["password"] = "密码不正确"
+
+        return HttpResponse(json.dumps({"status": "failed",
+                                        "errors": errors}))
+    return render(request, "web/user_info_passwd.html")
+
+
 
 @login_required
 def myorder(request):
@@ -158,11 +186,21 @@ def order_detail(request, order_id):
         # 验证权限
         if request.method == "POST":
             # 修改数据
-            if order_obj.status == 1 or order_obj.status == 3:
-                # status 是已提交或已完成
+            if order_obj.status == 3:
+                # status 已完成
                 return HttpResponse(status=403)
-                
+            
             data = request.POST.copy()
+
+            if order_obj.status == 1:
+                if data.get("type") == "withdraw":
+                    # 撤回订单
+                    order_obj.status = 0
+                    order_obj.save()
+                    return HttpResponse(json.dumps({"status": "success"}))
+                else:
+                    return HttpResponse(status=403)                    
+
             if data.get("type") == "delete":
                 # 状态为删除订单
                 order_obj.delete()
@@ -183,9 +221,9 @@ def order_detail(request, order_id):
         
         form_obj = form_class(instance=order_obj)        
         return render(request, "web/order_edit.html", {"order_obj": order_obj,
-                                                         "editable": editabl,
-                                                         "form_obj": form_obj,
-                                                         })
+                                                        "editable": editabl,
+                                                        "form_obj": form_obj,
+                                                        })
     else:
         return HttpResponse(status=404)
 
@@ -200,7 +238,12 @@ def unchecked_order(request):
     order_type = "unchecked"
     order_objs = models.Order.objects.filter(status=1).order_by("create_date").reverse()
     
-    return render(request, "web/orders.html", {"order_type": order_type, "order_objs": order_objs})
+    message = ""
+    message = request.GET.get("error-msg", "")
+
+    return render(request, "web/orders.html", {"order_type": order_type, 
+                                                "order_objs": order_objs, 
+                                                "message": message})
 
 
 @login_required
@@ -215,10 +258,11 @@ def check_order(request, order_id):
     try:
         order_obj = models.Order.objects.get(id=order_id)
     except ObjectDoesNotExist:
-        return HttpResponse(status=404)
-    # if order_obj.status != 1 and request.user.is_admin != True:
+        return redirect("/order/check/?error-msg=此订单已被删除或不存在!")
+    
     if order_obj.status != 1:
-        return HttpResponse(status=403)
+        # return unchecked_order(request, message="此订单已被撤回或不存在!")
+        return redirect("/order/check/?error-msg=此订单已被撤回或不存在!")
     
     creater = OrderFormBuilder()        
     order_class = creater.create_check_order(order_type=order_obj.order_type)

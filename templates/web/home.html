@@ -32,7 +32,9 @@
 									<img class="img-responsive" src="/static/img/thumbs/img3.jpg" alt="Image">
 								</div>
 								<div class="panel-media">
-									<img src="/media/default/av1.png" class="panel-media-img img-circle img-border-light" alt="Profile Picture">
+									<a href="/home/myprofile/">
+										<img src="{{ request.user.avatar_url }}" class="panel-media-img img-circle img-border-light" alt="Profile Picture">
+									</a>
 									<div class="row">
 										<div class="col-lg-7">
 											<h3 class="panel-media-heading">{{ request.user.name }}</h3>

@@ -87,6 +87,14 @@
                             </div>
                             {% endif %}
                         {% endif %}
+
+                        {%  if order_obj.status == 1 %}
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-3">
+                                    <button class="btn btn-warning btn-rounded btn-labeled fa fa-reply fa-lg" id="withdraw-order">撤&nbsp;&nbsp;回</button>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                     
                 </form>
@@ -154,6 +162,10 @@
     span.switchery {
         position: relative;
         top: 5px;
+    }
+    #withdraw-order {
+        position: relative;
+        left: -38px;
     }
 </style>
 {% endblock %}

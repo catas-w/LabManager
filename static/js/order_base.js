@@ -1,14 +1,12 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2021-01-03 16:23:12
+ * @LastEditTime: 2021-01-10 19:10:49
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
  */
 
     $(function() {
-
-        
 
         // 激活标志
         $('#mainnav-menu li').removeClass('active-link');
@@ -41,9 +39,11 @@
         BindClickButton("#order-reject", BindReject);
         BindClickButton("#order-pass", BindPass);
         BindClickButton("#user-save", BindUserEdit);
+        BindClickButton("#reset-passwd", BindResetPasswd);
         
         BindClickButton("#hist-order-submit", BindOrderSubmit, jump_url="/order/history/");
         BindClickButton("#hist-order-delete", BindDeleteOrder, jump_url="/order/history/");
+        BindClickButton("#withdraw-order", BindWithrawOrder);
     }) ;
 
     function BindCreateGoods(e) {
@@ -301,7 +301,7 @@
         var data = getOrderInfo();
         data.csrfmiddlewaretoken = csrf_token;
         data.type = type;
-        console.log(data);
+        // console.log(data);
         // return;
         $.ajax({
             url: "",
@@ -351,9 +351,9 @@
                 $.niftyNoty({
                     type: 'danger',
                     icon : 'fa fa-check',
-                    message : "请求失败 " +  ".<br> " + " <strong>" + "</strong>",
+                    message : "请求失败 (网络错误或订单已被删除, 撤回)" +  ".<br> " + " <strong>" + "</strong>",
                     container : 'floating',
-                    timer : 3000
+                    timer : 5000
                 });
             }
         });
@@ -382,7 +382,7 @@
         for (var i =0; i<form_items.length; i++) {
             data[$(form_items[i]).attr('name')] = $(form_items[i]).val();
         }
-        console.log(data);
+        // console.log(data);
         return data;
     }
     
@@ -508,3 +508,33 @@
             $(this).addClass("hide");
         })
     }
+
+    function BindResetPasswd(e) {
+        e.preventDefault();
+        submitOrder("reset_passwd");
+    }
+
+    function BindWithrawOrder(e, jump_url) {
+        // 撤回订单
+        e.preventDefault();
+        var dialog = bootbox.dialog({
+            title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;Alert</label>',
+            onEscape: true,
+            message: "<label class='text-sm'>确认要撤回吗?</label>",
+            
+            buttons: {
+                default: {
+                    label: "Cancel",
+                    className: "btn-default",
+                },
+                danger: {
+                    label: "确认",
+                    className: "btn-info",
+                    callback: function() {
+                        submitOrder("withdraw", window.location.pathname); 
+                    },
+                },
+            },
+        });          
+    }
+   
