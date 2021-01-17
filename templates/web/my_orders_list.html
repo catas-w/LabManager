@@ -13,10 +13,33 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-3 text-xs-center">
+            <div class="form-group">
+                <!-- <label class="control-label">筛选</label> -->
+                <select id="demo-foo-filter-status" onchange="javascript:replaceParamVal('scale', this.value);" class="form-control search scale">
+                    <option value="">全部</option>
+                    <option value="1">最近1个月</option>
+                    <option value="6">最近6个月</option>
+                    <option value="12">最近1年</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3 col-sm-offset-6 text-xs-center text-right">
+            <div class="searchbox">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control search q" onchange="javascript:replaceParamVal('q', this.value);" placeholder="Search by 商品/基因名" >
+                    <span class="input-group-btn">
+                        <button class="text-muted" type="button"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
     <table id="foo-filtering" class="table table-hover toggle-circle order-list" data-limit-navigation="4" data-page-size="10">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>#</th>
                 <th>订单类型</th>
                 <!-- <th data-toggle="true" >Task</th> -->
                 <th data-hide="phone, tablet">创建时间</th>
@@ -30,7 +53,8 @@
         <tbody>
             {% for item in my_orders %}
             <tr class="footable-even" style="display: table-row;">
-                <td><a href="{{ item.id }}">{{ item.id }}</a></td>
+                <td><a href="{{ item.id }}">{{ forloop.counter }}</a></td>
+                <!-- <td><a href="{{ item.id }}">{{ item.id }}</a></td> -->
                 <td><a href="{{ item.id }}">{{ item.get_order_type_display }}</a></td>
                 {% get_create_date item %}
                 {% if item.order_type == 0 %}

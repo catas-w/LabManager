@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-10 19:02:25
+LastEditTime: 2021-01-17 16:27:30
 Author: catas
 LastEditors: catas
 Description: 
@@ -20,6 +20,7 @@ from web.permission_list import perm_dict
 from web.utils import process_order
 from web.utils import OrderFormBuilder
 from django.forms import modelform_factory
+from web import tables
 
 # Create your views here.
 
@@ -106,9 +107,23 @@ def myorder(request):
     cur_user_id = request.user.id
     cur_orders = models.Order.objects.filter(user_id=cur_user_id).order_by("create_date").reverse()
     order_list_type = "personal"
+    scale = request.GET.get("scale", "")
+    q = request.GET.get("q", "")
+    cur_orders = tables.search_by(q, cur_orders, ["gene_name", "detail__name"])
     
-    
-    return render(request, "web/orders.html", {"my_orders": cur_orders, "order_list_type": order_list_type})
+    if scale:
+        # 过滤时间
+        days = int(scale) * 30
+        filter_date = datetime.datetime.now() - datetime.timedelta(days=days)
+        conditions = {"create_date": filter_date }
+        cur_orders = tables.query_filter(conditions, models.Order, cur_orders)
+
+    return render(request, "web/orders.html", {"my_orders": cur_orders, 
+                                            "order_list_type": order_list_type,
+                                            "order_type": order_list_type,
+                                            "scale": scale,
+                                            "q": q
+                                            })
 
 
    
@@ -236,14 +251,21 @@ def unchecked_order(request):
     return {*}
     '''    
     order_type = "unchecked"
+    # 查询参数
+    scale = request.GET.get("scale", "")
+    q = request.GET.get("q", "")
     order_objs = models.Order.objects.filter(status=1).order_by("create_date").reverse()
+    order_objs = tables.search_by(q, order_objs, ["user__name", "gene_name", "detail__name"])
     
     message = ""
     message = request.GET.get("error-msg", "")
 
     return render(request, "web/orders.html", {"order_type": order_type, 
                                                 "order_objs": order_objs, 
-                                                "message": message})
+                                                "message": message,
+                                                "scale": scale,
+                                                "q": q
+                                                })
 
 
 @login_required
@@ -306,10 +328,22 @@ def history_orders(request):
     return {*}
     '''    
     order_type = "history"
+    scale = request.GET.get("scale", "")
+    q = request.GET.get("q", "")
     order_objs = models.Order.objects.filter(status=3).order_by("create_date").reverse()
+    order_objs = tables.search_by(q, order_objs, ["user__name", "gene_name", "detail__name"])
     
+    if scale:
+        # 过滤时间
+        days = int(scale) * 30
+        filter_date = datetime.datetime.now() - datetime.timedelta(days=days)
+        conditions = {"create_date": filter_date }
+        order_objs = tables.query_filter(conditions, models.Order, order_objs)
+
     return render(request, "web/orders.html", {"order_type": order_type,
                                              "order_objs": order_objs,
+                                             "scale": scale,
+                                             "q": q
                                              })
 
 @check_permission
@@ -436,7 +470,13 @@ def output_history_order(request):
 @login_required
 def user_info(request):
     user_objs = models.UserProfile.objects.all()
-    return render(request, "web/user_info.html", {"user_objs": user_objs})
+    user_type = request.GET.get("user_type", "active")
+    if user_type == "active":
+        user_objs = tables.query_filter({"is_active": True}, models.UserProfile, user_objs)
+
+    return render(request, "web/user_info.html", {"user_objs": user_objs, 
+                                                  "user_type": user_type,
+                                                  })
 
 
 @check_permission

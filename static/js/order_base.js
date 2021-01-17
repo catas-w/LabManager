@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2021-01-10 19:10:49
+ * @LastEditTime: 2021-01-17 16:29:27
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -475,7 +475,7 @@
                     label: "确认",
                     className: "btn-success",
                     callback: function() {
-                        submitOrder("edit_user");
+                        submitOrder("edit_user", "/userinfo");
                     },
                 },
             },

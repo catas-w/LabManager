@@ -135,8 +135,8 @@ class Order(models.Model):
     company = models.ForeignKey("CompanyInfo", on_delete=models.SET_NULL, null=True, verbose_name="公司")
 
     gene_name = models.CharField(max_length=64, blank=True, null=True, verbose_name="基因")
-    primer1 = models.TextField(blank=True, null=True, verbose_name="引物序列1 (5'-3')")
-    primer2 = models.TextField(blank=True, null=True, verbose_name="引物序列2 (5'-3')")
+    primer1 = models.TextField(blank=True, null=True, verbose_name="引物序列F (5'-3')")
+    primer2 = models.TextField(blank=True, null=True, verbose_name="引物序列R (5'-3')")
 
     unit_price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="单价")
     count = models.IntegerField(verbose_name="数量")
