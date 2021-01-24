@@ -13,9 +13,31 @@
     </ol>
     <hr>
     <div id="page-content">
-        <h4>未完成...</h4>
         <div class="row">
-            <div class="col-sm-8 col-sm-offset-2 text-xs-center">
+            <div class="col-sm-3">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">筛 选</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pad-ver">        
+                            <!--Block level radio buttons-->
+                            <!--===================================================-->
+                            <form class="form-block">
+                                <label class="form-radio form-icon btn btn-info btn-labeled active form-text">
+                                    <input type="radio" name="btn-bkl-2" checked="" value="6" onchange="javascript:getStaticsData(this.value);">最近半年
+                                </label>
+                                <label class="form-radio form-icon btn btn-info btn-labeled form-text">
+                                    <input type="radio" name="btn-bkl-2" value="12" onchange="javascript:getStaticsData(this.value);">最近一年
+                                </label>
+                            </form>
+                            <!--===================================================-->
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8  text-xs-center">
                 <div id="main" style="width: 800px;height:600px;"></div>
             </div>
         </div>
@@ -28,74 +50,61 @@
 <script src="/static/js/echarts_defined.js"></script>
 <script>
     $(function() {
-        var myChart = echarts.init(document.getElementById('main'));
+        
+        DrawPieChart();
+        getStaticsData();
+    })
 
-        // 指定图表的配置项和数据
-        var option = {
-            title: {
-                text: 'ECharts 入门示例'
+    var csrf_token = "{{ csrf_token }}";
+    var myChart = echarts.init(document.getElementById('main'));
+
+    function getPieChartOption(dataset, lastmonth) {
+        option = {
+            legend: {},
+            tooltip: {
+                trigger: 'axis',
+                showContent: false
             },
-            tooltip: {},
-            legend: {
-                data:['销量']
-            },
-            xAxis: {
-                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
-            },
-            yAxis: {},
-            series: [{
-                name: '销量',
-                type: 'bar',
-                data: [5, 20, 36, 10, 10, 20]
-            }]
-        };
-
-        // 使用刚指定的配置项和数据显示图表。
-        // myChart.setOption(option);
-
-
-
-        setTimeout(function () {
-
-            option = {
-                legend: {},
-                tooltip: {
-                    trigger: 'axis',
-                    showContent: false
-                },
-                dataset: {
-                    source: [
-                        ['product', '6月', '7月', '8月', '9月', '10月', '11月'],
-                        ['试剂购买', 41.1, 30.4, 65.1, 53.3, 83.8, 98.7],
-                        ['测序', 86.5, 92.1, 85.7, 83.1, 73.4, 55.1],
-                        ['引物合成', 24.1, 67.2, 79.5, 86.4, 65.2, 82.5],
-                        ['其他', 55.2, 67.1, 69.2, 72.4, 53.9, 39.1]
-                    ]
-                },
-                xAxis: {type: 'category'},
-                yAxis: {gridIndex: 0},
-                grid: {top: '55%'},
-                series: [
-                    {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                    {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                    {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                    {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-                    {
-                        type: 'pie',
-                        id: 'pie',
-                        radius: '30%',
-                        center: ['50%', '25%'],
-                        label: {
-                            formatter: '{b}: {@6月} ({d}%)'
-                        },
-                        encode: {
-                            itemName: 'product',
-                            value: '6月',
-                            tooltip: '6月'
-                        }
+            dataset: dataset,
+            xAxis: {type: 'category'},
+            yAxis: {gridIndex: 0},
+            grid: {top: '55%'},
+            series: [
+                {type: 'line', smooth: true, seriesLayoutBy: 'row', emphasis: {focus: 'series'}},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row', emphasis: {focus: 'series'}},
+                {type: 'line', smooth: true, seriesLayoutBy: 'row', emphasis: {focus: 'series'}},
+                {
+                    type: 'pie',
+                    id: 'pie',
+                    radius: '40%',
+                    center: ['50%', '30%'],
+                    emphasis: {focus: 'data'},
+                    label: {
+                        formatter: `{b}: {@${lastmonth}} ({d}%)`
+                    },
+                    encode: {
+                        itemName: 'product',
+                        value: lastmonth,
+                        tooltip: lastmonth,
                     }
+                }
+            ]
+        };
+        return option;
+    }
+
+    function DrawPieChart() {
+        setTimeout(function () {
+            dataset = {
+                source: [
+                    ['product', '6月', '7月', '8月', '9月', '10月', '11月'],
+                    ['试剂购买', 41.1, 30.4, 65.1, 53.3, 83.8, 98.7],
+                    ['测序', 86.5, 92.1, 85.7, 83.1, 73.4, 55.1],
+                    ['引物合成', 24.1, 67.2, 79.5, 86.4, 65.2, 82.5],
                 ]
             };
+            lastmonth = "11月";
+            option = getPieChartOption(dataset, lastmonth);
 
             myChart.on('updateAxisPointer', function (event) {
                 var xAxisInfo = event.axesInfo[0];
@@ -115,12 +124,27 @@
                     });
                 }
             });
-
+            
             myChart.setOption(option);
-
         });
-    })
-
+    }
     
+    function getStaticsData(time_scale=6) {
+        $.ajax({
+            url: "",
+            type: "post",
+            dataType: "JSON",
+            data: {
+                "csrfmiddlewaretoken": csrf_token,
+                "time_scale": time_scale
+            },
+            success: function(res) {
+                option = getPieChartOption(res.dataset, res.lastmonth);
+                // console.log(option);
+                myChart.setOption(option);
+            }
+        });
+    }
+
 </script>
 {% endblock %}

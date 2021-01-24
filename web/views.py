@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-17 16:27:30
+LastEditTime: 2021-01-24 16:45:23
 Author: catas
 LastEditors: catas
 Description: 
@@ -469,7 +469,7 @@ def output_history_order(request):
     
 @login_required
 def user_info(request):
-    user_objs = models.UserProfile.objects.all()
+    user_objs = models.UserProfile.objects.all().order_by("is_admin").reverse()
     user_type = request.GET.get("user_type", "active")
     if user_type == "active":
         user_objs = tables.query_filter({"is_active": True}, models.UserProfile, user_objs)
@@ -492,14 +492,9 @@ def user_edit(request, user_id):
         data = request.POST.copy()
         data['is_admin'] = data.get("is_admin").capitalize()
         data['is_acitve'] = data.get("is_active").capitalize()
-        # data["user_permissions"] = data.get("user_permissions[]")
         data.setlist("user_permissions", data.getlist("user_permissions[]"))
-        # print(data)
-        # print(data.getlist("user_permissions"))
-        # form = forms.UserEditForm(data, instance=user_obj)
         form_class = modelform_factory(models.UserProfile, 
                                 fields=('name', 'user_type', 'is_active', 'is_admin', "user_permissions", "stu_number"), 
-                                # widgets={"name": {"required": "字段不能为空",}},
                                 )
         form = form_class(data, instance=user_obj)                        
         if form.is_valid():
@@ -583,6 +578,9 @@ def get_notice(request):
 @login_required
 def statistic(request):
     # 统计图
+    if request.method == "POST":
+        from web.utils import get_statistic_data
+        return HttpResponse(json.dumps(get_statistic_data(request.POST)))
 
     return render(request, "web/statistic.html")
 

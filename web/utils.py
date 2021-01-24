@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-28 22:10:34
-LastEditTime: 2021-01-16 16:34:19
+LastEditTime: 2021-01-24 16:24:47
 Author: catas
 LastEditors: catas
 Description: 
@@ -11,6 +11,8 @@ from django.forms import ModelForm
 from django.shortcuts import HttpResponse
 import json
 import re
+import datetime
+from django.db.models import Sum, Count
 
 def process_order(request, data, form_class, order_obj=None):
     '''
@@ -223,4 +225,74 @@ class OrderFormBuilder():
         return self.create_order(all_fields, readonly_fields=readonly_fields, unrequired_fields=unrequired_fields)
 
 
+
+def get_statistic_data(conditions):
+    '''
+    description: 获取统计数据
+    param {*}
+        conditions = {
+            'time_scale': 6/12,
+        }
+    return {*}
+        {
+            dataset: {
+                    source: [
+                        ['product', '6月', '7月', '8月', '9月', '10月', '11月'],
+                        ['试剂购买', 41.1, 30.4, 65.1, 53.3, 83.8, 98.7],
+                        ['测序', 86.5, 92.1, 85.7, 83.1, 73.4, 55.1],
+                        ['引物合成', 24.1, 67.2, 79.5, 86.4, 65.2, 82.5],
+                    ]
+                },
+            lastmonth: "month",
+        }
+    '''
+    time_scale = int(conditions.get("time_scale"))
+    today = datetime.datetime.now()
+    month_count = 12
+    # time scale 的日期
+    if time_scale == 12:
+        # 最近一年
+        if today.month == 12:
+            from_date = datetime.datetime(today.year, 1, day=1)
+        else:
+            from_date = datetime.datetime(today.year-1, today.month+1, day=1)
+    else:
+        # 最近半年
+        month_count = 7
+        if today.month >6:
+            from_date = datetime.date(today.year, today.month-6, day=1)
+        else:
+            from_date = datetime.date(today.year-1, today.month+6, day=1)
+
+    order_objs = models.Order.objects.filter(status=3).filter(create_date__gt=from_date)
+
+    # 月份列表
+    source = [
+        ["product"] + [""] * month_count,
+        ["试剂/耗材购买"] + [0] * month_count,
+        ["基因测序"] + [0] * month_count,
+        ["引物合成"] + [0] * month_count,
+    ]
+    init_month = from_date.month
+    for i in range(month_count):
+        month = init_month + i
+        if (month>12):
+            month = 1
+        source[0][i+1] = str(month) + "月"
+        orders_in_cur_month = order_objs.filter(create_date__month=month)
+        query_set = orders_in_cur_month.values("order_type").annotate(expense=Sum("total_price"))
+        for item in query_set:
+            source[item["order_type"]+1][i+1] = float(item["expense"])
+    
+    res = {
+        "dataset": {
+            "source": source
+        },
+        "lastmonth": source[0][-1],
+    }
+    return res
+        
+    
+    
+    
 
