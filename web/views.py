@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-24 16:45:23
+LastEditTime: 2021-01-26 17:29:48
 Author: catas
 LastEditors: catas
 Description: 
@@ -109,7 +109,7 @@ def myorder(request):
     order_list_type = "personal"
     scale = request.GET.get("scale", "")
     q = request.GET.get("q", "")
-    cur_orders = tables.search_by(q, cur_orders, ["gene_name", "detail__name"])
+    cur_orders = tables.search_by(q, cur_orders, ["gene_info__name", "detail__name"])
     
     if scale:
         # 过滤时间
@@ -159,33 +159,20 @@ def create_order(request):
     
     return render(request, "web/neworder.html", {
                                                 "form_obj": form_obj,
-                                                })
-    
+                                                })    
 
 @login_required
-def add_goods(request):
-    # 添加新商品
+def add_foreign_key_items(request):
     if request.method == "POST":
-        # print(request.POST)
-        form = forms.GoodsDetailForm(request.POST)
-
-        if form.is_valid():
-            add_obj = form.save()
-            return HttpResponse(json.dumps({"status": "success", "add_item": [add_obj.id, add_obj.__str__()]}))
-
-        else:
-            return HttpResponse(json.dumps({"status": "failed", "errors": form.errors}))
-
-@login_required
-def add_company(request):
-    if request.method == "POST":
-        form = forms.CompanyForm(request.POST)
+        item_type = request.POST.get("item_type")
+        form_cls = getattr(forms, item_type.capitalize()+"Form")
+        form = form_cls(request.POST)
         if form.is_valid():
             add_obj = form.save()
             return HttpResponse(json.dumps({"status": "success", "add_item": [add_obj.id, add_obj.__str__()]}))
         else:
             return HttpResponse(json.dumps({"status": "failed", "errors": form.errors}))
-
+        
 
 @login_required
 def order_detail(request, order_id):
@@ -255,7 +242,7 @@ def unchecked_order(request):
     scale = request.GET.get("scale", "")
     q = request.GET.get("q", "")
     order_objs = models.Order.objects.filter(status=1).order_by("create_date").reverse()
-    order_objs = tables.search_by(q, order_objs, ["user__name", "gene_name", "detail__name"])
+    order_objs = tables.search_by(q, order_objs, ["user__name", "gene_info__name", "detail__name"])
     
     message = ""
     message = request.GET.get("error-msg", "")
@@ -331,7 +318,7 @@ def history_orders(request):
     scale = request.GET.get("scale", "")
     q = request.GET.get("q", "")
     order_objs = models.Order.objects.filter(status=3).order_by("create_date").reverse()
-    order_objs = tables.search_by(q, order_objs, ["user__name", "gene_name", "detail__name"])
+    order_objs = tables.search_by(q, order_objs, ["user__name", "gene_info__name", "detail__name"])
     
     if scale:
         # 过滤时间

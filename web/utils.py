@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-28 22:10:34
-LastEditTime: 2021-01-24 16:24:47
+LastEditTime: 2021-01-26 17:21:42
 Author: catas
 LastEditors: catas
 Description: 
@@ -176,9 +176,9 @@ class OrderFormBuilder():
         if order_type == 0:
             add_fields = ["detail"]
         elif order_type == 1:
-            add_fields = ["gene_name"]
+            add_fields = ["gene_info"]
         elif order_type == 2:
-            add_fields = ["gene_name", "primer1", "primer2"]
+            add_fields = ["gene_info", "primer1", "primer2", "primer_product_length"]
         return add_fields
     
     def create_new_order(self, order_type):

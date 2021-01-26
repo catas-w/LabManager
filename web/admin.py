@@ -107,3 +107,4 @@ admin.site.register(models.CompanyInfo)
 
 admin.site.register(models.DutyItem)
 admin.site.register(models.GoodsDetail, GoodsDetailAdmin)
+admin.site.register(models.GeneInfo)

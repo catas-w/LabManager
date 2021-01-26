@@ -1,6 +1,6 @@
 '''
 Date: 2021-01-05 22:31:27
-LastEditTime: 2021-01-08 18:48:25
+LastEditTime: 2021-01-26 17:35:58
 Author: catas
 LastEditors: catas
 Description: 
@@ -144,9 +144,38 @@ def import_data_3():
         models.Order.objects.bulk_create(data_list)
 
 
-# if __name__ == "__main__":
-#     # import_data_1()
-#     import_data_2()
-#     import_data_3()
-
+def create_geneinfo():
+    # 添加 gene_info
+    all_genes = models.Order.objects.all().values_list("gene_name")
+    data_ls = []
+    name_set = set()
+    for item in all_genes:
+        gene_name = item[0]
         
+        if not gene_name or (gene_name in name_set):
+            continue
+        name_set.add(gene_name)
+        
+        obj = models.GeneInfo(
+            name = gene_name,
+            species = "人类"
+        )
+        data_ls.append(obj)
+    
+    models.GeneInfo.objects.bulk_create(data_ls)
+
+def edit_gene_info():
+    all_orders = models.Order.objects.filter(order_type__gt=0)
+    for order in all_orders:
+        gene_name = order.gene_name
+        gene_obj = models.GeneInfo.objects.get(name=gene_name)
+        order.gene_info = gene_obj
+        order.save()
+    pass
+
+if __name__ == "__main__":
+    # import_data_1()
+    create_geneinfo()
+    edit_gene_info()
+    pass
+

@@ -36,18 +36,16 @@ def perm_check(*args, **kwargs):
                         break
     if match_flag:
         app_name, per_name = match_key.split('__')
-        print("checl: " + per_name + request.user.name)
+        # print("checl: " + per_name + request.user.name)
         # perm_obj = '%s.%s' % (app_name, match_key)
         perm_obj = '%s.%s' % (app_name, per_name)
-        if request.user.is_admin or request.user.has_perm(match_key):
-            
-            print('----------Current user has permission')
+        if request.user.is_admin or request.user.has_perm(match_key):            
+            # print('----------Current user has permission')
             return True
         else:
-            print('----------Current has not permission')
+            # print('----------Current has not permission')
             return False
     else:
-        # print("not match")
         return True
 
 

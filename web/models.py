@@ -135,6 +135,9 @@ class Order(models.Model):
     company = models.ForeignKey("CompanyInfo", on_delete=models.SET_NULL, null=True, verbose_name="公司")
 
     gene_name = models.CharField(max_length=64, blank=True, null=True, verbose_name="基因")
+    gene_info = models.ForeignKey("GeneInfo", on_delete=models.SET_NULL, null=True, verbose_name="基因")
+    primer_product_length = models.IntegerField(blank=True, null=True, verbose_name="预计产物长度")
+
     primer1 = models.TextField(blank=True, null=True, verbose_name="引物序列F (5'-3')")
     primer2 = models.TextField(blank=True, null=True, verbose_name="引物序列R (5'-3')")
 
@@ -164,6 +167,21 @@ class Order(models.Model):
 
     def __str__(self):
         return "%s-%s-%s" % (self.order_type, self.user, self.create_date)
+
+
+class GeneInfo(models.Model):
+    objects = models.Manager()
+    # gene information
+    name = models.CharField(max_length=64, verbose_name="基因名")
+    species = models.CharField(max_length=64, verbose_name="物种")
+
+    class Meta:
+        verbose_name = "基因信息"
+        verbose_name_plural = "基因信息"
+        unique_together = [["name", "species"]]
+    
+    def __str__(self):
+        return "%s (%s)" % (self.name, self.species)
 
 
 class CompanyInfo(models.Model):

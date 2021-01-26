@@ -2,7 +2,7 @@ from django import forms
 from web import models
 from django.core.exceptions import NON_FIELD_ERRORS
 
-class GoodsDetailForm(forms.ModelForm):
+class DetailForm(forms.ModelForm):
 
     class Meta:
         model = models.GoodsDetail
@@ -44,6 +44,23 @@ class CompanyForm(forms.ModelForm):
         
         return name
 
+class Gene_infoForm(forms.ModelForm):
+    class Meta:
+        model = models.GeneInfo
+        fields = "__all__"
+        
+        error_messages = {
+            
+            "name": {
+                "required": "字段不能为空",
+            },
+            "species": {
+                "required": "字段不能为空",
+            },
+            NON_FIELD_ERRORS: {
+                'unique_together': "已存在!",
+            },
+        }
 
 class UserEditForm(forms.ModelForm):
     """

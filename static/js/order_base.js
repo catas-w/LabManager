@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2021-01-17 16:29:27
+ * @LastEditTime: 2021-01-26 16:22:10
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -9,14 +9,7 @@
     $(function() {
 
         // 激活标志
-        $('#mainnav-menu li').removeClass('active-link');
-        
-        $("li.order").addClass("active");
-        $('.order ul').attr({'class': 'collapse in', 'aria-expanded': "true"});
-         // 激活标志
-        var task_type = window.location.pathname.split('/')[2];
-         
-        $(`li.${task_type}`).addClass('active-link');        
+        InitTag();
 
         // 更改Ordertype 跳转页面
         BindOrderTypeOnChange();
@@ -34,6 +27,7 @@
         BindClickButton("#order-submit", BindOrderSubmit);
         BindClickButton("#add-detail", BindCreateGoods);
         BindClickButton("#add-company", BindCreateCompany);
+        BindClickButton("#add-gene_info", BindCreateGene);
         BindClickButton("#order-save", BindSaveOrder);
         BindClickButton("#order-delete", BindDeleteOrder);
         BindClickButton("#order-reject", BindReject);
@@ -46,156 +40,120 @@
         BindClickButton("#withdraw-order", BindWithrawOrder);
     }) ;
 
+    function InitTag() {
+        $('#mainnav-menu li').removeClass('active-link');
+        
+        $("li.order").addClass("active");
+        $('.order ul').attr({'class': 'collapse in', 'aria-expanded': "true"});
+         // 激活标志
+        var task_type = window.location.pathname.split('/')[2];
+         
+        $(`li.${task_type}`).addClass('active-link');
+    }
+
     function BindCreateGoods(e) {
-            var dialog = bootbox.dialog({
-                title: "新建商品",
-                onEscape: true,
-                message:'<div class="row"> ' + '<div class="col-md-12"> ' +
-                    '<form class="form-horizontal"> ' +
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-4 control-label text-bold" for="name">名称:</label> ' +
-                    '<div class="col-md-4"> ' +
-                    '<input name="name" type="text" placeholder="" required class="form-control input-md"> ' +
-                    '<span class="help-block name hide"><small>Here goes your name</small></span> </div> ' +
-                    '</div> ' + 
+        var form_content = '<div class="form-group"> ' +
+        '<label class="col-md-4 control-label text-bold" for="name">名称:</label> ' +
+        '<div class="col-md-4"> ' +
+        '<input name="name" type="text" placeholder="" required class="form-control input-md"> ' +
+        '<span class="help-block name hide"><small>Here goes your name</small></span> </div> ' +
+        '</div> ' + 
 
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-4 control-label text-bold" for="name">品牌/型号:</label> ' +
-                    '<div class="col-md-4"> ' +
-                    '<input name="brand" type="text" placeholder="" required class="form-control input-md"> ' +
-                    '<span class="help-block brand hide"><small>Here goes your name</small></span> </div> ' +
-                    '</div> ' +  
+        '<div class="form-group"> ' +
+        '<label class="col-md-4 control-label text-bold" for="name">品牌/型号:</label> ' +
+        '<div class="col-md-4"> ' +
+        '<input name="brand" type="text" placeholder="" required class="form-control input-md"> ' +
+        '<span class="help-block brand hide"><small>Here goes your name</small></span> </div> ' +
+        '</div> ' +  
 
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-4 control-label text-muted" for="name">数量规格:</label> ' +
-                    '<div class="col-md-4"> ' +
-                    '<input name="specification" type="text" placeholder="如50ml/瓶, 150pc/盒..."  class="form-control input-md"> ' +
-                    '<span class="help-block specification hide"><small>Here goes your name</small></span> </div> ' +
-                    '</div> ' +  
+        '<div class="form-group"> ' +
+        '<label class="col-md-4 control-label text-muted" for="name">数量规格:</label> ' +
+        '<div class="col-md-4"> ' +
+        '<input name="specification" type="text" placeholder="如50ml/瓶, 150pc/盒..."  class="form-control input-md"> ' +
+        '<span class="help-block specification hide"><small>Here goes your name</small></span> </div> ' +
+        '</div> ' +  
 
-                    '<div class="form-group"> ' +
-                    '<label class="col-md-4 control-label text-muted" for="name">CAS号:</label> ' +
-                    '<div class="col-md-4"> ' +
-                    '<input name="CAS_number" type="text" placeholder=""  class="form-control input-md"> ' +
-                    '<span class="help-block CAS_number hide"><small>Here goes your name</small></span>' + 
-                    '<span class="help-block __all__ hide"><small>Here goes your name</small></span></div> ' +
-                    '</div> ' +  
-
-                    '</form> </div> </div>',
-                buttons: {
-                    success: {
-                        label: "保存",
-                        className: "btn-purple",
-                        callback: function() {
-
-                            var name = $("input[name='name']").val();
-                            var brand = $("input[name='brand']").val();
-                            var specification = $("input[name='specification']").val();
-                            var CAS_number = $("input[name='CAS_number']").val();
-                            
-                            $.ajax({
-                                url: "/order/add-goods/",
-                                type: "post",
-                                dataType: "JSON",
-                                data: {
-                                    csrfmiddlewaretoken: csrf_token,
-                                    name: name,
-                                    brand: brand,
-                                    specification: specification,
-                                    CAS_number: CAS_number
-                                },
-                                success: function(res) {
-                                    // console.log(res);
-                                    // console.log(JSON.stringify(res));
-                                    if(res.status == "success") {
-                                        // 
-                                        // 更新 select
-                                        var add_id = res.add_item[0];
-                                        var add_name = res.add_item[1];
-                                        $("select[name='detail']").append(`<option value="${add_id}">${add_name}</option>`);
-                                        $("select[name='detail']").val(add_id);
-                                        $("select[name='detail']").trigger("chosen:updated");
-                                        // noty
-                                        $.niftyNoty({
-                                            type: 'success',
-                                            icon : 'fa fa-check',
-                                            message : "Success " +  ".<br> 添加成功 <strong>" + "</strong>",
-                                            container : 'floating',
-                                            timer : 5000
-                                        });
-
-                                        dialog.modal('hide');
-                                        
-
-                                    }else if(res.status == "failed") {
-                                        // 添加失败
-                                        $("span.help-block").addClass('hide');
-                                        var res_keys = Object.keys(res.errors);
-                                        for (i in res_keys) {
-                                            $(`span.${res_keys[i]}`).removeClass('hide');
-                                            $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
-                                        }
-                                    }
-                                }
-                            });
-
-                            return false;
-                        }
-                    }
-                }
-            });
-            
-            dialog.init(function() {
-                //console.log("AAAAA");
-            });
+        '<div class="form-group"> ' +
+        '<label class="col-md-4 control-label text-muted" for="name">CAS号:</label> ' +
+        '<div class="col-md-4"> ' +
+        '<input name="CAS_number" type="text" placeholder=""  class="form-control input-md"> ' +
+        '<span class="help-block CAS_number hide"><small>Here goes your name</small></span>' + 
+        '<span class="help-block __all__ hide"><small>Here goes your name</small></span></div> ' +
+        '</div> ';
+        AddForeignKeyItems(e, form_content, "detail", "添加商品", "/order/add-goods/");
     }
 
     function BindCreateCompany(e) {
+        var form_content = '<div class="form-group"> ' +
+        '<label class="col-md-4 control-label text-bold" for="name">名称:</label> ' +
+        '<div class="col-md-4"> ' +
+        '<input name="name" type="text" placeholder="" required class="form-control input-md"> ' +
+        '<span class="help-block name hide"><small>Here goes your name</small></span> </div> ' +
+        '</div> ';
+        
+        AddForeignKeyItems(e, form_content, "company", "添加公司", "/order/add-company/");
+    }
+
+    function BindCreateGene(e) {
+        var form_content = `
+        <div class="form-group"> 
+            <label class="col-md-4 control-label text-bold" for="name">基因名:</label> 
+            <div class="col-md-4">
+                <input name="name" type="text" placeholder="" required="" class="form-control input-md"> 
+                <span class="help-block name hide"><small>Here goes your name</small></span> 
+            </div> 
+        </div>
+        <div class="form-group"> 
+            <label class="col-md-4 control-label text-bold" for="name">物种:</label> 
+            <div class="col-md-4">
+                <input name="species" type="text" placeholder="" required="" class="form-control input-md"> 
+                <span class="help-block species hide"><small>Here goes your name</small></span> 
+            </div> 
+        </div> 
+        `;
+        AddForeignKeyItems(e, form_content, "gene_info", "添加基因", "/order/add-gene/");
+    }
+
+    function AddForeignKeyItems(e, form_content, item_type, title, url) {
         /**
-         * @description: 懒得重构代码直接拷贝上面, 请勿模仿
-         * @param {*}
+         * @description: 添加外键信息
+         * @param {*} form_content: html
+         *            item_type: company, gene_type...
+         *            title: 基因信息, 公司...
          * @return {*}
          */
+        e.preventDefault();
         var dialog = bootbox.dialog({
-            title: "添加公司",
+            title: title,
             onEscape: true,
-            message:'<div class="row"> ' + '<div class="col-md-12"> ' +
-                '<form class="form-horizontal"> ' +
-                '<div class="form-group"> ' +
-                '<label class="col-md-4 control-label text-bold" for="name">名称:</label> ' +
-                '<div class="col-md-4"> ' +
-                '<input name="name" type="text" placeholder="" required class="form-control input-md"> ' +
-                '<span class="help-block name hide"><small>Here goes your name</small></span> </div> ' +
-                '</div> ' + 
-                                
-                '</form> </div> </div>',
+            message:`
+                <div class="row"> 
+                    <div class="col-md-12"> 
+                        <form class="form-horizontal add-foreignkey-items"> 
+                            ${form_content}
+                        </form> 
+                    </div> 
+                </div>
+            `,
             buttons: {
                 success: {
                     label: "保存",
                     className: "btn-purple",
                     callback: function() {
-
-                        var name = $("input[name='name']").val();
-                        
                         $.ajax({
-                            url: "/order/add-company/",
+                            url: "/order/add-items/",
                             type: "post",
                             dataType: "JSON",
-                            data: {
-                                csrfmiddlewaretoken: csrf_token,
-                                name: name,
-                            },
+                            data: GetAddForeignKeyFormData(item_type),
                             success: function(res) {
                                 // console.log(res);
-                                // console.log(JSON.stringify(res));
                                 if(res.status == "success") {
-                                    // 
                                     // 更新 select
                                     var add_id = res.add_item[0];
                                     var add_name = res.add_item[1];
-                                    $("select[name='company']").append(`<option value="${add_id}">${add_name}</option>`);
-                                    $("select[name='company']").val(add_id);
-                                    $("select[name='company']").trigger("chosen:updated");
+                                    $(`select[name='${item_type}']`).append(`<option value="${add_id}">${add_name}</option>`);
+                                    $(`select[name='${item_type}']`).val(add_id);
+                                    $(`select[name='${item_type}']`).trigger("chosen:updated");
                                     // noty
                                     $.niftyNoty({
                                         type: 'success',
@@ -204,28 +162,32 @@
                                         container : 'floating',
                                         timer : 5000
                                     });
-
                                     dialog.modal('hide');
                                     
-
                                 }else if(res.status == "failed") {
                                     // 添加失败
                                     $("span.help-block").addClass('hide');
                                     var res_keys = Object.keys(res.errors);
                                     for (i in res_keys) {
-                                        $(`span.${res_keys[i]}`).removeClass('hide');
-                                        $(`span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
+                                        $(`.add-foreignkey-items span.${res_keys[i]}`).removeClass('hide');
+                                        $(`.add-foreignkey-items span.${res_keys[i]}`).html(res.errors[res_keys[i]]);
                                     }
                                 }
                             }
                         });
-
                         return false;
                     }
                 }
             }
         });
-}
+    }
+    
+    function GetAddForeignKeyFormData(item_type) {        
+        var form_data = getOrderInfo(".add-foreignkey-items");
+        form_data['csrfmiddlewaretoken'] = csrf_token;
+        form_data['item_type'] = item_type;
+        return form_data;
+    }
 
     function BindDeleteOrder(e, jump_url) {
         e.preventDefault();
@@ -261,6 +223,7 @@
             var count = $("input[name='count']").val();
             if (price < 0 || count <0) {
                 alert("不能小于0!");
+                return;
             }
             
             var total_price = Number(price) * Number(count);
@@ -359,26 +322,9 @@
         });
     }
 
-    function getOrderInfo() {
-        // var detail = $("#chosen-select").val();
-        // var company = $("input[name='company']").val();
-        // var unit_price = $("input[name='unit_price']").val();
-        // var count = $("input[name='count']").val();
-        // var total_price = $("input[name='total_price']").val();
-        // var memo = $("textarea[name='memo']").val();
-        // var review = $("input[name='review']").val();
-
-        // var data = {
-        //     detail: detail,
-        //     company: company,
-        //     unit_price: unit_price,
-        //     count: count,
-        //     total_price: total_price,
-        //     memo : memo,
-        //     review: review,
-        // }
+    function getOrderInfo(form_class="") {
         var data = {};
-        var form_items = $(".form-control");
+        var form_items = $(`${form_class} .form-control`);
         for (var i =0; i<form_items.length; i++) {
             data[$(form_items[i]).attr('name')] = $(form_items[i]).val();
         }
