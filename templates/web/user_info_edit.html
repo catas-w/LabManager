@@ -3,117 +3,133 @@
 
 {% block content %}
 <div class="" id="content-container">
-    <div id="page-title">
-        <h1 class="page-header text-overflow">用户管理</h1>
+    
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">用户管理</h1>
+        </div>
+        
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="demo-pli-home"></i></a></li>
+            <li><a href="/userinfo">用户管理</a></li>
+            <li class="active">{{ user.name }}</li>
+        </ol>
     </div>
-    <ol class="breadcrumb">
-        <li><a href="/">主页</a></li>
-        <li><a href="/userinfo">用户管理</a></li>
-        <li class="active">{{ user.name }}</li>
-    </ol>
-    <hr>
+
     <div id="page-content">
-        <form class="form-horizontal order-create">
-            <div class="panel-body">
 
-                <div class="form-group">
-                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">姓&nbsp;名</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="name" class="form-control" value="{{ user.name }}">
-                        <span class="help-block name hide"><small>Here goes your name</small></span>
-                    </div>
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">订单详情</h3>
                 </div>
-
-                <div class="form-group">
-                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">Email</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="email" class="form-control" value="{{ user.email }}" readonly>
-                        <span class="help-block email hide"><small>Here goes your name</small></span>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">学&nbsp;号</label>
-                    <div class="col-sm-4">                        
-                        <input type="text" name="stu_number" class="form-control" value="{{ user.stu_number }}">
-                        <span class="help-block stu_number hide"><small>Here goes your name</small></span>
-                    </div>
-                </div>            
-
-                <div class="form-group">
-                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">Status</label>
-                    <div class="col-sm-4">
-                        <select name="user_type" class="form-control" id="user_type">
-                            <!-- <option value="" disabled>选则用户类型</option> -->
-                            {% for user_type in user_types %}
-                                {% if user.user_type == user_type.0 %}
-                                <option value="{{ user_type.0 }}" name="user_type" selected>{{ user_type.1 }}</option>
-                                {% else %}
-                                <option value="{{ user_type.0 }}" name="user_type">{{ user_type.1 }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                        <span class="help-block user_type hide"><small>Here goes your name</small></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">管理员</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="is_admin" id="is_admin" class="form-control hide" value="{{ user.is_admin }}">
-                        {% if user.is_admin %}
-                        <input id="switch-admin" name="is_admin" type="checkbox" class="js-switch" checked />
-                        {% else %}
-                        <input id="switch-admin" name="is_admin" type="checkbox" class="js-switch" />
-                        {% endif %}
-                        <span class="help-block is_admin hide"><small>Here goes your name</small></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">Active</label>
-                    <div class="col-sm-4">
-                        <input type="text" name="is_active" id="is_active" class="form-control hide" value="{{ user.is_active }}">
-                        {% if user.is_active %}
-                        <input id="switch-active" name="is_active" type="checkbox" class="js-switch" checked />
-                        {% else %}
-                        <input id="switch-active" name="is_active" type="checkbox" class="js-switch" />
-                        {% endif %}
-                        <span class="help-block is-active hide"><small>Here goes your name</small></span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">权限</label>
-                    <div class="col-sm-4">
-                        <select name="user_permissions" data-placeholder="--默认权限--" class="form-control" multiple id="user_permissions">
-                            <!-- <option value="default" >--默认权限--</option> -->
-                            {% for perm in all_perms %}
-                                {% if perm in user_perms %}
-                                    <option value="{{ perm.0 }}" selected>{{ perm.1 }}</option>
-                                {% else %}
-                                    <option value="{{ perm.0 }}">{{ perm.1 }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                        <span class="help-block user_permissions hide"><small>Here goes your name</small></span>
-                    </div>
-                </div>
-                <!-- buttons -->
-                {% if has_edit_perm %}
-                <div class="row">
-                    <div class="col-sm-2 col-sm-offset-4">
-                        <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
-                    </div>
-                    <div class="col-sm-4 col-sm-offset">
-                        <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save fa-lg" id="user-save">保&nbsp;&nbsp;&nbsp;存</button>
-                    </div>
-                </div>
-                {% endif %}
-                
-            </div>
+                <div class="panel-body">
+                    <form class="form-horizontal order-create">
+                        <div class="panel-body">
             
-        </form>
+                            <div class="form-group">
+                                <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">姓&nbsp;名</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="name" class="form-control" value="{{ user.name }}">
+                                    <span class="help-block name hide"><small>Here goes your name</small></span>
+                                </div>
+                            </div>
+            
+                            <div class="form-group">
+                                <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">Email</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="email" class="form-control" value="{{ user.email }}" readonly>
+                                    <span class="help-block email hide"><small>Here goes your name</small></span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">学&nbsp;号</label>
+                                <div class="col-sm-4">                        
+                                    <input type="text" name="stu_number" class="form-control" value="{{ user.stu_number }}">
+                                    <span class="help-block stu_number hide"><small>Here goes your name</small></span>
+                                </div>
+                            </div>            
+            
+                            <div class="form-group">
+                                <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">Status</label>
+                                <div class="col-sm-4">
+                                    <select name="user_type" class="form-control" id="user_type">
+                                        <!-- <option value="" disabled>选则用户类型</option> -->
+                                        {% for user_type in user_types %}
+                                            {% if user.user_type == user_type.0 %}
+                                            <option value="{{ user_type.0 }}" name="user_type" selected>{{ user_type.1 }}</option>
+                                            {% else %}
+                                            <option value="{{ user_type.0 }}" name="user_type">{{ user_type.1 }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <span class="help-block user_type hide"><small>Here goes your name</small></span>
+                                </div>
+                            </div>
+            
+                            <div class="form-group">
+                                <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">管理员</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="is_admin" id="is_admin" class="form-control hide" value="{{ user.is_admin }}">
+                                    {% if user.is_admin %}
+                                    <input id="switch-admin" name="is_admin" type="checkbox" class="js-switch" checked />
+                                    {% else %}
+                                    <input id="switch-admin" name="is_admin" type="checkbox" class="js-switch" />
+                                    {% endif %}
+                                    <span class="help-block is_admin hide"><small>Here goes your name</small></span>
+                                </div>
+                            </div>
+            
+                            <div class="form-group">
+                                <label for="demo-is-inputnormal" class="col-sm-3 control-label text-bold">Active</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="is_active" id="is_active" class="form-control hide" value="{{ user.is_active }}">
+                                    {% if user.is_active %}
+                                    <input id="switch-active" name="is_active" type="checkbox" class="js-switch" checked />
+                                    {% else %}
+                                    <input id="switch-active" name="is_active" type="checkbox" class="js-switch" />
+                                    {% endif %}
+                                    <span class="help-block is-active hide"><small>Here goes your name</small></span>
+                                </div>
+                            </div>
+            
+                            <div class="form-group">
+                                <label for="demo-is-inputnormal" class="col-sm-3 control-label text-muted">权限</label>
+                                <div class="col-sm-4">
+                                    <select name="user_permissions" data-placeholder="--默认权限--" class="form-control" multiple id="user_permissions">
+                                        <!-- <option value="default" >--默认权限--</option> -->
+                                        {% for perm in all_perms %}
+                                            {% if perm in user_perms %}
+                                                <option value="{{ perm.0 }}" selected>{{ perm.1 }}</option>
+                                            {% else %}
+                                                <option value="{{ perm.0 }}">{{ perm.1 }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <span class="help-block user_permissions hide"><small>Here goes your name</small></span>
+                                </div>
+                            </div>
+                            <!-- buttons -->
+                            {% if has_edit_perm %}
+                            <div class="row">
+                                <div class="col-sm-2 col-sm-offset-4">
+                                    <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
+                                </div>
+                                <div class="col-sm-4 col-sm-offset">
+                                    <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save fa-lg" id="user-save">保&nbsp;&nbsp;&nbsp;存</button>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                        </div>
+                        
+                    </form>
+               
+                </div>
+            </div>  
+    
+
+        
     </div>
 </div>
 {% endblock %}

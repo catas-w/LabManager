@@ -2,55 +2,64 @@
 {% load tags %}
 
 {% block content %}
-<div class="" id="content-container">
-    <div id="page-title">
-        <h1 class="page-header text-overflow">Home Page</h1>
+<div class="" id="content-container">   
+    
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">Home Page</h1>
+        </div>
+        
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="demo-pli-home"></i></a></li>
+            <li><a href="/home">首页</a></li>
+            <li><a href="/home/myprofile">个人信息</a></li>
+            <li class="active">修改密码</li>
+        </ol>
     </div>
-    <ol class="breadcrumb">
-        <li><a href="/">Home</a></li>
-        <li><a href="/home">首页</a></li>
-        <li><a href="/home/myprofile">个人信息</a></li>
-        <li class="active">修改密码</li>
-    </ol>
-    <hr>
+
     <div id="page-content">
-        <form class="form-horizontal order-create">
+        <div class="panel">
             <div class="panel-body">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label text-bold">旧密码</label>
-                    <div class="col-sm-4">
-                        <input type="password" name="password" class="form-control">
-                        <span class="help-block password hide"><small></small></span>
+                <form class="form-horizontal order-create">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-bold">旧密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" name="password" class="form-control">
+                                <span class="help-block password hide"><small></small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-bold">新密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" name="password1" class="form-control">
+                                <span class="help-block password1 hide"><small></small></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label text-bold">确认新密码</label>
+                            <div class="col-sm-4">
+                                <input type="password" name="password2" class="form-control">
+                                <span class="help-block password2 hide"><small></small></span>
+                            </div>
+                        </div>
+                                    
+                        <!-- buttons -->
+                        <div class="row">
+                            <div class="col-sm-2 col-sm-offset-4">
+                                <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
+                            </div>
+                            <div class="col-sm-4 col-sm-offset">
+                                <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save fa-lg" id="reset-passwd">保&nbsp;&nbsp;&nbsp;存</button>
+                            </div>
+                        </div>
+                        
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label text-bold">新密码</label>
-                    <div class="col-sm-4">
-                        <input type="password" name="password1" class="form-control">
-                        <span class="help-block password1 hide"><small></small></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label text-bold">确认新密码</label>
-                    <div class="col-sm-4">
-                        <input type="password" name="password2" class="form-control">
-                        <span class="help-block password2 hide"><small></small></span>
-                    </div>
-                </div>
-                            
-                <!-- buttons -->
-                <div class="row">
-                    <div class="col-sm-2 col-sm-offset-4">
-                        <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
-                    </div>
-                    <div class="col-sm-4 col-sm-offset">
-                        <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save fa-lg" id="reset-passwd">保&nbsp;&nbsp;&nbsp;存</button>
-                    </div>
-                </div>
-                
+                    
+                </form>
             </div>
-            
-        </form>
+        </div>
+        
     </div>
 </div>
 {% endblock %}

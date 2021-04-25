@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-28 22:10:34
-LastEditTime: 2021-01-26 17:21:42
+LastEditTime: 2021-04-23 14:10:22
 Author: catas
 LastEditors: catas
 Description: 
@@ -273,9 +273,10 @@ def get_statistic_data(conditions):
         ["基因测序"] + [0] * month_count,
         ["引物合成"] + [0] * month_count,
     ]
-    init_month = from_date.month
+    month = from_date.month
     for i in range(month_count):
-        month = init_month + i
+        # month = init_month + i
+        month += 1
         if (month>12):
             month = 1
         source[0][i+1] = str(month) + "月"

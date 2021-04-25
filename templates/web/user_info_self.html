@@ -2,18 +2,24 @@
 {% load tags %}
 
 {% block content %}
-<div class="" id="content-container">
-    <div id="page-title">
-        <h1 class="page-header text-overflow">Home Page</h1>
-    </div>
-    <ol class="breadcrumb">
-        <li><a href="/">Home</a></li>
-        <li><a href="/home">首页</a></li>
+<div class="" id="content-container">    
+
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">Home Page</h1>
+        </div>
+        
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="demo-pli-home"></i></a></li>
+            <li><a href="/home">首页</a></li>
         <li class="active">个人信息</li>
-    </ol>
-    <hr>
+        </ol>
+    </div>
+
     <div id="page-content">
         <form class="form-horizontal order-create">
+            <div class="panel">
+                
             <div class="panel-body">
 
                 <div class="form-group">
@@ -78,7 +84,7 @@
                             
                 <!-- buttons -->
                 <div class="row">
-                    <div class="col-sm-2 col-sm-offset-4">
+                    <div class="col-sm-2 col-sm-offset-2">
                         <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
                     </div>
                     <div class="col-sm-4 col-sm-offset">
@@ -87,7 +93,7 @@
                 </div>
                 
             </div>
-            
+            </div>
         </form>
     </div>
 </div>

@@ -11,20 +11,22 @@
     </div>
     {% endif %}
 
-    <div id="page-title">
-        <h1 class="page-header text-overflow">订单管理</h1>
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">订单管理</h1>
+        </div>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="demo-pli-home"></i></a></li>
+            <li><a href="#">订单</a></li>
+            {% if order_type == "personal" %}
+                <li class="active">我的订单</li>
+            {% elif order_type == "unchecked" %}
+                <li class="active">订单审核</li>
+            {% elif order_type == "history" %}
+                <li class="active">历史订单</li>
+            {% endif %}
+        </ol>
     </div>
-    <ol class="breadcrumb">
-        <li><a href="/">主页</a></li>
-        <li><a href="#">订单</a></li>
-        {% if order_type == "personal" %}
-            <li class="active">我的订单</li>
-        {% elif order_type == "unchecked" %}
-            <li class="active">订单审核</li>
-        {% elif order_type == "history" %}
-            <li class="active">历史订单</li>
-        {% endif %}
-    </ol>
     <div id="page-content">
         <div class="panel panel-bordered-info">
             <div class="panel-heading">    

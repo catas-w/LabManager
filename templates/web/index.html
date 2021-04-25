@@ -14,18 +14,22 @@
     <link rel="icon" href="/static/img/logo.png" type="image/x-icon">
 
     <!--Demo script [ DEMONSTRATION ]-->
-    <!-- <link href="/static/css/demo/nifty-demo.min.css" rel="stylesheet"> -->
+    <link href="/static/css/demo/nifty-demo.min.css" rel="stylesheet">
 
 	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <!-- <link href="/static/css/bootstrap.css" rel="stylesheet"> -->
     <link href="/static/css/nifty.min.css" rel="stylesheet">
-
+    <link href="/static/css/demo/nifty-demo-icons.min.css" rel="stylesheet">
     
     <!--Font Awesome [ OPTIONAL ]-->
     <link href="/static/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	{% block css %}
 	{% endblock %}
-
+    <style>
+        .modal-backdrop {
+            z-index: 9900;
+        }
+    </style>
 </head>
 <body>
 	<div id="container" class="effect mainnav-lg">
@@ -42,8 +46,8 @@
                         <img src="/static/img/logo.png" id="page-logo" alt="Logo" class="brand-icon" height="20px" width="20px" style="
                         width: 25px;
                         height: 26px;
-                        margin-left: 7px;
-                        margin-top: 7px;
+                        margin-left: 15px;
+                        margin-top: 15px;
                     ">
                         <div class="brand-title">
                             <span class="brand-text">Zou Lab</span>
@@ -63,10 +67,24 @@
                         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                         <li class="tgl-menu-btn">
                             <a class="mainnav-toggle" href="#">
-                                <i class="fa fa-navicon fa-lg"></i>
+                                <i class="demo-pli-list-view"></i>
                             </a>
-						</li>
-						<!-- Notification -->
+                        </li>
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <!--End Navigation toogle button-->
+                        
+						
+
+                    </ul>
+                    <ul class="nav navbar-top-links pull-right">
+
+                        
+                      
+                    </ul>
+                    <ul class="nav navbar-top-links">                        
+
+                        <!--Notification dropdown-->
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 						<li class="dropdown">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle" aria-expanded="true">
                                 <i class="fa fa-bell fa-lg"></i>
@@ -74,55 +92,13 @@
                             </a>
 
                             <!--Notification dropdown menu-->
-                            <div class="dropdown-menu dropdown-menu-md">
+                            <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
                                 <div class="pad-all bord-btm">
                                     <p class="text-lg text-muted text-semibold mar-no" id="notice-brief"></p>
                                 </div>
                                 <div class="nano scrollable has-scrollbar" style="height: 265px;">
                                     <div class="nano-content" tabindex="0" style="right: -17px;">
-                                        <ul class="head-list">
-									        <!-- <li>
-									            <a href="#" class="media">
-									                <div class="media-left">
-									                    <img src="/static/img/av4.png" alt="Profile Picture" class="img-circle img-sm">
-									                </div>
-									                <div class="media-body">
-									                    <div class="text-nowrap">Lucy sent you a message</div>
-									                    <small class="text-muted">30 minutes ago</small>
-									                </div>
-									            </a>
-									        </li> -->
-									
-									        <!-- Dropdown list-->
-									        <!-- <li>
-									            <a href="#" class="media">
-									        <span class="label label-danger pull-right">New</span>
-									                <div class="media-left">
-									                    <span class="icon-wrap bg-purple">
-									                        <i class="fa fa-comment fa-lg"></i>
-									                    </span>
-									                </div>
-									                <div class="media-body">
-									                    <div class="text-nowrap">Comment Sorting</div>
-									                    <small class="text-muted">Last Update 8 hours ago</small>
-									                </div>
-									            </a>
-									        </li> -->
-									
-									        <!-- Dropdown list-->
-									        <!-- <li>
-									            <a href="#" class="media">
-									                <div class="media-left">
-									                    <span class="icon-wrap bg-success">
-									                        <i class="fa fa-user fa-lg"></i>
-									                    </span>
-									                </div>
-									                <div class="media-body">
-									                    <div class="text-nowrap">New User Registered</div>
-									                    <small class="text-muted">4 minutes ago</small>
-									                </div>
-									            </a>
-									        </li> -->
+                                        <ul class="head-list">									        
 									
                                         </ul>
                                     </div>
@@ -137,16 +113,20 @@
 							</div>
 							
                         </li>
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <!--End notifications dropdown-->
 
-                    </ul>
-                    <ul class="nav navbar-top-links pull-right">
 
+
+                        <!--User dropdown-->
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
                         <li id="dropdown-user" class="dropdown" style="border: 0;">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle text-right">
-                                <span class="pull-right">
-                                    <img class="img-circle img-user media-object" src="{{ request.user.avatar_url }}" alt="Profile Picture">
+                                <span class="ic-user pull-right" >
+                                    <!-- <img class="img-circle img-user media-object" style="top: 15px;" src="{{ request.user.avatar_url }}" alt="Profile Picture"> -->
+                                    <i class="demo-pli-male"></i>
                                 </span>
-                                <div class="username hidden-xs">{{ request.user.name }}</div>
+                                <!-- <div class="username hidden-xs">{{ request.user.name }}</div> -->
                             </a>
 
 
@@ -185,7 +165,14 @@
                                 </div>
                             </div>
                         </li>
-                      
+                        <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+                        <!--End user dropdown-->
+
+                        <li>
+                            <a href="#" class="aside-toggle">
+                                <i class="demo-pli-dot-vertical"></i>
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
@@ -212,8 +199,74 @@
                     <div id="mainnav-menu-wrap">
                         <div class="nano">
                             <div class="nano-content">
-                                <ul id="mainnav-menu" class="list-group">
-						
+                                 <!--Profile Widget-->
+                                <!--================================-->
+                                <div id="mainnav-profile" class="mainnav-profile">
+                                    <div class="profile-wrap text-center">
+                                        <div class="pad-btm">
+                                            <img class="img-circle img-md" src="{{ request.user.avatar_url }}" alt="Profile Picture">
+                                        </div>
+                                        <a href="#profile-nav" class="box-block" data-toggle="collapse" aria-expanded="false">
+                                            <span class="pull-right dropdown-toggle">
+                                                <i class="dropdown-caret"></i>
+                                                <!-- <i class="fa fa-chevron-down" aria-hidden="true"></i> -->
+                                            </span>
+                                            <p class="mnp-name">{{ request.user.name }}</p>
+                                            <span class="mnp-desc">{{ request.user.email }}</span>
+                                        </a>
+                                    </div>
+                                    <div id="profile-nav" class="collapse list-group bg-trans">                                        
+                                        <a href="/home/myprofile" class="list-group-item">
+                                            <i class="demo-pli-male icon-lg icon-fw"></i> 个人信息
+                                        </a>
+                                        <a href="/home/myprofile/reset-passwd/" class="list-group-item">
+                                            <i class="demo-pli-gear icon-lg icon-fw"></i> 修改密码
+                                        </a>                                        
+                                        <a href="/logout" class="list-group-item">
+                                            <i class="demo-pli-unlock icon-lg icon-fw"></i> 登出
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!--Shortcut buttons-->
+                                <!--================================-->
+                                <div id="mainnav-shortcut" class="hidden">
+                                    <ul class="list-unstyled shortcut-wrap">
+                                        <li class="col-xs-3" data-content="My Profile">
+                                            <a class="shortcut-grid" href="#">
+                                                <div class="icon-wrap icon-wrap-sm icon-circle bg-mint">
+                                                <i class="demo-pli-male"></i>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="col-xs-3" data-content="Messages">
+                                            <a class="shortcut-grid" href="#">
+                                                <div class="icon-wrap icon-wrap-sm icon-circle bg-warning">
+                                                <i class="demo-pli-speech-bubble-3"></i>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="col-xs-3" data-content="Activity">
+                                            <a class="shortcut-grid" href="#">
+                                                <div class="icon-wrap icon-wrap-sm icon-circle bg-success">
+                                                <i class="demo-pli-thunder"></i>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="col-xs-3" data-content="Lock Screen">
+                                            <a class="shortcut-grid" href="#">
+                                                <div class="icon-wrap icon-wrap-sm icon-circle bg-purple">
+                                                <i class="demo-pli-lock-2"></i>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--================================-->
+                                <!--End shortcut buttons-->
+
+                                <ul id="mainnav-menu" class="list-group">						                                   
+
 						            <!--Category name-->
 						            <li class="list-header">Navigation</li>
 						
@@ -270,22 +323,22 @@
 						
 									<!--Menu list item-->
 								
-						            <li class="document">
-						                <a href="#">
-						                    <i class="fa fa-calendar-check-o fa-lg"></i>
+						            <li class="docs">
+						                <a href="/tools/docs/">
+						                    <i class="fa fa-folder-open fa-lg"></i>
 						                    <span class="menu-title">文档</span>
 						                </a>
                                     </li>
                                     <li class="">
 						                <a href="#">
 						                    <i class="fa fa-calendar-check-o fa-lg"></i>
-						                    <span class="menu-title">其他</span>
+						                    <span class="menu-title">值日表</span>
 						                </a>
                                     </li>
                                     <li class="">
 						                <a href="#">
-						                    <i class="fa fa-calendar-check-o fa-lg"></i>
-						                    <span class="menu-title">其他</span>
+						                    <i class="fa fa-photo fa-lg"></i>
+						                    <span class="menu-title">Gallery</span>
 						                </a>
 						            </li>
                             </div>
@@ -328,7 +381,7 @@
                 </ul>
             </div>
 
-            <div class="hide-fixed pull-right pad-rgt">Version 1.0.5</div>
+            <div class="hide-fixed pull-right pad-rgt">Version 4.2.3</div>
 
 
             <p class="pad-lft">&#0169; 2021 Zou-Lab </p>
@@ -355,6 +408,9 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <!-- <script src="/static/plugins/fast-click/fastclick.min.js"></script> -->
     <script src="/static/js/nifty.min.js"></script>
+    <!--Specify page [ SAMPLE ]-->
+	<!-- <script src="/static/js/demo/nifty-demo.min.js"></script> -->
+
     <script>
         $(function() {
             
@@ -364,8 +420,12 @@
 
         function updateTag() {
             var cur_path = window.location.pathname.split('/')[1];
+            if (cur_path=="tools") {
+                cur_path = window.location.pathname.split('/')[2];
+            }
             $('#mainnav-menu li').removeClass('active-link');
-            $(`.${cur_path}`).addClass('active-link');
+            if (cur_path != "")
+                $(`.${cur_path}`).addClass('active-link');
         }
 
         //获取url中的参数

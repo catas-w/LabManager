@@ -1,0 +1,212 @@
+{% extends "web/index.html" %}
+{% load tags %}
+
+{% block content %}
+<div class="" id="content-container">
+    <div id="page-title">
+        <h1 class="page-header text-overflow">共享文件</h1>
+    </div>
+    <ol class="breadcrumb">
+        <li><a href="/">主页</a></li>
+        <li class="active">文档</li>
+    </ol>
+    <div id="page-content">
+        <div class="panel">
+            <!-- <div class="panel-heading">
+                <h3 class="panel-title"></h3>
+            </div> -->
+            <div class="panel-body">                                
+                <div class="fluid file-panel">
+                    <div class="row">
+                        <ol class="breadcrumb f-bread">
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">App Views</a></li>
+                            <li class="active">File Manager</li>
+                        </ol>
+                    </div>
+                    <hr style="margin-bottom: 5px;">
+                    <div class="row f-btn-group">
+                        <div class="col-sm-1 f-group-1">
+                            <a class="btn btn-icon add-tooltip" href="#" data-original-title="Home" data-toggle="tooltip">
+                                <!-- <i class="icon-2x demo-pli-home"></i> -->
+                                <i class="fa fa-home fa-2x" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn btn-icon add-tooltip" href="#" data-original-title="刷新" data-toggle="tooltip">
+                                <i class="fa fa-refresh fa-2x"></i>
+                            </a>
+                        </div>
+                        <div class="col-sm-2">
+                            <a class="btn btn-icon add-tooltip" href="#" data-original-title="新建文件夹" data-toggle="tooltip">
+                                <i class="fa fa-folder-o fa-2x"></i>
+                            </a>
+                            <a class="btn btn-icon add-tooltip" href="#" data-original-title="上传文件" data-toggle="tooltip">
+                                <!-- <input type="file" name="" id="f-upload2"> -->
+                                <i class="fa fa-cloud-upload fa-2x" style="color: #1bade5;;"></i>
+                            </a>
+                            <!-- <a class="btn btn-icon add-tooltip" href="#" data-original-title="编辑" data-toggle="tooltip">
+                                <i class="fa fa-edit fa-2x"></i>
+                            </a> -->
+                        </div>
+                        <div class="col-sm-1 f-group-3">
+                            <a class="btn btn-icon add-tooltip" href="#" data-original-title="删除" data-toggle="tooltip">
+                                <i class="fa fa-trash-o fa-2x"></i>
+                            </a>
+                            <a class="btn btn-icon add-tooltip" href="#" data-original-title="下载" data-toggle="tooltip">
+                                <i class="fa fa-cloud-download fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <hr style="margin-top: 5px;">
+                    
+                    <table class="table table-hover table-vcenter f-table">                        
+                        <tbody>
+                            <tr>
+                                <td class="text-center min-width">
+                                    <i class="fa fa-folder-open fa-2x" aria-hidden="true"></i>
+                                <td>
+                                    <span class="text-bold f-name">..</span>
+                                    <br>
+                                    <!-- <small class="text-muted">admin | 1894.11.12 | 25.6Kb</small> -->
+                                </td>
+                                <td class="text-center min-width">
+                                    <i class="fa fa-ellipsis-v fa-lg" aria-hidden="true"></i>                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center min-width">
+                                    <i class="fa fa-folder-open fa-2x" aria-hidden="true"></i>
+                                <td>
+                                    <span class="text-bold f-name">软件</span>
+                                    <br>
+                                    <!-- <small class="text-muted">admin | 1894.11.12 | 25.6Kb</small> -->
+                                </td>
+                                <td class="text-center min-width">
+                                    <i class="fa fa-ellipsis-v fa-lg" aria-hidden="true"></i>                                    
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-center min-width">
+                                    <span class="icon-wrap icon-wrap-sm icon-circle bg-info">
+                                        <!-- <i class="fa fa-desktop fa-lg"></i> -->
+                                        <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+                                    </span></td>
+                                <td>
+                                    <span class="text-bold f-name">Desktop.psd</span>
+                                    <br>
+                                    <small class="text-muted">admin | 1894.11.12 | 25.6Kb</small>
+                                </td>
+                                <td class="text-center min-width">
+                                    <i class="fa fa-ellipsis-v fa-lg" aria-hidden="true"></i>                                    
+                                </td>
+                            </tr>
+                            
+                            
+                        </tbody>
+                    </table>
+
+                    <div class="col-sm-5">
+                        <!-- <input type="file" class="filepond" id="f-upload">                         -->
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+{% endblock %}
+
+
+{% block css %}
+<!-- Filepond stylesheet -->
+<!-- <link rel="stylesheet" href="/static/plugins/file-pond/filepond.min.css"> -->
+<style>
+    .f-bread {
+        padding-left: 15px;
+    }
+    .f-btn-group {
+        opacity: 80%;
+    }
+    .f-group-1 {
+        border-right: 1px solid #dddddd;
+        width: 120px;
+    }
+    .f-group-3 {
+        float: right;
+        width: 120px;
+    }
+    .f-table {
+        margin-top: 10px;
+    }
+    .f-table .fa {
+        opacity: 80%;
+    }
+    .f-table tr {
+        height: 56px;
+    }
+    .f-name {
+        color: #4d627b;
+        font-weight: 700;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .f-name:hover {
+        cursor: pointer;
+        opacity: 50%;
+    }
+    .filepond--item {
+        width: calc(70% - .5em);
+    }
+    .filepond--root {
+    }
+</style>
+{% endblock %}
+
+
+{% block js %}
+<!-- <script src="/static/plugins/file-pond/filepond.min.js"></script> -->
+<!-- <script src="/static/plugins/dropzone/dropzone.min.js"></script> -->
+<script>
+    $(function() {
+        // FilePond.parse(document.body);
+        // initFilePond();
+    });
+    
+    function initFilePond() {
+        const inputElement = document.querySelector('#f-upload');
+        const pond = FilePond.create( inputElement );
+        
+        pond.setOptions({
+            server: {
+                url: window.location.href,
+                process: {
+                    method: 'POST',                    
+                    ondata: (formData) => {
+                        formData.append('csrfmiddlewaretoken', "{{ csrf_token }}");
+                        return formData;
+                    }
+                },
+            },
+            maxFiles: 3,
+            instantUpload: false,
+            labelIdle: '<span class="filepond--label-action"> 点击 </span>或拖曳上传',
+            labelFileProcessingAborted: "取消上传",
+            labelFileProcessingError: "上传失败",
+
+
+        });
+
+        pond.on('addfile', (error, file) => {
+            if (error) {
+                console.log('Oh no');
+                return;
+            }
+            console.log('File added', file);
+        });
+    }
+</script>
+
+{% endblock %}
+
+

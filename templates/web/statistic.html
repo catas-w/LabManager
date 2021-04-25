@@ -4,14 +4,17 @@
 
 {% block content %}
 <div class="" id="content-container">
-    <div id="page-title">
-        <h1 class="page-header text-overflow">统&nbsp;计</h1>
+    <div id="page-head">
+        <div id="page-title">
+            <h1 class="page-header text-overflow">统&nbsp;计</h1>
+        </div>
+        <ol class="breadcrumb">
+            <li><a href="/"><i class="demo-pli-home"></i></a></li>
+            <li class="active">统计</li>
+        </ol>
     </div>
-    <ol class="breadcrumb">
-        <li><a href="/">主页</a></li>
-        <li class="active">统计</li>
-    </ol>
-    <hr>
+    
+    <!-- <hr> -->
     <div id="page-content">
         <div class="row">
             <div class="col-sm-3">
@@ -24,10 +27,10 @@
                             <!--Block level radio buttons-->
                             <!--===================================================-->
                             <form class="form-block">
-                                <label class="form-radio form-icon btn btn-info btn-labeled active form-text">
+                                <label class="form-radio form-icon btn btn-primary active form-text">
                                     <input type="radio" name="btn-bkl-2" checked="" value="6" onchange="javascript:getStaticsData(this.value);">最近半年
                                 </label>
-                                <label class="form-radio form-icon btn btn-info btn-labeled form-text">
+                                <label class="form-radio form-icon btn btn-primary form-text">
                                     <input type="radio" name="btn-bkl-2" value="12" onchange="javascript:getStaticsData(this.value);">最近一年
                                 </label>
                             </form>
@@ -37,9 +40,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-8  text-xs-center">
-                <div id="main" style="width: 800px;height:600px;"></div>
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="col-sm-8  text-xs-center">
+                        <div id="main" style="width: 800px;height:600px;"></div>
+                    </div>
+                </div>
             </div>
+            
         </div>
         
     </div>
@@ -47,7 +55,8 @@
 {% endblock %}
 
 {% block js %}
-<script src="/static/js/echarts_defined.js"></script>
+<!-- <script src="/static/js/echarts_defined.js"></script> -->
+<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.1.0/echarts.common.min.js"></script>
 <script>
     $(function() {
         

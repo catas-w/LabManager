@@ -3,119 +3,124 @@
 
 
 {% block content %}
-			<!--CONTENT CONTAINER-->
-			<!--===================================================-->
-			<div id="content-container">
-				
-				<!--Page Title-->
-				<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
-				<div id="page-title">
-					<h1 class="page-header text-overflow">HomePage</h1>
+<!--CONTENT CONTAINER-->
+<!--===================================================-->
+<div id="content-container">
+	
+	<!--Page Title-->
+	<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+	<!-- <div id="page-title">
+		<h1 class="page-header text-overflow">HomePage</h1>		
+	</div> -->
 
-					<!--Searchbox-->
-				</div>
-				
-				<ol class="breadcrumb">
-					<li><a href="#">Home</a></li>
-					<li class="active">首页</li>
-				</ol>
+	<div id="page-head">                
+		<div class="pad-all text-center">
+			<h3>Welcome to LabManager.</h3>
+			<p1>{{ request.user.motto }}</p>
+		</div>
+	</div>
+<!-- 
+	<ol class="breadcrumb">
+		<li><a href="#">Home</a></li>
+		<li class="active">首页</li>
+	</ol> -->
 
-				<div id="page-content">
-					
-					<div class="row">
-					    <div class="col-md-8 col-lg-8">
-					
-							<!--Realtime flot chart-->
-							<!--===================================================-->
-							<div class="panel">
-								<div class="panel-bg-cover">
-									<img class="img-responsive" src="/static/img/thumbs/img3.jpg" alt="Image">
-								</div>
-								<div class="panel-media">
-									<a href="/home/myprofile/">
-										<img src="{{ request.user.avatar_url }}" class="panel-media-img img-circle img-border-light" alt="Profile Picture">
-									</a>
-									<div class="row">
-										<div class="col-lg-7">
-											<h3 class="panel-media-heading">{{ request.user.name }}</h3>
-											<!-- <a href="#" class="btn-link">@stephen_doe</a> -->
-											<p class="text-muted mar-btm">@{{ request.user.email }}</p>
-										</div>
-										<div class="col-lg-5 text-lg-right">
-											{% if request.user.is_admin %}
-												<button class="btn btn-sm btn-purple">管理员</button>
-											{% endif %}
-											<!-- <button class="btn btn-sm btn-mint btn-icon fa fa-envelope icon-lg"></button> -->
-										</div>
-									</div>
-								</div>
-								<div class="panel-body">
-									<h4> {{ request.user.get_user_type_display }} </h4>
-									{{ request.user.motto }}
-								</div>
+	<div id="page-content">
+		
+		<div class="row">
+			<div class="col-md-8 col-lg-8">
+		
+				<!--Realtime flot chart-->
+				<!--===================================================-->
+				<div class="panel">
+					<div class="panel-bg-cover">
+						<img class="img-responsive" src="/static/img/thumbs/img3.jpg" alt="Image">
+					</div>
+					<div class="panel-media">
+						<a href="/home/myprofile/">
+							<img src="{{ request.user.avatar_url }}" class="panel-media-img img-circle img-border-light" alt="Profile Picture">
+						</a>
+						<div class="row">
+							<div class="col-lg-7">
+								<h3 class="panel-media-heading">{{ request.user.name }}</h3>
+								<!-- <a href="#" class="btn-link">@stephen_doe</a> -->
+								<p class="text-muted mar-btm">@{{ request.user.email }}</p>
 							</div>
-							<!--===================================================-->
-							<!--End Realtime flot chart-->
-					
-						</div>
-					    <div class="col-lg-4">
-					
-							<!--Weather widget-->
-							<!--===================================================-->
-							<div id="demo-weather-widget-md" class="panel panel-info panel-colorful text-center">
-								<div class="panel-body">
-					
-									<!--Weather widget body-->
-									<div class="row pad-top">
-										<div class="col-xs-6">
-											<canvas id="demo-weather-md-icon-1" width="98" height="98"></canvas>
-										</div>
-										<div class="col-xs-6">
-											<p class="text-4x">17°</p>
-											<p class="text-sm">晴&nbsp&nbsp天</p>
-										</div>
-									</div>
-									<h4 class="mar-no pad-top">成&nbsp&nbsp都</h4>
-									<p>Today</p>
-									<hr>
-					
-					
-									<!--Weather widget footer-->
-									<ul class="list-unstyled text-center clearfix">
-										<li class="col-xs-3">
-											<canvas id="demo-weather-md-icon-2" width="32" height="32"></canvas>
-											<p class="text-sm mar-no">Saturday</p>
-											<p>25 °C</p>
-										</li>
-										<li class="col-xs-3">
-											<canvas id="demo-weather-md-icon-3" width="32" height="32"></canvas>
-											<p class="text-sm mar-no">Sunday</p>
-											<p>22 °C</p>
-										</li>
-										<li class="col-xs-3">
-											<canvas id="demo-weather-md-icon-4" width="32" height="32"></canvas>
-											<p class="text-sm mar-no">Monday</p>
-											<p>20 °C</p>
-										</li>
-										<li class="col-xs-3">
-											<canvas id="demo-weather-md-icon-5" width="32" height="32"></canvas>
-											<p class="text-sm mar-no">Tuesday</p>
-											<p>28 °C</p>
-										</li>
-									</ul>
-								</div>
+							<div class="col-lg-5 text-lg-right">
+								{% if request.user.is_admin %}
+									<button class="btn btn-sm btn-purple">管理员</button>
+								{% endif %}
+								<!-- <button class="btn btn-sm btn-mint btn-icon fa fa-envelope icon-lg"></button> -->
 							</div>
-							<!--===================================================-->
-							<!--End Weather widget-->
-					
 						</div>
 					</div>
-					
-					<br>
-				
-					
+					<div class="panel-body">
+						<h4> {{ request.user.get_user_type_display }} </h4>
+						{{ request.user.motto }}
+					</div>
 				</div>
+				<!--===================================================-->
+				<!--End Realtime flot chart-->
+		
 			</div>
+			<div class="col-lg-4">
+		
+				<!--Weather widget-->
+				<!--===================================================-->
+				<div id="demo-weather-widget-md" class="panel panel-info panel-colorful text-center">
+					<div class="panel-body">
+		
+						<!--Weather widget body-->
+						<div class="row pad-top">
+							<div class="col-xs-6">
+								<canvas id="demo-weather-md-icon-1" width="98" height="98"></canvas>
+							</div>
+							<div class="col-xs-6">
+								<p class="text-4x">17°</p>
+								<p class="text-sm">晴&nbsp&nbsp天</p>
+							</div>
+						</div>
+						<h4 class="mar-no pad-top">成&nbsp&nbsp都</h4>
+						<p>Today</p>
+						<hr>
+		
+		
+						<!--Weather widget footer-->
+						<ul class="list-unstyled text-center clearfix">
+							<li class="col-xs-3">
+								<canvas id="demo-weather-md-icon-2" width="32" height="32"></canvas>
+								<p class="text-sm mar-no">Saturday</p>
+								<p>25 °C</p>
+							</li>
+							<li class="col-xs-3">
+								<canvas id="demo-weather-md-icon-3" width="32" height="32"></canvas>
+								<p class="text-sm mar-no">Sunday</p>
+								<p>22 °C</p>
+							</li>
+							<li class="col-xs-3">
+								<canvas id="demo-weather-md-icon-4" width="32" height="32"></canvas>
+								<p class="text-sm mar-no">Monday</p>
+								<p>20 °C</p>
+							</li>
+							<li class="col-xs-3">
+								<canvas id="demo-weather-md-icon-5" width="32" height="32"></canvas>
+								<p class="text-sm mar-no">Tuesday</p>
+								<p>28 °C</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!--===================================================-->
+				<!--End Weather widget-->
+		
+			</div>
+		</div>
+		
+		<br>
+	
+		
+	</div>
+</div>
 {% endblock %}
 
 

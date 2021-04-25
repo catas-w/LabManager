@@ -1,6 +1,6 @@
 '''
 Date: 2021-01-05 22:31:27
-LastEditTime: 2021-01-26 17:35:58
+LastEditTime: 2021-01-26 17:58:04
 Author: catas
 LastEditors: catas
 Description: 
@@ -175,7 +175,7 @@ def edit_gene_info():
 
 if __name__ == "__main__":
     # import_data_1()
-    create_geneinfo()
-    edit_gene_info()
+    # create_geneinfo()
+    # edit_gene_info()
     pass
 

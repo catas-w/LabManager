@@ -7,114 +7,94 @@
 // - ThemeOn.net -
 
 
-$(window).on('load', function() {
+$(document).on('nifty.ready', function() {
 
-
-
-    // Network chart ( Morris Line Chart )
+    // NETWORK CHART
     // =================================================================
-    // Require MorrisJS Chart
+    // Require Flot Charts
     // -----------------------------------------------------------------
-    // http://morrisjs.github.io/morris.js/
+    // http://www.flotcharts.org/
     // =================================================================
 
-    var day_data = [
-        {"elapsed": "Oct-12", "value": 24, b:2},
-        {"elapsed": "Oct-13", "value": 34, b:22},
-        {"elapsed": "Oct-14", "value": 33, b:7},
-        {"elapsed": "Oct-15", "value": 22, b:6},
-        {"elapsed": "Oct-16", "value": 28, b:17},
-        {"elapsed": "Oct-17", "value": 60, b:15},
-        {"elapsed": "Oct-18", "value": 60, b:17},
-        {"elapsed": "Oct-19", "value": 70, b:7},
-        {"elapsed": "Oct-20", "value": 67, b:18},
-        {"elapsed": "Oct-21", "value": 86, b: 18},
-        {"elapsed": "Oct-22", "value": 86, b: 18},
-        {"elapsed": "Oct-23", "value": 113, b: 29},
-        {"elapsed": "Oct-24", "value": 130, b: 23},
-        {"elapsed": "Oct-25", "value": 114, b:10},
-        {"elapsed": "Oct-26", "value": 80, b:22},
-        {"elapsed": "Oct-27", "value": 109, b:7},
-        {"elapsed": "Oct-28", "value": 100, b:6},
-        {"elapsed": "Oct-29", "value": 105, b:17},
-        {"elapsed": "Oct-30", "value": 110, b:15},
-        {"elapsed": "Oct-31", "value": 102, b:17},
-        {"elapsed": "Nov-01", "value": 107, b:7},
-        {"elapsed": "Nov-02", "value": 60, b:18},
-        {"elapsed": "Nov-03", "value": 67, b: 18},
-        {"elapsed": "Nov-04", "value": 76, b: 18},
-        {"elapsed": "Nov-05", "value": 73, b: 29},
-        {"elapsed": "Nov-06", "value": 94, b: 13},
-        {"elapsed": "Nov-07", "value": 135, b:2},
-        {"elapsed": "Nov-08", "value": 154, b:22},
-        {"elapsed": "Nov-09", "value": 120, b:7},
-        {"elapsed": "Nov-10", "value": 100, b:6},
-        {"elapsed": "Nov-11", "value": 130, b:17},
-        {"elapsed": "Nov-12", "value": 100, b:15},
-        {"elapsed": "Nov-13", "value": 60, b:17},
-        {"elapsed": "Nov-14", "value": 70, b:7},
-        {"elapsed": "Nov-15", "value": 67, b:18},
-        {"elapsed": "Nov-16", "value": 86, b: 18},
-        {"elapsed": "Nov-17", "value": 86, b: 18},
-        {"elapsed": "Nov-18", "value": 113, b: 29},
-        {"elapsed": "Nov-19", "value": 130, b: 23},
-        {"elapsed": "Nov-20", "value": 114, b:10},
-        {"elapsed": "Nov-21", "value": 80, b:22},
-        {"elapsed": "Nov-22", "value": 109, b:7},
-        {"elapsed": "Nov-23", "value": 100, b:6},
-        {"elapsed": "Nov-24", "value": 105, b:17},
-        {"elapsed": "Nov-25", "value": 110, b:15},
-        {"elapsed": "Nov-26", "value": 102, b:17},
-        {"elapsed": "Nov-27", "value": 107, b:7},
-        {"elapsed": "Nov-28", "value": 60, b:18},
-        {"elapsed": "Nov-29", "value": 67, b: 18},
-        {"elapsed": "Nov-30", "value": 76, b: 18},
-        {"elapsed": "Des-01", "value": 73, b: 29},
-        {"elapsed": "Des-02", "value": 94, b: 13},
-        {"elapsed": "Des-03", "value": 79, b: 24}
-    ];
+    var dwData = [[1, 24], [2, 34], [3, 33], [4, 22], [5, 28], [6, 60], [7, 60], [8, 70], [9, 67], [10, 86], [11, 86], [12, 113], [13, 130], [14, 114], [15, 80], [16, 109], [17, 100], [18, 105], [19, 110], [20, 102], [21, 107], [22, 60], [23, 67], [24, 76], [25, 73], [26, 94], [27, 135], [28, 154], [29, 120], [30, 100], [31, 130], [32, 100], [33, 60], [34, 70], [35, 67], [36, 86], [37, 86], [38, 113], [39, 130], [40, 114], [41, 80], [42, 109], [43, 100], [44, 105], [45, 110], [46, 102], [47, 107], [48, 60], [49, 67], [50, 76], [51, 73], [52, 94], [53, 79]],
+        upData = [[1, 2], [2, 22], [3, 7], [4, 6], [5, 17], [6, 15], [7, 17], [8, 7], [9, 18], [10, 18], [11, 18], [12, 29], [13, 23], [14, 10], [15, 22], [16, 7], [17, 6], [18, 17], [19, 15], [20, 17], [21, 7], [22, 18], [23, 18], [24, 18], [25, 29], [26, 13], [27, 2], [28, 22], [29, 7], [30, 6], [31, 17], [32, 15], [33, 17], [34, 7], [35, 18], [36, 18], [37, 18], [38, 29], [39, 23], [40, 10], [41, 22], [42, 7], [43, 6], [44, 17], [45, 15], [46, 17], [47, 7], [48, 18], [49, 18], [50, 18], [51, 29], [52, 13], [53, 24]];
 
-    var chart = Morris.Area({
-        element: 'morris-chart-network',
-        data: day_data,
-        axes:false,
-        xkey: 'elapsed',
-        ykeys: ['value', 'b'],
-        labels: ['Download Speed', 'Upload Speed'],
-        yLabelFormat :function (y) { return y.toString() + ' Mb/s'; },
-        gridEnabled: false,
-        gridLineColor: 'transparent',
-        lineColors: ['#7db8d8','#3b7093'],
-        lineWidth:[0,0],
-        pointSize:[0,0],
-        fillOpacity:1,
-        gridTextColor:'#999',
-        parseTime: false,
-        resize:true,
-        behaveLikeLine : true,
-        hideHover: 'auto'
+    var plot = $.plot('#demo-chart-network', [
+        {
+            label: 'Download Speed',
+            data: dwData,
+            lines: {
+                show: true,
+                lineWidth: 0,
+                fill: true,
+                fillColor: {
+                    colors: [{
+                        opacity: 0.2
+                    }, {
+                        opacity: 0.2
+                    }]
+                }
+            },
+            points: {
+                show: false
+            }
+        },
+        {
+            label: 'Upload Speed',
+            data: upData,
+            lines: {
+                show: true,
+                lineWidth: 0,
+                fill: true,
+                fillColor: {
+                    colors: [{
+                        opacity: 0.9
+                    }, {
+                        opacity: 0.9
+                    }]
+                }
+            },
+            points: {
+                show: false
+            }
+        }
+        ], {
+        series: {
+            lines: {
+                show: true
+            },
+            points: {
+                show: true
+            },
+            shadowSize: 0 // Drawing is faster without shadows
+        },
+        colors: ['#b5bfc5','#25476a'],
+        legend: {
+            show: true,
+            position: 'nw',
+            margin: [0, 0]
+        },
+        grid: {
+            borderWidth: 0,
+            hoverable: true,
+            clickable: true
+        },
+        yaxis: {
+            show: false,
+            ticks: 5,
+            tickColor: 'rgba(0,0,0,.1)'
+        },
+        xaxis: {
+            show: true,
+            ticks: 10,
+            tickColor: 'transparent'
+        },
+        tooltip: {
+            show: true,
+            content: "<div class='flot-tooltip text-center'><h5 class='text-main'>%s</h5>%y.0 Mbps</div>"
+        }
     });
 
-
-
-
-    // EXTRA SMALL WEATHER WIDGET
-    // =================================================================
-    // Require sckycons
-    // -----------------------------------------------------------------
-    // http://darkskyapp.github.io/skycons/
-    // =================================================================
-
-    // on Android, a nasty hack is needed: {"resizeClear": true}
-    skyconsOptions = {
-        "color": "#3bb5e8",
-        "resizeClear": true
-    }
-
-    /* Main Icon */
-    var skycons = new Skycons(skyconsOptions);
-    skycons.add("demo-weather-xs-icon", Skycons.PARTLY_CLOUDY_DAY);
-    skycons.play();
 
 
 
@@ -127,14 +107,14 @@ $(window).on('load', function() {
     // http://omnipotent.net/jquery.sparkline/#s-about
     // =================================================================
     var hddSparkline = function() {
-        $("#demo-sparkline-area").sparkline([57,69,70,62,73,79,76,77,73,52,57,50,60,55,70,68], {
+        $("#demo-sparkline-area").sparkline([57,69,70,62,73,79,76,77,73,52,57,50,60,55,70,68,57,62,53,69,59,67,69,58,50,47,65], {
             type: 'line',
             width: '100%',
-            height: '40',
-            spotRadius: 5,
+            height: '60',
+            spotRadius: 4,
             lineWidth: 2,
             lineColor:'rgba(255,255,255,.85)',
-            fillColor: 'rgba(0,0,0,0.03)',
+            fillColor: 'rgba(0,0,0,0.1)',
             spotColor: 'rgba(255,255,255,.5)',
             minSpotColor: 'rgba(255,255,255,.5)',
             maxSpotColor: 'rgba(255,255,255,.5)',
@@ -148,7 +128,6 @@ $(window).on('load', function() {
 
 
 
-
     // EARNING - SPARKLINE LINE CHART
     // =================================================================
     // Require sparkline
@@ -156,22 +135,22 @@ $(window).on('load', function() {
     // http://omnipotent.net/jquery.sparkline/#s-about
     // =================================================================
     var earningSparkline = function(){
-        $("#demo-sparkline-line").sparkline([345,404,305,455,378,567,586,685,458,742,565], {
+        $("#demo-sparkline-line").sparkline([945, 754, 805, 855, 678, 987, 1026, 885, 878, 922, 875, ], {
             type: 'line',
             width: '100%',
-            height: '40',
-            spotRadius: 2,
-            lineWidth:2,
-            lineColor:'#ffffff',
+            height: '60',
+            spotRadius: 0,
+            lineWidth: 2,
+            lineColor: '#ffffff',
             fillColor: false,
-            minSpotColor :false,
-            maxSpotColor : false,
-            highlightLineColor : '#ffffff',
+            minSpotColor: false,
+            maxSpotColor: false,
+            highlightLineColor: '#ffffff',
             highlightSpotColor: '#ffffff',
             tooltipChartTitle: 'Earning',
-            tooltipPrefix :'$ ',
-            spotColor:'#ffffff',
-            valueSpots : {
+            tooltipPrefix: '$ ',
+            spotColor: '#ffffff',
+            valueSpots: {
                 '0:': '#ffffff'
             }
         });
@@ -187,24 +166,24 @@ $(window).on('load', function() {
     // =================================================================
 
     var barEl = $("#demo-sparkline-bar");
-    var barValues = [40,32,65,53,62,55,24,67,45,70,45,56,34,67,76,32,65,53,62,55,24,67,45,70,45,56,70,45,56,34,67,76,32,65,53,62,55];
+    var barValues = [40,32,65,53,62,55,24,67,45,70,45,56,34,67,76,32,65,53,62,55,24,67,45,70,45,56,70,45,56,34,67,76,32,65,53];
     var barValueCount = barValues.length;
     var barSpacing = 1;
     var salesSparkline = function(){
          barEl.sparkline(barValues, {
             type: 'bar',
-            height: 55,
+            height: 78,
             barWidth: Math.round((barEl.parent().width() - ( barValueCount - 1 ) * barSpacing ) / barValueCount),
             barSpacing: barSpacing,
             zeroAxis: false,
             tooltipChartTitle: 'Daily Sales',
             tooltipSuffix: ' Sales',
-            barColor: 'rgba(255,255,255,.7)'
+            barColor: 'rgba(0,0,0,.15)'
         });
     }
 
 
-    nifty.window.on('resizeEnd', function(){
+    $(window).on('resizeEnd', function(){
         hddSparkline();
         earningSparkline();
         salesSparkline();
@@ -223,7 +202,9 @@ $(window).on('load', function() {
     // -----------------------------------------------------------------
     // http://www.themeon.net
     // =================================================================
-    $('#demo-panel-network-refresh').niftyOverlay().on('click', function(){
+    $('#demo-panel-network-refresh').niftyOverlay({
+        iconClass : 'demo-psi-repeat-2 spin-anim icon-2x'
+    }).on('click', function(){
         var $el = $(this), relTime;
 
         $el.niftyOverlay('show');
@@ -235,74 +216,5 @@ $(window).on('load', function() {
         },2000);
     });
 
-
-
-
-
-
-
-
-    // WEATHER WIDGET
-    // =================================================================
-    // Require sckycons
-    // -----------------------------------------------------------------
-    // http://darkskyapp.github.io/skycons/
-    // =================================================================
-
-    // on Android, a nasty hack is needed: {"resizeClear": true}
-    skyconsOptions = {
-        "color": "#337ab7",
-        "resizeClear": true
-    }
-    /* Main Icon */
-    var skycons = new Skycons(
-    {
-        color : '#fff',
-        resizeClear : true
-    });
-    skycons.add("demo-weather-md-icon-1", Skycons.PARTLY_CLOUDY_DAY);
-    skycons.play();
-
-
-
-    /* Small Icons*/
-    var skycons2 = new Skycons(skyconsOptions);
-    skycons2.add("demo-weather-md-icon-2", Skycons.CLOUDY);
-    skycons2.play();
-
-
-
-    var skycons3 = new Skycons(skyconsOptions);
-    skycons3.add("demo-weather-md-icon-3", Skycons.WIND);
-    skycons3.play();
-
-
-
-    var skycons4 = new Skycons(skyconsOptions);
-    skycons4.add("demo-weather-md-icon-4", Skycons.RAIN);
-    skycons4.play();
-
-
-
-    var skycons5 = new Skycons(skyconsOptions);
-    skycons5.add("demo-weather-md-icon-5", Skycons.PARTLY_CLOUDY_DAY);
-    skycons5.play();
-
-
-
-    // WELCOME NOTIFICATIONS
-    // =================================================================
-    // Require Admin Core Javascript
-    // =================================================================
-     var fvisit  = setTimeout(function(){
-        $.niftyNoty({
-            type: 'dark',
-            title: 'Hello Admin,',
-            message: 'Lorem ipsum dolor sit amet consectetuer <br> adipiscing elit sed diam nonummy nibh.',
-            container: 'floating',
-            timer: 5500
-        });
-        clearTimeout(fvisit);
-     }, 3000);
 
 });

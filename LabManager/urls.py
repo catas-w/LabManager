@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from web import views
 from django.conf.urls.static import static
 from LabManager import settings
@@ -51,4 +51,5 @@ urlpatterns = [
     # re_path('^static/(?P<path>.*)', serve,{'document_root':settings.STATIC_ROOT}), # 用于处理static里的文件
     # re_path('^media/(?P<path>.*)',serve,{'document_root':settings.MEDIA_ROOT}),
 
+    path("tools/", include("abrams.urls")),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
