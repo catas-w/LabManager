@@ -147,3 +147,5 @@ MEDIA_URL = '/media/'
 # 注册口令
 check_signal = 'zou85412805'
 
+# 默认密码
+default_pwd = '123456'

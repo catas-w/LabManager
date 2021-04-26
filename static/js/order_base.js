@@ -1,6 +1,6 @@
 /*
  * @Date: 2020-12-18 11:49:17
- * @LastEditTime: 2021-01-26 16:22:10
+ * @LastEditTime: 2021-04-26 17:41:54
  * @Author: catas
  * @LastEditors: catas
  * @Description: 
@@ -34,6 +34,7 @@
         BindClickButton("#order-pass", BindPass);
         BindClickButton("#user-save", BindUserEdit);
         BindClickButton("#reset-passwd", BindResetPasswd);
+        BindClickButton("#admin-reset-pwd", BindAdminResetPwd);
         
         BindClickButton("#hist-order-submit", BindOrderSubmit, jump_url="/order/history/");
         BindClickButton("#hist-order-delete", BindDeleteOrder, jump_url="/order/history/");
@@ -458,6 +459,73 @@
     function BindResetPasswd(e) {
         e.preventDefault();
         submitOrder("reset_passwd");
+    }
+
+    function BindAdminResetPwd(e) {
+        // 管理员重置密码
+        e.preventDefault();
+        // submitOrder("admin-reset-pwd")        
+        var dialog = bootbox.dialog({
+            title: '<label class="text-bold"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>&nbsp;警告</label>',
+            onEscape: true,
+            message: "<label class='text-sm'>确认重置? 该用户密码将配重置为 123456 </label>",
+            
+            buttons: {
+                default: {
+                    label: "Cancel",
+                    className: "btn-default",
+                },
+                danger: {
+                    label: "确认",
+                    className: "btn-danger",
+                    callback: function() {
+                        adminResetPwd();
+                    },
+                },
+            },
+        });
+    }
+    
+    function adminResetPwd() {
+        console.log("reset pwd");
+        data = {};
+        data.csrfmiddlewaretoken = csrf_token;
+        $.ajax({
+            url: window.location.pathname + "/reset-pwd/",
+            type: "post",
+            dataType: "JSON",
+            data: data,
+            // data: JSON.stringify(data),
+            success: function(res) {
+                if(res.status=="success") {
+                    $.niftyNoty({
+                        type: 'success',
+                        icon : 'fa fa-check',
+                        message : "密码重置" +  ".<br> " + "成功 <strong>" + "</strong>",
+                        container : 'floating',
+                        timer : 3000
+                    });
+                }else if(res.status=="failed") {
+                    $.niftyNoty({
+                        type: 'danger',
+                        icon : 'fa fa-check',
+                        message : "数据错误 " +  ".<br> " + " <strong>" + "</strong>",
+                        container : 'floating',
+                        timer : 7000
+                    });                                        
+                }
+            },
+
+            error: function() {
+                $.niftyNoty({
+                    type: 'danger',
+                    icon : 'fa fa-check',
+                    message : "请求失败" +  ".<br> " + " <strong>" + "</strong>",
+                    container : 'floating',
+                    timer : 5000
+                });
+            }
+        });
     }
 
     function BindWithrawOrder(e, jump_url) {

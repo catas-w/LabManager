@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-01-26 17:29:48
+LastEditTime: 2021-04-26 17:39:52
 Author: catas
 LastEditors: catas
 Description: 
@@ -21,6 +21,7 @@ from web.utils import process_order
 from web.utils import OrderFormBuilder
 from django.forms import modelform_factory
 from web import tables
+from LabManager import settings
 
 # Create your views here.
 
@@ -501,6 +502,24 @@ def user_edit(request, user_id):
                                                         "all_perms": all_perms,
                                                         "has_edit_perm": has_edit_perm,
                                                         })
+
+
+@check_permission
+@login_required
+def admin_reset_pwd(request, user_id):
+    '''
+        description: 管理员重置用户密码
+        param {*}
+        return
+    '''
+    try:
+        user_obj = models.UserProfile.objects.get(id=user_id)
+        user_obj.set_password(settings.default_pwd)
+        user_obj.save()
+        return HttpResponse(json.dumps({"status": "success"}))
+    except Exception as e:
+        return HttpResponse(json.dumps({"status": "failed", 'errors': 'Error occured!'}))
+
 
 
 @login_required

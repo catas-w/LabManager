@@ -20,7 +20,7 @@
 
             <div class="panel">
                 <div class="panel-heading">
-                    <h3 class="panel-title">订单详情</h3>
+                    <h3 class="panel-title">用户信息</h3>
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal order-create">
@@ -112,11 +112,11 @@
                             <!-- buttons -->
                             {% if has_edit_perm %}
                             <div class="row">
-                                <div class="col-sm-2 col-sm-offset-4">
-                                    <!-- <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle fa-lg" id="order-delete">删&nbsp;&nbsp;除</button> -->
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-danger btn-rounded btn-labeled fa fa-exclamation-triangle" id="admin-reset-pwd">重置密码</button>
                                 </div>
                                 <div class="col-sm-4 col-sm-offset">
-                                    <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save fa-lg" id="user-save">保&nbsp;&nbsp;&nbsp;存</button>
+                                    <button class="btn btn-mint btn-rounded  btn-labeled fa fa-save" id="user-save">保&nbsp;&nbsp;&nbsp;存</button>
                                 </div>
                             </div>
                             {% endif %}

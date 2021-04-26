@@ -18,9 +18,9 @@ from django.urls import path, include
 from web import views
 from django.conf.urls.static import static
 from LabManager import settings
-# from django.views.static import serve
+from django.views.static import serve
 # from django.conf import settings
-# from django.urls import re_path
+from django.urls import re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,6 +44,7 @@ urlpatterns = [
     path("order/history/output/", views.output_history_order),
     path("userinfo/", views.user_info),
     path("userinfo/<int:user_id>", views.user_edit, name="user_edit"),
+    path("userinfo/<int:user_id>/reset-pwd/", views.admin_reset_pwd, name="user_edit"),
     path("update-avatar/", views.update_avatar),
 
     path("get_notice/", views.get_notice),
