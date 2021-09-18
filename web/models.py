@@ -158,7 +158,7 @@ class Order(models.Model):
     memo = models.TextField(blank=True, null=True, verbose_name="备注")
     detail = models.ForeignKey("GoodsDetail", on_delete=models.SET_NULL, blank=True, null=True, verbose_name="商品")
     
-    bill_received = models.BooleanField(default=False, verbose_name="收到底单")
+    bill_received = models.BooleanField(default=False, verbose_name="已报账")
     review = models.CharField(max_length=128, blank=True, null=True, verbose_name="原因")
 
     class Meta:
