@@ -26,3 +26,7 @@ def share_docs(request):
 
 
 
+def live_test(request):
+    return render(request, "common/live.html")
+
+

@@ -1,6 +1,6 @@
 '''
 Date: 2020-12-15 10:24:28
-LastEditTime: 2021-04-26 17:39:52
+LastEditTime: 2021-09-21 15:41:09
 Author: catas
 LastEditors: catas
 Description: 
@@ -316,7 +316,7 @@ def history_orders(request):
     return {*}
     '''    
     order_type = "history"
-    scale = request.GET.get("scale", "")
+    scale = request.GET.get("scale", "1")
     q = request.GET.get("q", "")
     order_objs = models.Order.objects.filter(status=3).order_by("create_date").reverse()
     order_objs = tables.search_by(q, order_objs, ["user__name", "gene_info__name", "detail__name"])
@@ -412,7 +412,7 @@ def output_history_order(request):
                 ("单价", "unit_price"), 
                 ("数量", "count"), 
                 ("总价", "total_price"), 
-                ("收到底单", "bill_received")]
+                ("已报账", "bill_received")]
                 
     all_sheets = [(u"试剂购买", all_cols[0:6]+all_cols[7:], 0),
                   (u"基因测序", all_cols[0:5]+all_cols[6:], 1), 
@@ -438,8 +438,13 @@ def output_history_order(request):
                     obj_attr = obj_attr()
                 elif "time" in obj_attr.__repr__():
                     obj_attr = obj_attr.strftime("%Y-%m-%d  %H:%M")
-
+                
                 value = obj_attr.__str__()
+                if value == 'True':
+                    value = '是'
+                elif value == 'False':
+                    value = '否'
+
                 sheet.write(i+1, j, value)
     
     output = BytesIO()
