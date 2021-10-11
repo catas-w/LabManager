@@ -133,10 +133,10 @@ LOGIN_URL = '/login/'
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'static'),
+# )
 
 # 配置 MEDIA_ROOT 作为你上传文件在服务器中的基本路径
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # 注意此处不要写成列表或元组的形式
@@ -148,4 +148,4 @@ MEDIA_URL = '/media/'
 check_signal = 'zou85412805'
 
 # 默认密码
-default_pwd = '123456'
+default_pwd = 'zou123456'
