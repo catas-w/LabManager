@@ -6,3 +6,4 @@ db.sqlit3
 */migrations/
 media/
 *.log
+*.pid
