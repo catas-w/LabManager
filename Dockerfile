@@ -20,16 +20,17 @@ RUN python -m pip install --upgrade pip
 # 利用 pip 安装依赖
 RUN python -m pip install -r requirments.txt
 
-RUN apt-get update
-RUN apt-get install iputils-ping -y
+# RUN apt-get update
+# RUN apt-get install iputils-ping -y
 
 # 给start.sh可执行权限
-RUN chmod +x ./start.sh
+RUN chmod 754 ./start.sh
 
 EXPOSE 8000
 EXPOSE 9000
 
 
-# CMD [ "bash", "start.sh" ]
+# CMD bash ./start.sh
+ENTRYPOINT [ "bash", "./start.sh" ]
 
 

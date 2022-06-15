@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# python manage.py collectstatic --noinput &&
-# python manage.py makemigrations &&
-# python manage.py migrate &&
 
 uwsgi --ini /var/LabManager/uwsgi.ini
+tail -f /tmp/LabManager-master.pid
