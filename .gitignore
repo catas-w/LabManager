@@ -5,4 +5,4 @@ db.sqlit3
 .vscode/*
 */migrations/
 media/
-
+*.log
